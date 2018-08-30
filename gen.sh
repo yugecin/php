@@ -23,7 +23,7 @@ do
 	sed -f minhtml.sed _skeleton2.html >> $PN
 	cat MINCSS >> $PN
 	sed -f minhtml.sed _skeleton3.html >> $PN
-	sed -n '5,$p' <$IX >> $PN
+	sed -f tohtml.sed <$IX >> $PN
 	sed -f minhtml.sed _skeleton4.html >> $PN
 	sed -n '3p' <$IX >> $PN
 	sed -f minhtml.sed _skeleton5.html >> $PN
