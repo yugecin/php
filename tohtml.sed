@@ -18,7 +18,7 @@
 	n
 }
 
-s/\\}/~ENDTAG~/g
+s/\\}/~ESCAPEDENDTAG~/g
 
 :moretags
 
@@ -64,6 +64,24 @@ s/\\}/~ENDTAG~/g
 		b nexttag
 	}
 
+	/{@u / {
+		H
+		g
+		s/\(.*\)\n.*$/\1\n<\/u>/
+		x
+		s/.*\n\(.*\){@u \(.*\)/\1<u>\2/
+		b nexttag
+	}
+
+	/{@blockquote / {
+		H
+		g
+		s/\(.*\)\n.*$/\1\n<\/blockquote>/
+		x
+		s/.*\n\(.*\){@blockquote \(.*\)/\1<blockquote>\2/
+		b nexttag
+	}
+
 	/{@ia=\([^ ]*\) / {
 		H
 		g
@@ -79,6 +97,11 @@ s/\\}/~ENDTAG~/g
 		s_\(.*\)\n.*$_\1\n</a><img src="moin-www.png" alt="external link" title="external link"/>_
 		x
 		s/.*\n\(.*\){@a=\([^ ]*\) \(.*\)/\1<a href="\2">\3/
+		b nexttag
+	}
+
+	/{@hr}/ {
+		s_{@hr}_<hr/>_
 		b nexttag
 	}
 
@@ -112,5 +135,5 @@ s/\\}/~ENDTAG~/g
 	b moretags
 }
 
-s/~ENDTAG~/}/g
+s/~ESCAPEDENDTAG~/}/g
 
