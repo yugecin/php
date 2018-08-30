@@ -1,3 +1,11 @@
 body {
 	font-family: 'Tahoma', 'arial', sans-serif;
 }
+::selection {
+	color: #fff;
+	background: #000;
+}
+::-moz-selection {
+	color: #fff;
+	background: #000;
+}
