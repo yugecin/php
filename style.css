@@ -1,11 +1,34 @@
 body {
 	font-family: 'Tahoma', 'arial', sans-serif;
+	max-width: 45em;
+	margin: 2em auto;
+	background: WHITE;
+	color: BLACK;
 }
 ::selection {
-	color: #fff;
-	background: #000;
+	color: WHITE;
+	background: BLACK;
 }
 ::-moz-selection {
-	color: #fff;
-	background: #000;
+	color: WHITE;
+	background: BLACK;
+}
+pre,
+code {
+	font-family: 'courier new', monospace;
+	background: LIGHTGREY;
+}
+pre {
+	padding: 0 1em;
+	border: 2px solid DARKGREY;
+}
+code {
+	padding: .1em .4em;
+	border-radius: 2px;
+}
+footer {
+	color: DARKGREY;
+	text-align: right;
+	font-size: small;
+	padding-top: 1em;
 }
