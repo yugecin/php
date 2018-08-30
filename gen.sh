@@ -3,6 +3,8 @@
 MINCSS=minstyle.css
 sed -f mincss.sed style.css > MINCSS
 
+ls -1 *.html | grep -v "^_" | xargs rm
+
 mapfile -t PAGES < <(find pages/ -maxdepth 1 -type f)
 
 for IX in "${PAGES[@]}"
