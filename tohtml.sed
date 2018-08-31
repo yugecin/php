@@ -169,8 +169,15 @@ x
 	x
 	N
 	/\n$/ !{
-		# no, clean up pattern space
-		#s/.*\n\([^\n]*\)$/\1/
+		# no, print previous pattern space and
+		# continue with next
+		s/^/~BEGIN~/
+		H
+		s/^~BEGIN~\(.*\)\n.*$/\1/p
+		g
+		s/~BEGIN~.*$//
+		x
+		s/^.*\n//
 		b begin
 	}
 
