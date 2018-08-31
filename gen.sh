@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 MINCSS=minstyle.css
-sed -f mincss.sed style.css > MINCSS
+sed -f mincss.sed style.css > $MINCSS
 
 ls -1 *.html | grep -v "^_" | xargs rm
 
@@ -21,7 +21,7 @@ do
 	sed -f minhtml.sed _skeleton1.html > $PN
 	head -n1 $IX >> $PN
 	sed -f minhtml.sed _skeleton2.html >> $PN
-	cat MINCSS >> $PN
+	cat $MINCSS >> $PN
 	sed -f minhtml.sed _skeleton3.html >> $PN
 	sed -f tohtml.sed <$IX >> $PN
 	sed -f minhtml.sed _skeleton4.html >> $PN
@@ -29,4 +29,4 @@ do
 	sed -f minhtml.sed _skeleton5.html >> $PN
 done
 
-rm MINCSS
+rm $MINCSS
