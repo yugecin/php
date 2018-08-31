@@ -32,3 +32,10 @@ footer {
 	font-size: small;
 	padding-top: 1em;
 }
+blockquote {
+	font-style: italic;
+}
+hr {
+	border-top: 1px solid DARKGREY;
+	border-bottom: 1px solid LIGHTGREY;
+}
