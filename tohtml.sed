@@ -88,6 +88,15 @@ s/\\}/~ESCAPEDENDTAG~/g
 		b nexttag
 	}
 
+	/{@small / {
+		H
+		g
+		s/\(.*\)\n.*$/\1\n<\/span>/
+		x
+		s/.*\n\(.*\){@small \(.*\)/\1<span class="small">\2/
+		b nexttag
+	}
+
 	/{@ia=\([^ ]*\) / {
 		H
 		g

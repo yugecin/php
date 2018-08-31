@@ -2,7 +2,7 @@ home
 
 31 Aug 2018
 --------------------------------------------------------------------------------
-{@h1 hi there}
+{@h1 hi there {@small {@ia=pages/00_index.txt [txt]}}}
 
 Welcome on my personal home page. For all the vampires out there: there's
 a link to switch to dark theme in the top right. If you stumbled upon the

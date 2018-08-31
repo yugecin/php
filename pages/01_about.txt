@@ -2,7 +2,7 @@ about me
 
 31 Aug 2018
 --------------------------------------------------------------------------------
-{@h1 about me}
+{@h1 about me {@small {@ia=pages/01_about.txt [txt]}}}
 
 So I am Robin. Hello :) You can usually find me as robin_be or yugecin. I was
 born and live in Belgium, more specifically in

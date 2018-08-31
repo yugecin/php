@@ -33,6 +33,9 @@ footer {
 	font-size: small;
 	padding-top: 1em;
 }
+.small {
+	font-size: small;
+}
 blockquote {
 	font-style: italic;
 }

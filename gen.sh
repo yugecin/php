@@ -4,14 +4,14 @@ MINCSS=$(sed -f mincss.sed style.css)
 
 ls -1 *.html | grep -v "^_" | xargs rm
 
-mapfile -t PAGES < <(find pages/ -maxdepth 1 -type f | grep -v "pages/_")
+mapfile -t PAGES < <(find pages/*.txt -maxdepth 1 -type f | grep -v "pages/_")
 
 NAV=
 for IX in "${PAGES[@]}"
 do
 	PF=${IX##*/*_}
 	PN=$(head -n1 $IX)
-	NAV="$NAV|<a href=\"$PF~INTERNALLINK~\">$PN</a>"
+	NAV="$NAV|<a href=\"${PF%.txt*}.html~INTERNALLINK~\">$PN</a>"
 done
 
 NAV="<nav>${NAV#*|}</nav><hr/>"
@@ -21,6 +21,7 @@ PAGEFILES=()
 for IX in "${PAGES[@]}"
 do
 	PF=${IX##*/*_}
+	PF=${PF%.txt*}.html
 	PAGEFILES+=($PF)
 
 	echo $PF
