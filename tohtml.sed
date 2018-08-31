@@ -21,6 +21,7 @@
 		b pre
 	}
 	n
+	b begin
 }
 
 s/\\}/~ESCAPEDENDTAG~/g
