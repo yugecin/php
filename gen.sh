@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-MINCSS=minstyle.css
-sed -f mincss.sed style.css > $MINCSS
+MINCSS=$(sed -f mincss.sed style.css)
 
 ls -1 *.html | grep -v "^_" | xargs rm
 
@@ -29,7 +28,7 @@ do
 	sed -f minhtml.sed _skeleton1.html > $PF
 	head -n1 $IX >> $PF
 	sed -f minhtml.sed _skeleton2.html >> $PF
-	cat $MINCSS >> $PF
+	echo $MINCSS >> $PF
 	sed -f minhtml.sed _skeleton3.html >> $PF
 	echo "<header><a href=\"$PF~INTERNALLINKINV~\">~LIGHTSOFF~</a></header>" >> $PF
 	echo $NAV >> $PF
@@ -49,4 +48,3 @@ do
 	sed -i -f applydarktheme.sed $TO
 done
 
-rm $MINCSS
