@@ -93,7 +93,7 @@ s/\\}/~ESCAPEDENDTAG~/g
 		g
 		s/\(.*\)\n.*$/\1\n<\/a>/
 		x
-		s/.*\n\(.*\){@ia=\([^ ]*\) \(.*\)/\1<a href="\2">\3/
+		s/.*\n\(.*\){@ia=\([^ ]*\) \(.*\)/\1<a href="\2~INTERNALLINK~">\3/
 		b nexttag
 	}
 

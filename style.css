@@ -26,6 +26,7 @@ code {
 	padding: .1em .4em;
 	border-radius: 2px;
 }
+header,
 footer {
 	color: DARKGREY;
 	text-align: right;
@@ -39,9 +40,12 @@ hr {
 	border-top: 1px solid DARKGREY;
 	border-bottom: 1px solid LIGHTGREY;
 }
-header {
+nav {
 	text-align: center;
 }
-header a {
+nav a {
 	padding: 0 1em;
+}
+a {
+	color: BLUELINK;
 }
