@@ -6,6 +6,12 @@
 }
 1,4d
 
+:begin
+
+/^$/ {
+	d
+}
+
 /^<pre>$/ {
 	N
 	s/\n/<p>/
@@ -115,7 +121,7 @@ s/\\}/~ESCAPEDENDTAG~/g
 
 /}/ {
 	x
-	/empty$/ {
+	/@\?empty$/ {
 		x
 		a<h1>tag stack is empty!</h1>
 		q
@@ -127,7 +133,7 @@ s/\\}/~ESCAPEDENDTAG~/g
 	H
 	s/^\([^}]*\)}.*$/\1/
 	G
-	s/\nempty.*\n\([^\n]\+\)\n.*}\(.*\)$/\1\2/
+	s/\n@\?empty.*\n\([^\n]\+\)\n.*}\(.*\)$/\1\2/
 	x
 	s/\n[^\n]*\n[^\n]*$//
 	x
@@ -136,4 +142,42 @@ s/\\}/~ESCAPEDENDTAG~/g
 }
 
 s/~ESCAPEDENDTAG~/}/g
+
+# add <p> tags
+# <p> is added if line is not empty and doesn't start with <
+# if <p> was added, hold space gets an @ in the beginning
+# if hold space has @, next line is checked if it's empty
+# if it's empty, append </p> and remove @ from hold space
+
+# check if <p> should be prepended
+/^</ !{
+	x
+	/^@/ {
+		x
+		b checkend
+	}
+	s/^/@/
+	x
+	s/^/<p>/
+}
+
+:checkend
+# check if </p> should be appended
+x
+/^@/ {
+	# peek next line to see if <p> needs to be closed
+	x
+	N
+	/\n$/ !{
+		# no, clean up pattern space
+		#s/.*\n\([^\n]*\)$/\1/
+		b begin
+	}
+
+	# yes
+	s_\n_</p>_
+	x
+	s/^@//
+}
+x
 
