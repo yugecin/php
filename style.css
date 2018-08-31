@@ -39,3 +39,9 @@ hr {
 	border-top: 1px solid DARKGREY;
 	border-bottom: 1px solid LIGHTGREY;
 }
+header {
+	text-align: center;
+}
+header a {
+	padding: 0 1em;
+}
