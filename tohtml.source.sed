@@ -63,6 +63,16 @@ s/\\}/~ESCAPEDENDTAG~/g
 		b nexttag
 	}
 
+	/{@img=[^,]*,[^,]*,[^,]*,[^,]*}/ {
+		s_{@img=\([^,]*\),\([^,]*\),\([^,]*\),\([^,]*\)}_<p class="img"><img src="\1" alt="\2" title="\3"/><br/>\4</p>_
+		b nexttag
+	}
+
+	/{@img=[^,]*,[^,]*,[^,]*}/ {
+		s_{@img=\([^,]*\),\([^,]*\),\([^,]*\)}_<p class="img"><img src="\1" alt="\2" title="\3"/></p>_
+		b nexttag
+	}
+
 	/{@ia=\([^ ]*\) / {
 		H
 		g

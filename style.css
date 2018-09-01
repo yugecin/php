@@ -52,3 +52,10 @@ nav a {
 a {
 	color: BLUELINK;
 }
+p.img {
+	text-align: center;
+	color: DARKGREY;
+}
+p.img img {
+	max-width: 100%;
+}
