@@ -72,7 +72,7 @@ s/\\}/~ESCAPEDENDTAG~/g
 	/{@a=\([^ ]*\) / {
 		H
 		g
-		s_\(.*\)\n.*$_\1\n</a><img src="moin-www.png" alt="external link" title="external link"/>_
+		s_\(.*\)\n.*$_\1\n</a><img src="moin-www.png" alt="globe icon" title="external link"/>_
 		x
 		s/.*\n\(.*\){@a=\([^ ]*\) \(.*\)/\1<a href="\2">\3/
 		b nexttag
