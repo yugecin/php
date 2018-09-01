@@ -21,6 +21,7 @@ function makepage {
 }
 
 PAGEFILES=()
+sed -f tohtml.gen.sed < tohtml.source.sed > tohtml.sed
 
 # remove existing generated pages
 ls -1 *.html | grep -v "^_" | xargs rm

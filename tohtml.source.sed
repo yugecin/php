@@ -34,104 +34,17 @@ s/\\}/~ESCAPEDENDTAG~/g
 	s/{@/~NEXTTAGS~/g
 	s/~FIRSTTAG~/{@/
 
-	/{@h1 / {
-		H
-		g
-		s/\(.*\)\n.*$/\1\n<\/h1>/
-		x
-		s/.*\n\(.*\){@h1 \(.*\)/\1<h1>\2/
-		b nexttag
-	}
-
-	/{@h2 / {
-		H
-		g
-		s/\(.*\)\n.*$/\1\n<\/h2>/
-		x
-		s/.*\n\(.*\){@h2 \(.*\)/\1<h2>\2/
-		b nexttag
-	}
-
-	/{@h3 / {
-		H
-		g
-		s/\(.*\)\n.*$/\1\n<\/h3>/
-		x
-		s/.*\n\(.*\){@h3 \(.*\)/\1<h3>\2/
-		b nexttag
-	}
-
-	/{@h4 / {
-		H
-		g
-		s/\(.*\)\n.*$/\1\n<\/h4>/
-		x
-		s/.*\n\(.*\){@h4 \(.*\)/\1<h4>\2/
-		b nexttag
-	}
-
-	/{@h5 / {
-		H
-		g
-		s/\(.*\)\n.*$/\1\n<\/h5>/
-		x
-		s/.*\n\(.*\){@h5 \(.*\)/\1<h5>\2/
-		b nexttag
-	}
-
-	/{@h6 / {
-		H
-		g
-		s/\(.*\)\n.*$/\1\n<\/h6>/
-		x
-		s/.*\n\(.*\){@h6 \(.*\)/\1<h6>\2/
-		b nexttag
-	}
-
-	/{@code / {
-		H
-		g
-		s/\(.*\)\n.*$/\1\n<\/code>/
-		x
-		s/.*\n\(.*\){@code \(.*\)/\1<code>\2/
-		b nexttag
-	}
-
-	/{@b / {
-		H
-		g
-		s/\(.*\)\n.*$/\1\n<\/strong>/
-		x
-		s/.*\n\(.*\){@b \(.*\)/\1<strong>\2/
-		b nexttag
-	}
-
-	/{@i / {
-		H
-		g
-		s/\(.*\)\n.*$/\1\n<\/em>/
-		x
-		s/.*\n\(.*\){@i \(.*\)/\1<em>\2/
-		b nexttag
-	}
-
-	/{@u / {
-		H
-		g
-		s/\(.*\)\n.*$/\1\n<\/u>/
-		x
-		s/.*\n\(.*\){@u \(.*\)/\1<u>\2/
-		b nexttag
-	}
-
-	/{@blockquote / {
-		H
-		g
-		s/\(.*\)\n.*$/\1\n<\/blockquote>/
-		x
-		s/.*\n\(.*\){@blockquote \(.*\)/\1<blockquote>\2/
-		b nexttag
-	}
+	!SIMPLETAG h1
+	!SIMPLETAG h2
+	!SIMPLETAG h3
+	!SIMPLETAG h4
+	!SIMPLETAG h5
+	!SIMPLETAG h6
+	!SIMPLETAG code
+	!SIMPLETAG b
+	!SIMPLETAG i
+	!SIMPLETAG u
+	!SIMPLETAG blockquote
 
 	/{@small / {
 		H
