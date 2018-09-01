@@ -67,6 +67,7 @@ SKELETON23=$SKELETON23$(sed -f mincss.sed style.css)
 SKELETON23=$SKELETON23$(sed -f minhtml.sed _skeleton3.html)
 SKELETON4=$(sed -f minhtml.sed _skeleton4.html)
 SKELETON5=$(sed -f minhtml.sed _skeleton5.html)
+BLOGTOP=$(sed -f tohtml.sed < blog/_top_template.txt)
 
 # make blog posts
 for IX in "${BLOGPOSTS[@]}"
@@ -79,8 +80,7 @@ do
 	INPUTFILE=${INPUTFILE%% *}
 	OUTPUTFILE=${OUTPUTFILE%% *}
 	echo "$INPUTFILE"
-	TOP=$(sed -f tohtml.sed < blog/_top_template.txt)
-	TOP=${TOP//~TITLE~/"$TITLE"}
+	TOP=${BLOGTOP//~TITLE~/"$TITLE"}
 	TOP=${TOP//~INPUTFILE~/"$INPUTFILE"}
 	TOP=${TOP//~OUTPUTFILE~/"$OUTPUTFILE"}
 	makepage "$OUTPUTFILE" "$(tail -n +3 $INPUTFILE)" "$TOP"
