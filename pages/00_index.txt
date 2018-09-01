@@ -16,3 +16,9 @@ For the interested: these pages are generated using some bash/sed scripts.
 You can find the source on {@a=https://github.com/yugecin/php the github
 repo of this site} (or browse on here if you know the urls ;)).
 
+{@h3 Why does this look so familiar?}
+
+Ehm well I recently found {@a=https://spoonm.org/ spoonm's webpage} and I
+liked how it was made and I supposed I consciously and subconsciously made
+something that looks very similar to it :s
+
