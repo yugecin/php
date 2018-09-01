@@ -117,7 +117,7 @@ s/~ESCAPEDENDTAG~/}/g
 # if it's empty, append </p> and remove @ from hold space
 
 # check if <p> should be prepended
-/^</ !{
+/^<\(h\|pre\|blockquote\)/ !{
 	x
 	/^@/ {
 		x
