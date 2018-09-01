@@ -9,6 +9,9 @@
 :begin
 
 /^$/ {
+	x
+	s/^!//
+	x
 	d
 }
 
@@ -90,7 +93,7 @@ s/\\}/~ESCAPEDENDTAG~/g
 
 /}/ {
 	x
-	/@\?empty$/ {
+	/empty$/ {
 		x
 		a<h1>tag stack is empty!</h1>
 		q
@@ -102,7 +105,7 @@ s/\\}/~ESCAPEDENDTAG~/g
 	H
 	s/^\([^}]*\)}.*$/\1/
 	G
-	s/\n@\?empty.*\n\([^\n]\+\)\n.*}\(.*\)$/\1\2/
+	s/\n[@!]\?empty.*\n\([^\n]\+\)\n.*}\(.*\)$/\1\2/
 	x
 	s/\n[^\n]*\n[^\n]*$//
 	x
@@ -113,14 +116,33 @@ s/\\}/~ESCAPEDENDTAG~/g
 s/~ESCAPEDENDTAG~/}/g
 
 # add <p> tags
-# <p> is added if line is not empty and doesn't start with <
-# if <p> was added, hold space gets an @ in the beginning
-# if hold space has @, next line is checked if it's empty
-# if it's empty, append </p> and remove @ from hold space
+# opening tag should be added on lines that either don't start
+# with a '<' or start with tags that are allowed inside para's
+# (such as '<a>' or '<span>')
 
-# check if <p> should be prepended
+# if this condition doesn't match, hold space gets a ! in the
+# beginning. this ! means a paragraph can't be inserted.
+# the ! is removed again when an empty line is found (this
+# happens in the top section of the script where empty lines
+# are ditched)
+
+# if the condition does match, hold space gets a @ in the front
+# and the opening <p> tag is inserted (unless hold space already
+# had a @ symbol)
+
+# adding the closing tag is done by checking if the next line
+# is empty and if hold space has a @ symbol, meaning one is
+# currently opened and should be closed. if that's the case,
+# append a </p> and remove the @ from hold space
+
+# check if <p> can be prepended
 /^\(<a\|<span\|[^<]\)/ {
 	x
+	/^!/ {
+		x
+		n
+		b begin
+	}
 	/^@/ {
 		x
 		b checkend
@@ -128,7 +150,22 @@ s/~ESCAPEDENDTAG~/}/g
 	s/^/@/
 	x
 	s/^/<p>/
+	b checkend
 }
+
+# cannot be prepended so mark state as such
+# (only if not already prepended)
+# this will be reset when an empty line is found (see top)
+x
+/^@/ !{
+	/^!/ !{
+		s/^/!/
+	}
+	x
+	n
+	b begin
+}
+x
 
 :checkend
 # check if </p> should be appended
