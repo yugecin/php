@@ -19,6 +19,6 @@ repo of this site} (or browse on here if you know the urls ;)).
 {@h3 Why does this look so familiar?}
 
 Ehm well I recently found {@a=https://spoonm.org/ spoonm's webpage} and I
-liked how it was made and I supposed I consciously and subconsciously made
+liked how it was made and I suppose I consciously and subconsciously made
 something that looks very similar to it :s
 
