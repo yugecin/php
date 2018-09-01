@@ -1,3 +1,4 @@
 /*.html
 !/_*.html
 /tohtml.sed
+/pages/02_blog.txt

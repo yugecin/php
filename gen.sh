@@ -26,6 +26,11 @@ sed -f tohtml.gen.sed < tohtml.source.sed > tohtml.sed
 # remove existing generated pages
 ls -1 *.html | grep -v "^_" | xargs rm
 
+# make blog page (continues below)
+BLOGPAGE=pages/02_blog.txt
+cat pages/_02_blog_template.txt > $BLOGPAGE
+echo "<ul>" >> $BLOGPAGE
+
 # collect blog posts
 mapfile -t _BLOGPOSTS < <(find blog/*.txt -maxdepth 1 -type f | grep -v "blog/_")
 BLOGPOSTS=
@@ -41,7 +46,12 @@ do
 	OUTPUTFILE=blog-${OUTPUTFILE/.txt/.html}
 	TITLE=$(head -n 3 $IX | tail -n 1)
 	BLOGPOSTS=$BLOGPOSTS$'\n'"$TIMESTAMP $IX $OUTPUTFILE $TITLE"
+	DATE=$(date -d @$TIMESTAMP +"%0d %b %Y")
+	echo "{@li $DATE - {@ia=$OUTPUTFILE $TITLE}}" >> $BLOGPAGE
 done
+
+echo "</ul>" >> $BLOGPAGE
+echo "" >> $BLOGPAGE
 
 BLOGPOSTS=$(echo "$BLOGPOSTS" | tail -n +2 | sort -n)
 readarray -t BLOGPOSTS <<<"$BLOGPOSTS"
