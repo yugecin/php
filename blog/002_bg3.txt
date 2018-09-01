@@ -1,8 +1,8 @@
-contact
+18945339
+
+blo2g3
 
 31 Aug 2018
 --------------------------------------------------------------------------------
-{@h1 contact {@small {@ia=pages/02_contact.txt [txt]}}}
-
-contact here
+hello this is blog post #3
 

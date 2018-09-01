@@ -14,5 +14,5 @@ blogposts many times before and I guess I can start doing that now :&gt;
 
 For the interested: these pages are generated using some bash/sed scripts.
 You can find the source on {@a=https://github.com/yugecin/php the github
-repo of this site}
+repo of this site} (or browse on here if you know the urls ;)).
 

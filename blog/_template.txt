@@ -1,3 +1,5 @@
+publish date goes here AS A TIMESTAMP (or WIP if it's not finished)
+
 title goes here
 
 last modified date goes here
