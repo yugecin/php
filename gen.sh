@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-MINCSS=$(sed -f mincss.sed style.css)
-
 ls -1 *.html | grep -v "^_" | xargs rm
 
 mapfile -t PAGES < <(find pages/*.txt -maxdepth 1 -type f | grep -v "pages/_")
@@ -16,6 +14,13 @@ done
 
 NAV="<nav>${NAV#*|}</nav><hr/>"
 
+SKELETON1=$(sed -f minhtml.sed _skeleton1.html)
+SKELETON23=$(sed -f minhtml.sed _skeleton2.html)
+SKELETON23=$SKELETON23$(sed -f mincss.sed style.css)
+SKELETON23=$SKELETON23$(sed -f minhtml.sed _skeleton3.html)
+SKELETON4=$(sed -f minhtml.sed _skeleton4.html)
+SKELETON5=$(sed -f minhtml.sed _skeleton5.html)
+
 PAGEFILES=()
 
 for IX in "${PAGES[@]}"
@@ -26,17 +31,15 @@ do
 
 	echo $PF
 
-	sed -f minhtml.sed _skeleton1.html > $PF
+	echo $SKELETON1 > $PF
 	head -n1 $IX >> $PF
-	sed -f minhtml.sed _skeleton2.html >> $PF
-	echo $MINCSS >> $PF
-	sed -f minhtml.sed _skeleton3.html >> $PF
+	echo $SKELETON23 >> $PF
 	echo "<header><a href=\"$PF~INTERNALLINKINV~\">~LIGHTSOFF~</a></header>" >> $PF
 	echo $NAV >> $PF
 	sed -f tohtml.sed <$IX >> $PF
-	sed -f minhtml.sed _skeleton4.html >> $PF
+	echo $SKELETON4 >> $PF
 	sed -n '3p' <$IX >> $PF
-	sed -f minhtml.sed _skeleton5.html >> $PF
+	echo $SKELETON5 >> $PF
 done
 
 for FROM in "${PAGEFILES[@]}"
