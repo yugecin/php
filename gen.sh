@@ -26,6 +26,8 @@ sed -f tohtml.gen.sed < tohtml.source.sed > tohtml.sed
 # remove existing generated pages
 ls -1 *.html | grep -v "^_" | xargs rm
 
+echo "collecting blog"
+
 # make blog page (continues below)
 BLOGPAGE=pages/02_blog.txt
 cat pages/_02_blog_template.txt > $BLOGPAGE
@@ -45,7 +47,7 @@ do
 	OUTPUTFILE=${OUTPUTFILE/_/-}
 	OUTPUTFILE=blog-${OUTPUTFILE/.txt/.html}
 	TITLE=$(head -n 3 $IX | tail -n 1)
-	BLOGPOSTS=$BLOGPOSTS$'\n'"$TIMESTAMP $IX $OUTPUTFILE $TITLE"
+	BLOGPOSTS=$BLOGPOSTS$'\n'"$IX $OUTPUTFILE $TITLE"
 	DATE=$(date -d @$TIMESTAMP +"%0d %b %Y")
 	echo "{@li $DATE - {@ia=$OUTPUTFILE $TITLE}}" >> $BLOGPAGE
 done
@@ -58,6 +60,8 @@ readarray -t BLOGPOSTS <<<"$BLOGPOSTS"
 
 # collect pages
 mapfile -t PAGES < <(find pages/*.txt -maxdepth 1 -type f | grep -v "pages/_")
+
+echo "make nav and pre skeleton"
 
 # make nav
 NAV=
@@ -80,14 +84,12 @@ SKELETON5=$(sed -f minhtml.sed _skeleton5.html)
 BLOGTOP=$(sed -f tohtml.sed < blog/_top_template.txt)
 
 # make blog posts
+echo ""
 for IX in "${BLOGPOSTS[@]}"
 do
-	BLOGPOSTS=$BLOGPOSTS$'\n'"$TIMESTAMP $IX $OUTPUTFILE $TITLE"
-	TIMESTAMP=${IX%% *}
-	INPUTFILE=${IX#* }
-	OUTPUTFILE=${INPUTFILE#* }
+	INPUTFILE=${IX%% *}
+	OUTPUTFILE=${IX#* }
 	TITLE=${OUTPUTFILE#* }
-	INPUTFILE=${INPUTFILE%% *}
 	OUTPUTFILE=${OUTPUTFILE%% *}
 	echo "$INPUTFILE"
 	TOP=${BLOGTOP//~TITLE~/"$TITLE"}
