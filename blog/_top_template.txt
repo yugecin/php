@@ -1,0 +1,8 @@
+1
+2
+3
+4
+{@ia=blog.html blog} &gt; {@ia=~OUTPUTFILE~ ~TITLE~}
+
+{@h1 ~TITLE~ {@small {@ia=~INPUTFILE~ [txt]}}}
+

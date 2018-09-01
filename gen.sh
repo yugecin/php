@@ -31,12 +31,16 @@ mapfile -t _BLOGPOSTS < <(find blog/*.txt -maxdepth 1 -type f | grep -v "blog/_"
 BLOGPOSTS=
 for IX in "${_BLOGPOSTS[@]}"
 do
-	TS=$(head -n1 $IX)
-	if [[ "$TS" = "WIP" ]]
+	TIMESTAMP=$(head -n1 $IX)
+	if [[ "$TIMESTAMP" = "WIP" ]]
 	then
 		continue
 	fi
-	BLOGPOSTS=$BLOGPOSTS$'\n'"$TS $IX"
+	OUTPUTFILE=${IX##*/}
+	OUTPUTFILE=${OUTPUTFILE/_/-}
+	OUTPUTFILE=blog-${OUTPUTFILE/.txt/.html}
+	TITLE=$(head -n 3 $IX | tail -n 1)
+	BLOGPOSTS=$BLOGPOSTS$'\n'"$TIMESTAMP $IX $OUTPUTFILE $TITLE"
 done
 
 BLOGPOSTS=$(echo "$BLOGPOSTS" | tail -n +2 | sort -n)
@@ -67,13 +71,19 @@ SKELETON5=$(sed -f minhtml.sed _skeleton5.html)
 # make blog posts
 for IX in "${BLOGPOSTS[@]}"
 do
+	BLOGPOSTS=$BLOGPOSTS$'\n'"$TIMESTAMP $IX $OUTPUTFILE $TITLE"
+	TIMESTAMP=${IX%% *}
 	INPUTFILE=${IX#* }
-	PF=${INPUTFILE##*/}
-	PF=${PF/_/-}
-	PF=blog-${PF/.txt/.html}
-	echo "$PF"
-	#BLOGPOSTLIST+=(${IX%% *} $PF)
-	makepage "$PF" "$(tail -n +3 $INPUTFILE)"
+	OUTPUTFILE=${INPUTFILE#* }
+	TITLE=${OUTPUTFILE#* }
+	INPUTFILE=${INPUTFILE%% *}
+	OUTPUTFILE=${OUTPUTFILE%% *}
+	echo "$INPUTFILE"
+	TOP=$(sed -f tohtml.sed < blog/_top_template.txt)
+	TOP=${TOP//~TITLE~/"$TITLE"}
+	TOP=${TOP//~INPUTFILE~/"$INPUTFILE"}
+	TOP=${TOP//~OUTPUTFILE~/"$OUTPUTFILE"}
+	makepage "$OUTPUTFILE" "$(tail -n +3 $INPUTFILE)" "$TOP"
 done
 
 echo ""
