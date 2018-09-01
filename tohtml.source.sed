@@ -27,6 +27,9 @@
 	b begin
 }
 
+s/^\s\+//
+s/\s\+$//
+
 s/\\}/~ESCAPEDENDTAG~/g
 
 :moretags
