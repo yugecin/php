@@ -136,6 +136,11 @@ x
 /^@/ {
 	# peek next line to see if <p> needs to be closed
 	x
+	$ {
+		# eof, yes (last non-empty line is eof apparently)
+		s_$_</p>_
+		q
+	}
 	N
 	/\n$/ !{
 		# no, print previous pattern space and
