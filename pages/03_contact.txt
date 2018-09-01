@@ -4,5 +4,22 @@ contact
 --------------------------------------------------------------------------------
 {@h1 contact {@small {@ia=pages/03_contact.txt [txt]}}}
 
-contact here
+Here are some ways to contact me or places where you can find me on the net.
+
+{@ul 
+{@li {@a=https://github.com/yugecin GitHub: yugecin}}
+{@li {@a=https://twitter.com/yugecin26 Twitter: yugecin26}}
+{@li {@a=https://whatpulse.org/yugecin WhatPulse: yugecin} (if you want to
+register you can use my {@a=http://whatpulse.org/ref/316450 referral
+link})}
+{@li {@a=https://www.youtube.com/c/robin_be YouTube: robin_be}}
+{@li Discord: username: robin_be tag: 2125
+{@li IRC: robin_be on irc.exp-gaming.net}
+{@li E-mail (pick one, not for spam or advertising):
+{@ul 
+{@li local-part: yugecin domain: yandex.com}
+{@li local-part: robin domain: basdon.net}
+{@li local-part: robin domain: thisisgaming.org}
+}
+}
 
