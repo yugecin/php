@@ -1,5 +1,5 @@
 
-/<style>$/ {
+/<style>/ {
 	:morestyle
 	s/BLUELINK/#0000FF/g
 	s/BLACK/#000/g
@@ -8,7 +8,7 @@
 	s/LIGHTGREY/#e8e8e8/g
 	s/DARKGREY/#606060/g
 	n
-	/^<\/style>/ !{
+	/^<header>/ !{
 		b morestyle
 	}
 }

@@ -46,9 +46,7 @@ for FROM in "${PAGEFILES[@]}"
 do
 	TO=${FROM%.html*}_d.html
 
-	cat $FROM > $TO
-
+	sed -f applydarktheme.sed < $FROM > $TO
 	sed -i -f applylighttheme.sed $FROM
-	sed -i -f applydarktheme.sed $TO
 done
 
