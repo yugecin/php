@@ -86,9 +86,8 @@ do
 	makepage "$OUTPUTFILE" "$(tail -n +3 $INPUTFILE)" "$TOP"
 done
 
-echo ""
-
 # make pages
+echo ""
 for IX in "${PAGES[@]}"
 do
 	PF=${IX##*/*_}
@@ -98,6 +97,8 @@ do
 done
 
 # light and dark theme for every page
+echo ""
+echo "turning lights on and off"
 for FROM in "${PAGEFILES[@]}"
 do
 	TO=${FROM%.html*}_d.html
