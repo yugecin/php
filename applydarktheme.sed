@@ -1,7 +1,7 @@
 
 /<style>/ {
 	:morestyle
-	s/BLUELINK/#6060FF/g
+	s/BLUELINK/#9090FF/g
 	s/BLACK/#fff/g
 	s/WHITE/#000/g
 	#s/LIGHTGREY/#a8a8a8/g
