@@ -6,3 +6,5 @@
 
 {@h1 ~TITLE~ {@small {@ia=~INPUTFILE~ [txt]}}}
 
+<p class="pushup">{@small ~PUBDATE~}</p>
+

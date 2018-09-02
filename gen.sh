@@ -47,8 +47,8 @@ do
 	OUTPUTFILE=${OUTPUTFILE/_/-}
 	OUTPUTFILE=blog-${OUTPUTFILE/.txt/.html}
 	TITLE=$(head -n 3 $IX | tail -n 1)
-	BLOGPOSTS=$BLOGPOSTS$'\n'"$IX $OUTPUTFILE $TITLE"
 	DATE=$(date -d @$TIMESTAMP +"%0d %b %Y")
+	BLOGPOSTS=$BLOGPOSTS$'\n'"$DATE|$IX $OUTPUTFILE $TITLE"
 	echo "{@li $DATE - {@ia=$OUTPUTFILE $TITLE}}" >> $BLOGPAGE
 done
 
@@ -87,14 +87,17 @@ BLOGTOP=$(sed -f tohtml.sed < blog/_top_template.txt)
 echo ""
 for IX in "${BLOGPOSTS[@]}"
 do
-	INPUTFILE=${IX%% *}
-	OUTPUTFILE=${IX#* }
+	DATE=${IX%%|*}
+	INPUTFILE=${IX#*|}
+	OUTPUTFILE=${INPUTFILE#* }
 	TITLE=${OUTPUTFILE#* }
+	INPUTFILE=${INPUTFILE%% *}
 	OUTPUTFILE=${OUTPUTFILE%% *}
 	echo "$INPUTFILE"
 	TOP=${BLOGTOP//~TITLE~/"$TITLE"}
 	TOP=${TOP//~INPUTFILE~/"$INPUTFILE"}
 	TOP=${TOP//~OUTPUTFILE~/"$OUTPUTFILE"}
+	TOP=${TOP//~PUBDATE~/"$DATE"}
 	makepage "$OUTPUTFILE" "$(tail -n +3 $INPUTFILE)" "$TOP"
 done
 
