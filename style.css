@@ -52,6 +52,10 @@ nav a {
 a {
 	color: BLUELINK;
 }
+p.capt {
+	margin-top: -.75em;
+}
+p.capt,
 p.img {
 	text-align: center;
 	color: DARKGREY;

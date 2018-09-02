@@ -63,6 +63,15 @@ s/\\}/~ESCAPEDENDTAG~/g
 		b nexttag
 	}
 
+	/{@caption / {
+		H
+		g
+		s/\(.*\)\n.*$/\1\n<\/p>/
+		x
+		s/.*\n\(.*\){@caption \(.*\)/\1<p class="capt">\2/
+		b nexttag
+	}
+
 	/{@img=[^;]*;[^;]*;[^;]*;[^;]*}/ {
 		s_{@img=\([^;]*\);\([^;]*\);\([^;]*\);\([^;]*\)}_<p class="img"><img src="\1" alt="\2" title="\3"/><br/>\4</p>_
 		b nexttag
