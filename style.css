@@ -2,6 +2,7 @@ body {
 	font-family: 'Tahoma', 'arial', sans-serif;
 	max-width: 45em;
 	margin: 2em auto;
+	padding: 0 .75em;
 	background: WHITE;
 	color: BLACK;
 }
