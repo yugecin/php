@@ -19,6 +19,7 @@ code {
 	background: LIGHTGREY;
 }
 pre {
+	white-space: pre-wrap;
 	padding: 1em;
 	border: 2px solid DARKGREY;
 }
