@@ -111,6 +111,8 @@ do
 	makepage "$PF" "$(cat $IX)"
 done
 
+makepage "404.html" "$(cat pages/_404.txt)"
+
 # light and dark theme for every page
 echo ""
 echo "turning lights on and off"

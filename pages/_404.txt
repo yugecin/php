@@ -1,0 +1,9 @@
+404 Not Found
+
+04 Sep 2018
+--------------------------------------------------------------------------------
+{@h1 404 Not Found}
+
+There's nothing to be found on this URL. If you think this is my mistake,
+{@a=contact.html~INTERNALLINK~ contact me}.
+
