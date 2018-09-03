@@ -60,12 +60,12 @@ s/\\}/~ESCAPEDENDTAG~/g
 	#SIMPLETAG u
 	#SIMPLETAG blockquote
 
-	/{@small / {
+	/{@small\( \|$\)/ {
 		H
 		g
 		s/\(.*\)\n.*$/\1\n<\/span>/
 		x
-		s/.*\n\(.*\){@small \(.*\)/\1<span class="small">\2/
+		s/.*\n\(.*\){@small \?\(.*\)/\1<span class="small">\2/
 		b nexttag
 	}
 
@@ -88,21 +88,21 @@ s/\\}/~ESCAPEDENDTAG~/g
 		b nexttag
 	}
 
-	/{@ia=\([^ ]*\) / {
+	/{@ia=\([^ ]*\)\( \|$\)/ {
 		H
 		g
 		s/\(.*\)\n.*$/\1\n<\/a>/
 		x
-		s/.*\n\(.*\){@ia=\([^ ]*\) \(.*\)/\1<a href="\2~INTERNALLINK~">\3/
+		s/.*\n\(.*\){@ia=\([^ ]*\) \?\(.*\)/\1<a href="\2~INTERNALLINK~">\3/
 		b nexttag
 	}
 
-	/{@a=\([^ ]*\) / {
+	/{@a=\([^ ]*\)\( \|$\)/ {
 		H
 		g
 		s_\(.*\)\n.*$_\1\n</a><img src="moin-www.png" alt="globe icon" title="external link"/>_
 		x
-		s/.*\n\(.*\){@a=\([^ ]*\) \(.*\)/\1<a href="\2">\3/
+		s/.*\n\(.*\){@a=\([^ ]*\) \?\(.*\)/\1<a href="\2">\3/
 		b nexttag
 	}
 
