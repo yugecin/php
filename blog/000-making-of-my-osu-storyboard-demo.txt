@@ -1,0 +1,291 @@
+1535883433
+
+Making of my osu! storyboard demo
+
+02 Sep 2018
+--------------------------------------------------------------------------------
+{@img=blog/000/ytthumb.png;fragmented heart scene;YouTube thumbnail}
+
+{@h2 Links}
+
+{@ul
+  {@li {@a=https://youtube.com/watch?v=bOGJWGJOMOk YouTube video showing the \
+storyboard}}
+  {@li {@a=https://old.ppy.sh/b/1756941?m=0 Beatmap on osu! website}}
+  {@li {@a=https://github.com/yugecin/osusb1 GitHub repo}}
+  {@li {@a=https://github.com/yugecin/osusb1/releases GitHub releases}}
+}
+
+{@hr}
+
+{@h2 Prologue}
+
+First things first, if you don't know what {@a=https://osu.ppy.sh/home osu!} is,
+it's a rythm game where you have to click circles which are (hopefully) synced
+with the music playing. There are multiple game modes, but the circle clicking
+one (also called 'osu!standard') is the most popular one.
+
+Beatmaps (which basically contain the music & metadata and describe when and
+where circles, sliders, spinners, etc should be) can also include a video and/or
+a storyboard. A storyboard, in its bare essence, describes a series of images
+and each image can have a timed series of transformations that will be applied
+to it (positioning/rotating/scaling/coloring).
+
+If you're still completely in the dark, here's a nice video that shows what
+gameplay with a storyboard in the background looks like (epilepsy warning):
+{@a=https://www.youtube.com/watch?v=D112SbYXR3o YouTube: How beautiful can osu!
+REALLY be? - Episode 2 [Sweet Dreams]}. Everything that happens in the
+background is done using the storyboard. Amazing, right? Note that this is auto
+mode, it's not a human playing.
+
+{@h2 Backstory and timeline}
+
+{@blockquote
+robin_be: is anyone familiar with storyboarding?<br/>
+Emily | Sunpy: I am somewhat familiar with it. But I havent done any
+storyboarding in along time. But im guessing you are thinking about opsu
+port?<br/>
+robin_be: nah I'm planning something that's gonna fail miserably<br/>
+robin_be: what is an .osb file?
+}
+{@caption yeah... silly me in #offtopic in Knorke discord, July 12th 2017}
+
+{@h3 July 2017}
+
+I can't exactly remember why I wanted to try out storyboarding. I think it's
+because I wanted to try something different. If you recognize my username,
+you might be familiar with my osu! cursordance videos. I made a few of those,
+after being amazed by the work by
+{@a=https://www.youtube.com/user/MrRheinerZufall MrRheinerZufall}. (This was
+back in mid-2016). (I even
+forked {@a=https://github.com/itdelatrisu/opsu opsu!} into {@a=https://github\
+.com/yugecin/opsu-dance opsu!dance} to add cursordance-y stuff to it). I tried
+to add something new or original into every video. If I didn't do that, every
+video felt basically the same to me, and I don't like that. I hate seeing or
+hearing the same thing over and over again. I don't listen to the (mainstream)
+radio because after a while you notice they're always playing the same songs.
+I don't understand how other people can stand that. Anyways, trying to have
+something fresh every new video was getting pretty hard since I would say I'm
+not really a person with lots of creativity. So I guess one day I just
+randomly thought about doing something with storyboards.
+
+I'm an avid follower of {@a=https://en.wikipedia.org/wiki/Demoscene the
+demoscene} and the first idea I had (I think) was to try to remake the demo
+{@a=https://www.youtube.com/watch?v=UYU5POqHdeA "What are you syncing about?"
+by Ninjadev}, or at least some of the 2d parts. I saw it being released on the
+live stream of the Revision 2017 demoparty. It was very nice to watch and it
+looked like it would be possible to remake some of the parts in an osu!
+storyboard. Especially the spaceship part that starts at 1m15s would be very
+nice to see. I managed to hand-write storyboard commands to make everything
+(except for the cubes and text) up to the 30s mark. The 3d pink-ish 'floor'
+was pretty easy to fake with a few rectangular sprites. But the cubes are a
+different story.
+
+I had to get the cubes working. Otherwise there would be nothing special at
+all about my storyboard. After all, it doesn't really have a story or
+complements the beatmap that goes with it, because I wasn't going to make
+a beatmap, just a storyboard. So it had to have at least something that would
+be considered an 'achievement' or something that hasn't been done before. I
+made some kind of helper program that would draw a wireframe cube which I
+could rotate to try to match the cube in the video.
+
+{@img=blog/000/20170715.png;program that draws a wireframe cube and has user \
+controls on the right to change the cube's position and angles;;Yeah that \
+looks horrible.}
+
+I tried but the result looked horrible. The main culprit was that I thought
+that move commands did not allow decimal numbers (spoiler: it does), which
+is pretty essential if you want to have a good-looking wireframe cube. I blame
+the osu!wiki for this. For some reason it stated that move commands do not
+allow decimals. (I've submitted a pull request:
+{@a=https://github.com/ppy/osu-wiki/pull/1660 osu-wiki PR#1660} to fix this).
+I think I did try to use decimal numbers, but it gave an error when osu! tried
+to parse the storyboard. Decimals {@i are} allowed, so osu! shouldn't throw an
+error. I guess it's either a false memory or I managed to mess up something else
+that made the command invalid.
+
+{@img=blog/000/decimals.png;the move command specification on the osu!wiki, \
+with a highlight on text that says decimals are not allowed;seriously?;I \
+curse whoever wrote this.}
+
+After failing that I think I just ditched the project, because it wasn't going
+anywhere. No cubes, no glory.
+
+{@blockquote meh apparently doing 3d stuff in storyboards is quite hard}
+{@caption robin_be - July 16, 2017}
+
+{@h3 February 2018}
+
+After 7 months, I started looking into this again. Not sure how and why, that's
+just what my git log says. On the 25th I made the first commit in that
+repository, and it already had the projection code I would use for the rest of
+this project. (More on that in the next section). Two days later I had a
+wireframe cube storyboard that looked horrible because, again, I still didn't
+know decimals were allowed in move commands. (Also I didn't scale the line width
+down to 1 pixel so it looked extra bad).
+
+{@img=blog/000/20180227.gif;a rotating wireframe cube but the lines don't \
+connect and jump around;;It's a cube, but it doesn't look really good.}
+
+{@h3 March 2018}
+
+I then had the idea of making a large grid of pixels to make a cube. I think.
+At least that's what happened, but I don't remember what I was thinking at that
+time.
+
+{@img=blog/000/20180304.gif;a rotating opaque pixelated cube;;An actual cube, \
+amazing.}
+
+It looked pretty good. It was relatively small, too. There were a few artifacts
+though. Sometimes a few pixels would stay black for a frame when they should
+change color. This was because I already tried to save some bytes, but it was
+done in a way that basically said that the color should be black for 0
+milliseconds, and somehow it actually showed black when running it. This was
+fixed (way) later when Emily gave me some pointers on compressing.
+
+{@blockquote this may have potential}
+{@caption robin_be - March 4, 2018}
+
+{@h3 May 2018}
+
+After more weeks of hibernation and very low activity, I used some FFT output
+for an attempt to make a 3d spectrum. The result is... a spectrum, but too low
+quality to actually use. I could of course decrease the pixel size, but that
+would enlarge the storyboard size. That was something to worry for later though,
+first I needed more things to actually make something that would be interesting.
+
+{@img=blog/000/20180517.gif;a rotating pixelated 3d spectrum;;Every good \
+storyboard needs a spectrum right?}
+
+On a very sunny sunday, I went outside and spent a good two hours solving my
+rubik's cube. The reason it took so long was because I was trying to note down
+every move I made, so I can use that to scramble and solve a rubik's cube in the
+storyboard. But I kept messing up, either by writing down wrong moves, or
+messing up while redoing the moves I wrote down. Eventually I have a series of
+moves that split up into two branches, then came together again, only to be
+split again in two branches. So then I had to figure out what parts of what
+branches were correct. I didn't want to start over again because this scramble
+and solution didn't have many moves and I knew I had to keep the amount of
+moves low so that the rubik's cube scene wouldn't become too long. So yeah, two
+(if not more) hours...
+
+{@img=blog/000/20180506.jpg;garden with 2 chairs, one having a notebook and a \
+rubik's cube on it;;What a nice day that was.}
+
+One other shape I had in mind was a torus. It was relatively easy to generate
+points to make one, as expected. The result came out to be pretty nice.
+
+{@img=blog/000/31052018.jpg;a pixelated green torus;;Anyone fancy a torus?}
+
+{@h3 June 2018}
+
+As for song choice, I had been looking at some tracks by Renard and lapfox
+tracks etc in an attempt to find something energetic that would fit with a
+demoscene-y storyboard. To get some inspiration for what to do in my
+storyboard, I was regulary looking at {@a=https://www.youtube.com/playlist?\
+list=PLzAbz5PweIWTtwwGhznh1Y6cvlo_Oo8RE BGA videos}. Eventually I stumbled
+upon {@a=https://www.youtube.com/watch?v=xJqN4RUyxIE sky_delta - Exordium}. This
+seemed like a really nice song to complement a demo-ish storyboard, so this
+became my new pick. It also gave me some new ideas of things I could do (does
+the tetrahedron flying through the tunnel look familiar?).
+
+{@h3 July 2018}
+
+In July, I flew to Norway and went to the {@a=http://www.solskogen.no \
+Solskogen demoparty} together with Emily (best few days of my life \o/). While
+being there, I told her what I was trying to do and showed what I had, which was
+basically only a pixelated cube and a shaded torus. It was kind of funny when I
+explained that I was basically coloring pixel sprites in order to display a
+spinning cube... :D.
+
+About two weeks after that, things really took off. Emily tried to make a
+wireframe cube. I was pretty sure it wasn't going to work, since I still
+believed that decimals weren't possible in move commands, so I thought it
+couldn't possibly look good. She took some old javascript code to draw a 3d
+cube and took that as base to generate a short storyboard. We were in a call
+at that time and I was helping a bit with the math aspect. It was getting pretty
+late so I went to bed. The next day when I opened Discord, I was greeted with
+the following picture and an accompanying storyboard file.
+
+{@img=blog/000/27072018.png;a 3d wireframe cube in osu!;;Yup, that's one good \
+looking cube.}
+
+Seeing that was a magic moment to me. All I had seen before was my own attempt,
+which was horrible. Now Emily made a cube with lines that are joined perfectly.
+It was amazing.
+
+{@blockquote fuck me for thinking it's not possible}
+{@caption robin_be - July 27, 2018}
+
+Barely a day later Emily found a method of making opaque surfaces. After that
+I basically worked on it every day, because now I knew it was possible to do
+some more awesome things. Also because I finally managed to fix the whole
+rubik's cube movement code. It took me a looooong time to get that right and
+it was very demotivating since nothing I thought of seemed to work.
+
+{@img=blog/000/commits.png;commit graph of the project, it has a little spike \
+around May and June, and a huge spike at the end of July and mid August;;\
+Commit history of the project's repository.}
+
+{@h2 Techniques}
+
+{@blockquote (times I have been fucked by C# treating a comma as decimal
+separator for float.Parse() and using a . as thousand separator)++}
+{@caption robin_be - March 4, 2018}
+
+For some reason C# (or .NET in general?) parses floats by using the 'Region
+and Language' that has been setup in the control panel. In my case, that
+means it would use a {@code ,} as decimal separator and a {@code .} as
+thousand separator. It's a pretty easy fix but for some reason it usually
+takes me a while to realize that that's what causing the weird
+{@code float.Parse} behavior that I'm seeing.
+
+<pre>
+var c = (CultureInfo) Thread.CurrentThread.CurrentCulture.Clone();
+c.NumberFormat.NumberDecimalSeparator = ".";
+Thread.CurrentThread.CurrentCulture = c;
+</pre>
+{@caption Take that, annoying region and language settings!}
+
+
+
+
+{@blockquote "use the tools that you have" on a whole new level}
+
+{@h2 Variables}
+
+compression, leave out end values, fixed some bugs I had by trying to reduce color 0, 0, 0
+
+{@h3 Staircase of death}
+
+{@h3 Stable vs Lazer}
+
+Only sequential nesting is possible when using variables. However, in Lazer,
+proper nesting seems to be supported.
+
+{@h2 Shorthand discoveries}
+
+when looking at wiki, shorthands notices, checked github, found page
+
+This page about shorthands is not linked anywhere on the wiki though, so it's
+very hard to find. To be more precise, it is linked on the Sitemap page, but
+that page is not linked anywhere. But wait, there's more! The Sitemap page is
+linked from a page named {@code Main_Page}, but that page doesn't even exist
+on the live version, it only exists in the osu!wiki repository. I don't even...
+I made a pull request: {@a=https://github.com/ppy/osu-wiki/pull/1661 osu-wiki \
+PR#1661} to add a link to the shorthand page, so hopefully that will be fixed
+soon.
+
+{@blockquote also, turns out writing a blogpost takes a long while &lt;.&lt;}
+{@caption robin_be - September 3, 2018}
+
+{@h2 Related work}
+
+dualife, flower trip, (others I can't remember atm)
+
+those had 3d wireframe objects, back in 2016. I found out about them when I
+was almost finished with my storyboard. I wish I saw them earlier, so I would
+know that decimals in move commands are allowed. Still, bad from my end that
+I didn't try enough to actually see if it was possible.
+
+
