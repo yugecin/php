@@ -194,9 +194,9 @@ the tetrahedron flying through the tunnel look familiar?).
 In July, I flew to Norway and went to the {@a=http://www.solskogen.no \
 Solskogen demoparty} together with Emily (best few days of my life \o/). While
 being there, I told her what I was trying to do and showed what I had, which was
-basically only a pixelated cube and a shaded torus. It was kind of funny when I
-explained that I was basically coloring pixel sprites in order to display a
-spinning cube... :D.
+basically only a pixelated cube and a shaded torus. It was kind of a funny
+moment when I explained that I was basically coloring pixel sprites in order to
+display a spinning cube... :D.
 
 About two weeks after that, things really took off. Emily tried to make a
 wireframe cube. I was pretty sure it wasn't going to work, since I still
@@ -227,7 +227,163 @@ it was very demotivating since nothing I thought of seemed to work.
 around May and June, and a huge spike at the end of July and mid August;;\
 Commit history of the project's repository.}
 
-{@h2 Techniques}
+In the beginning og August, the song of choice changed one last time. I am
+subscribed to a YouTube channel named {@a=https://www.youtube.com/user/\
+jjbbllkk Red Means Recording} because the person behind it makes some
+interesting videos wherein he makes music using some interesting synthesizer
+things (I don't actually know much about it, but I like what he's creating...).
+One day he uploaded this video:
+{@a=https://www.youtube.com/watch?v=sM0flzYWjcs I Made YouTube Library Music \
+For You}. I took a look at it, because why not, and it had a few songs that I
+though were suitable as music for this project. When I heard "Flex", I
+instantly thought I found something. It has some nice buildups, which can be
+useful for demo-ish stuffs, and it's a pretty nice song overall. It is a bit
+long, but I figured I didn't have to fill the entire length. It ended up being
+the song for the final version.
+
+{@h2 Techniques and approach}
+
+To make life easier, I made two important (no-brainer) decisions before even
+starting. One was that I was not just going something that would dump out
+storyboard commands, but a program that would actually render what I was coding.
+It would be incredibly time consuming and stupid if I had to export the
+storyboard and check in osu! everytime I did a little change. Not only that,
+but there's zero chance that I would get the storyboard commands correctly from
+the start, so that would make debugging very tedious and even more time
+consuming.
+
+The other decision was that everything had to be deterministic. By that I mean
+that I should just be able to give a certain timestamp, and the program should
+calculate the result that should be visible on that specific timestamp. This
+means no state at all. It would be very stupid to not do it this way, because
+jumping around in time would mess up everything.
+
+<pre>
+float startx = 100;
+float endx = 500;
+int endtime = 3000;
+Cube cube = new Cube(startx, 0, 0);
+void draw(int time) {
+	cube.position.x += (endx - startx) / endtime;
+	cube.draw();
+}
+</pre>
+{@caption Pseudocode, moving a cube the wrong (non-deterministic) way.}
+
+In the example above, if you would want to see what the scene looks like at time
+2000, you would need to draw the scene for every millisecond until you get at
+time 2000. Otherwise the cube's position won't be correct, since it wouldn't
+have done the movements that are being made in the previous frames. This also
+means it's not possible to go back in time.
+
+By using the code in the example below, you can seek as much as you want. The
+cube's position will always be correct for the given time, since it only depends
+on the time value and not on how many times the scene has rendered before.
+
+<pre>
+float startx = 100;
+float endx = 500;
+int endtime = 3000;
+Cube cube = new Cube(startx, 0, 0);
+void draw(int time) {
+	float progress = time / endtime;
+	cube.position.x = (endx - startx) * progress;
+	cube.draw();
+}
+</pre>
+{@caption Pseudocode, moving a cube the correct (deterministic) way.}
+
+That being said, generating all the storyboard commands works by rendering the
+scenes from start to end while collecting information about every object's
+position.
+
+{@h3 Application}
+
+{@img=blog/000/app.gif;gif showing the application with the tunnel + spectrum \
+scene, demonstrating how the camera can be rotated by dragging the mouse\
+;;Looking around in the tunnel + spectrum scene}
+
+I decided to make the program in C#. I'm more familiar with Java, but C#
+seemed like the obvious choice since making GUI stuff is very easy using Visual
+Studio. Stuff like mouse handling and events is also more straight forward in
+C# so I didn't even really consider using Java.
+
+The GUI itself is pretty simple. No need for anything complicated. The most
+important parts are the {@code PictureBox} where everything gets rendered and
+the {@code NumericUpDown} control in the bottom left, to change the time. There
+are also quite a few {@code TrackBar}s at the right, which can be used anywhere
+in the code to change values to test without having to recompile and restart
+the program. I didn't end up using it much at all though. I think the only time
+I really had to use it was to get the rotation movements correct in the very
+first scene with the wireframe cube and text.
+
+Mouse dragging events in the preview rectangle were saved so scenes could use
+that data to change angles, effectively allowing me to 'look around' in the
+world.
+
+{@img=blog/000/app2.gif;gif showing the application with the 'Emily' 3D text \
+scene, demonstrating object movement with sliders and camera movement with \
+mouse;;Moving Emily around :3c}
+
+{@h3 Scenes}
+
+The whole storyboard is divided in different scenes. For example, the tunnel
+is one scene, the rubik's cube is in a different scene, ... Each scene has its
+own start and stop time, so it will only be rendered if the current time falls
+inbetween that. Additionally, each scene has its own framedelta, so scenes can
+be rendered at a different FPS. Example: the heart is rendered at 7.4 FPS
+while the torus field gets 20 FPS.
+
+Two scenes actually have a non-constant FPS. The tunnel scene starts with a
+framedelta of 900 so that it will have one frame at the start and one frame
+after the tunnel has flown in. That makes the fly-in effect look smooth because
+it's a single interpolation between 2 frames. After that, its framedelta
+changes to 300.
+
+The torus field scene starts with a framedelta so that the second frame will
+be in sync with the audio, then it changes its framedelta so the third frame
+will be in sync with the audio, and then it changes the framedelta once more
+to the normal value to have a nice fps.
+
+{@h4 Phantom frames}
+
+Once I started interpolating sprites, an issue showed up. See the picture below.
+The left image is one frame, the right image is the next frame. The image in
+the middle is what happens between those frames. All the squares are being
+interpolated from frame 1's position to the position they should be in frame 2.
+The problem is that some squares that are not visible in frame 1 should suddenly
+become visible while they're being transitioned into frame 2's position. But of
+course they aren't becoming visible since there's no frame that processes it at
+that point in time.
+
+{@img=blog/000/cubs.png;3 captures of the rukbik's cube scene, the 2nd capture \
+has missing pixels on a part that is moving;;Black hole warning.}
+
+The solution I made was to introduce so-called "phantom frames". Frames that
+don't really exist. Every scene now also has a phantom framedelta. For most
+scenes, the value is the same as the framedelta because it doesn't need phantom
+processing. When generating the storyboard commands at the end, every phantom
+frame is being examined to check if it introduces an object that wasn't visible
+before. If it does, that phantom frame is "promoted" to a real frame. All the
+other phantom frames are just being dropped.
+
+{@h3 Exporting to storyboard}
+
+{@img=blog/000/export.png;image of the console showing how many Kb each scene \
+is, and usage count of sprites and ease commands;;The output when exporting \
+to a storyboard file.}
+
+{@h3 Type 'library'}
+
+{@h3 3d projection}
+
+{@h3 Rasterisation}
+
+{@h3 Opaque surfaces}
+
+{@h3 FFT}
+
+{@h3 Font rendering}
 
 {@blockquote (times I have been fucked by C# treating a comma as decimal
 separator for float.Parse() and using a . as thousand separator)++}
@@ -252,18 +408,19 @@ Thread.CurrentThread.CurrentCulture = c;
 
 {@blockquote "use the tools that you have" on a whole new level}
 
-{@h2 Variables}
+{@h2 Compression}
 
-compression, leave out end values, fixed some bugs I had by trying to reduce color 0, 0, 0
+{@h3 Line endings}
 
-{@h3 Staircase of death}
+{@h3 Sprite names}
 
-{@h3 Stable vs Lazer}
+{@h3 Sprite sizes}
 
-Only sequential nesting is possible when using variables. However, in Lazer,
-proper nesting seems to be supported.
+{@h3 End time and end values}
 
-{@h2 Shorthand discoveries}
+{@h3 Shorthand discoveries}
+
+(the things in end time and end values are also shorthands)
 
 when looking at wiki, shorthands notices, checked github, found page
 
@@ -276,8 +433,25 @@ I made a pull request: {@a=https://github.com/ppy/osu-wiki/pull/1661 osu-wiki \
 PR#1661} to add a link to the shorthand page, so hopefully that will be fixed
 soon.
 
-{@blockquote also, turns out writing a blogpost takes a long while &lt;.&lt;}
-{@caption robin_be - September 3, 2018}
+{@h3 Enum members}
+
+{@h3 Variables}
+
+compression, leave out end values, fixed some bugs I had by trying to reduce color 0, 0, 0
+
+{@img=blog/000/minify.png;image of the console showing variable process \
+progress and the top variable replacements;;The output when minifying using \
+variables.}
+
+{@h4 Staircase of death}
+
+{@blockquote we should call this the staircase of death}
+{@caption Emily - August 26, 2018}
+
+{@h4 Stable vs Lazer}
+
+Only sequential nesting is possible when using variables. However, in Lazer,
+proper nesting seems to be supported.
 
 {@h2 Related work}
 
@@ -287,5 +461,10 @@ those had 3d wireframe objects, back in 2016. I found out about them when I
 was almost finished with my storyboard. I wish I saw them earlier, so I would
 know that decimals in move commands are allowed. Still, bad from my end that
 I didn't try enough to actually see if it was possible.
+
+{@hr}
+
+{@blockquote also, turns out writing a blogpost takes a long while &lt;.&lt;}
+{@caption robin_be - September 3, 2018}
 
 
