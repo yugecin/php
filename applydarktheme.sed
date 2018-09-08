@@ -5,7 +5,8 @@
 	s/BLACK/#fff/g
 	s/WHITE/#000/g
 	#s/LIGHTGREY/#a8a8a8/g
-	s/LIGHTGREY/#171717/g
+	#s/LIGHTGREY/#171717/g
+	s/LIGHTGREY/#272727/g
 	s/DARKGREY/#9f9f9f/g
 	n
 	/^<header>/ !{
