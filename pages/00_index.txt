@@ -20,5 +20,6 @@ repo of this site} (or browse on here if you know the urls ;)).
 
 Ehm well I recently found {@a=https://spoonm.org/ spoonm's webpage} and I
 liked how it was made and I suppose I consciously and subconsciously made
-something that looks very similar to it :s
+something that looks very similar to it :s Probably also because I'm keeping
+this very minimal and there aren't many ways to do that I guess.
 
