@@ -160,7 +160,7 @@ storyboard needs a spectrum right?}
 On a very sunny sunday, I went outside and spent a good two hours solving my
 rubik's cube. The reason it took so long was because I was trying to note down
 every move I made, so I can use that to scramble and solve a rubik's cube in the
-storyboard. But I kept messing up, either by writing down wrong moves, or
+storyboard. But I kept messing up, either by writing down wrong moves, or by
 messing up while redoing the moves I wrote down. Eventually I have a series of
 moves that split up into two branches, then came together again, only to be
 split again in two branches. So then I had to figure out what parts of what
@@ -170,7 +170,7 @@ moves low so that the rubik's cube scene wouldn't become too long. So yeah, two
 (if not more) hours...
 
 {@img=blog/000/20180506.jpg;garden with 2 chairs, one having a notebook and a \
-rubik's cube on it;;What a nice day that was.}
+rubik's cube on it;;What a beautiful day that was.}
 
 One other shape I had in mind was a torus. It was relatively easy to generate
 points to make one, as expected. The result came out to be pretty nice.
@@ -345,16 +345,82 @@ be in sync with the audio, then it changes its framedelta so the third frame
 will be in sync with the audio, and then it changes the framedelta once more
 to the normal value to have a nice fps.
 
+Note that this fps thing only applies when exporting to a storyboard, so it
+doesn't affect the preview in the application.
+
+{@h3 Exporting to storyboard}
+
+As I kind of mentioned before, generating the storyboard is done by rendering
+the scenes every 5 milliseconds, starting from the scene with the earliest
+starttime to the scene with the latest endtime. While this is happening,
+sprites and commands are being generated and saved into lists.
+
+{@h4 Generating commands}
+
+Looking closer at the code, there is an {@code Odot} class (Object: dot), which
+is used to track a dot. Other objects are {@code Orect} for rectangles (3d
+rectangles so actually just 4 point filled polygons), {@code Otri} (which is
+not used directly, each {@code Orect} makes 4 of these: see
+{@ia=#opaque_surfaces opaque surfaces}) and {@code Oline} for a line between two
+points. There's also {@code Odottedrect} which makes a field of {@code Odot}s
+inside a rectangle (this is only used in the {@ia=#rubikscube rubik's cube \
+scene}).
+
+<pre>
+Odot dot;
+void draw(SCENE scene) {
+	float angle = scene.progress * 20f;
+	vec3 pos = v3(30f * sin(angle), 20f * cos(angle), 20f);
+	vec3 color = v4(1f, 0f, scene.progress, 1f);
+	float size = 12f;
+	vec4 p = project(pos);
+	if (p.w < 300f) {
+		dot.update(scene.time, color, p.xy, size);
+	} else {
+		dot.update(scene.time, null, null, size);
+	}
+	dot.draw(scene.graphics);
+}
+</pre>
+
+While this is happening, the
+position of every rendered object is saved into a structure that represents a
+move command, which then is saved into a list that contains all the move
+{@b REWRITE THIS}
+commands for that object. But before the command for that time is added to the
+list, it's being checked if it differs from the previous command. If the
+position doesn't change, it's not necessary to add another move command because
+the sprite would already be in the correct position. Note that this also
+depends on how much decimals are configured to be printed at the time of
+processing that object, because that is pretty much configurable per scene and
+object. The same happens for rotating, scaling, coloring and fading.
+
+By working this way, the scenes only have to alter the objects and not worry
+about how the storyboard commands should be generated.
+
+// TODOFDKL
+
+{@h4 Rounding decimal values}
+
+stack
+
+{@h4 Adding interpolation}
+
 {@h4 Phantom frames}
 
-Once I started interpolating sprites, an issue showed up. See the picture below.
-The left image is one frame, the right image is the next frame. The image in
-the middle is what happens between those frames. All the squares are being
+An issue showed up once I started interpolating sprites, as shown in the picture
+below. The left image is one frame, the right image is the next frame. The image
+in the middle is what happens between those frames. All the squares are being
 interpolated from frame 1's position to the position they should be in frame 2.
 The problem is that some squares that are not visible in frame 1 should suddenly
 become visible while they're being transitioned into frame 2's position. But of
 course they aren't becoming visible since there's no frame that processes it at
 that point in time.
+
+The same effect is also visible in the right image. The grey surface in between
+the cube's sections should still be visible. But this is a capture between that
+frame and the next frame, and since that grey surface is not visible in the next
+frame, it is already invisible because there's no position to interpolate to.
 
 {@img=blog/000/cubs.png;3 captures of the rukbik's cube scene, the 2nd capture \
 has missing pixels on a part that is moving;;Black hole warning.}
@@ -367,7 +433,16 @@ frame is being examined to check if it introduces an object that wasn't visible
 before. If it does, that phantom frame is "promoted" to a real frame. All the
 other phantom frames are just being dropped.
 
-{@h3 Exporting to storyboard}
+The same applies to the reverse problem, when objects don't stay long enough
+because they disappear between frames. In that case, the last frame is used as
+the end position, even if it's a phantom frame.
+
+
+{@h4 Combining multiple fade/scale commands}
+
+{@h4 Default value quirk}
+
+{@h4 Output report}
 
 {@img=blog/000/export.png;image of the console showing how many Kb each scene \
 is, and usage count of sprites and ease commands;;The output when exporting \
@@ -380,6 +455,8 @@ to a storyboard file.}
 {@h3 Rasterisation}
 
 {@h3 Opaque surfaces}
+
+{@h3 Opaque 3d objects}
 
 {@h3 FFT}
 
@@ -407,6 +484,8 @@ Thread.CurrentThread.CurrentCulture = c;
 
 
 {@blockquote "use the tools that you have" on a whole new level}
+
+{@h2 Scene breakdown}
 
 {@h2 Compression}
 
@@ -447,6 +526,8 @@ variables.}
 
 {@blockquote we should call this the staircase of death}
 {@caption Emily - August 26, 2018}
+
+{@h5 Upload failure}
 
 {@h4 Stable vs Lazer}
 
