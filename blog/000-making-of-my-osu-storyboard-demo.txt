@@ -18,6 +18,12 @@ storyboard}}
 
 {@hr}
 
+{@h2 Contents}
+
+~INDEXGOESHERE~
+
+{@hr}
+
 {@h2 Prologue}
 
 First things first, if you don't know what {@a=https://osu.ppy.sh/home osu!} is,
@@ -363,7 +369,7 @@ rectangles so actually just 4 point filled polygons), {@code Otri} (which is
 not used directly, each {@code Orect} makes 4 of these: see
 {@ia=#opaque_surfaces opaque surfaces}) and {@code Oline} for a line between two
 points. There's also {@code Odottedrect} which makes a field of {@code Odot}s
-inside a rectangle (this is only used in the {@ia=#rubikscube rubik's cube \
+inside a rectangle (this is only used in the {@ia=rubikscube #Rubik's cube \
 scene}).
 
 <pre>
@@ -374,7 +380,7 @@ void draw(SCENE scene) {
 	vec3 color = v4(1f, 0f, scene.progress, 1f);
 	float size = 12f;
 	vec4 p = project(pos);
-	if (p.w < 300f) {
+	if (p.w &lt; 300f) {
 		dot.update(scene.time, color, p.xy, size);
 	} else {
 		dot.update(scene.time, null, null, size);

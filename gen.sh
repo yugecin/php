@@ -99,6 +99,9 @@ do
 	TOP=${TOP//~OUTPUTFILE~/"$OUTPUTFILE"}
 	TOP=${TOP//~PUBDATE~/"$DATE"}
 	makepage "$OUTPUTFILE" "$(tail -n +3 $INPUTFILE)" "$TOP"
+	sed -i "$OUTPUTFILE" -f indexgen.sed
+	sed -i "$OUTPUTFILE" -f indexcpy.sed
+	rm INDEX
 done
 
 # make pages
