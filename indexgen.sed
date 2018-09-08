@@ -6,6 +6,7 @@
 	h
 	s_^<h[1-6]>\(.*\)</h[1-6]>$_\1_
 	s/^\([^<]*\)<.*$/\1/
+	# this should be the same as the {@#= tag process regex in tohmlt.source.sed!
 	s/[^a-zA-Z0-9\-_.]//g
 	s/$/~END~/
 	G

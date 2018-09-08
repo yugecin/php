@@ -106,6 +106,21 @@ s/\\}/~ESCAPEDENDTAG~/g
 		b nexttag
 	}
 
+	/{@#=.*|/ {
+		H
+		s/^.*{@#=//
+		s/|.*$//
+		# this should be the same as the regex in indexgen.sed!
+		s/[^a-zA-Z0-9\-_.]//g
+		s/^/~~@#~~/
+		H
+		g
+		s_\(.*\)\n.*$_\1\n</a>_
+		x
+		s/.*\n\(.*\){@#=\([^|]*\)| \?\(.*\)~~@#~~\(.*\)$/\1<a href="#\4">\3/
+		b nexttag
+	}
+
 	/{@hr}/ {
 		s_{@hr}_<hr/>_
 		b nexttag
