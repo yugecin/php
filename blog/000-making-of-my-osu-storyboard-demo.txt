@@ -233,7 +233,7 @@ it was very demotivating since nothing I thought of seemed to work.
 around May and June, and a huge spike at the end of July and mid August;;\
 Commit history of the project's repository.}
 
-In the beginning og August, the song of choice changed one last time. I am
+In the beginning of August, the song of choice changed one last time. I am
 subscribed to a YouTube channel named {@a=https://www.youtube.com/user/\
 jjbbllkk Red Means Recording} because the person behind it makes some
 interesting videos wherein he makes music using some interesting synthesizer
@@ -361,8 +361,6 @@ the scenes every 5 milliseconds, starting from the scene with the earliest
 starttime to the scene with the latest endtime. While this is happening,
 sprites and commands are being generated and saved into lists.
 
-{@h4 Generating commands}
-
 Looking closer at the code, there is an {@code Odot} class (Object: dot), which
 is used to track a dot. Other objects are {@code Orect} for rectangles (3d
 rectangles so actually just 4 point filled polygons), {@code Otri} (which is
@@ -375,42 +373,147 @@ scene}).
 <pre>
 Odot dot;
 void draw(SCENE scene) {
-	float angle = scene.progress * 20f;
-	vec3 pos = v3(30f * sin(angle), 20f * cos(angle), 20f);
-	vec3 color = v4(1f, 0f, scene.progress, 1f);
-	float size = 12f;
+	float angle = scene.progress * 7f;
+	vec3 pos = v3(30f * sin(angle), 20f * cos(angle), 100f);
+	vec4 color = v4(1f, 0f, scene.progress, 1f);
+	float size = 6f + 2f * scene.progress;
 	vec4 p = project(pos);
-	if (p.w &lt; 300f) {
-		dot.update(scene.time, color, p.xy, size);
+	if (p.w > 95f) {
+		dot.update(scene.time, color, p, size);
 	} else {
 		dot.update(scene.time, null, null, size);
 	}
-	dot.draw(scene.graphics);
+	dot.draw(scene.g);
 }
 </pre>
+{@caption Sample scene that draws a dot spinning in 3d space.}
 
-While this is happening, the
-position of every rendered object is saved into a structure that represents a
-move command, which then is saved into a list that contains all the move
-{@b REWRITE THIS}
-commands for that object. But before the command for that time is added to the
-list, it's being checked if it differs from the previous command. If the
-position doesn't change, it's not necessary to add another move command because
-the sprite would already be in the correct position. Note that this also
-depends on how much decimals are configured to be printed at the time of
-processing that object, because that is pretty much configurable per scene and
-object. The same happens for rotating, scaling, coloring and fading.
+This example scene has only one dot. It spins around in 3d space (but this is
+not really noticable), the color changes from red at the start to magenta at
+the end, and it grows from {@code 6} units to {@code 8} units in size. The dot
+only shows if its distance to the camera is more than {@code 95} units (the
+{@code w} component of a {@code vec4} projection result gets set to the
+distance from the projected point to the camera).
 
-By working this way, the scenes only have to alter the objects and not worry
-about how the storyboard commands should be generated.
+The {@code dot.draw} method is only needed to draw the dot inside the preview in
+the application, it doesn't do anything during exporting.
 
-// TODOFDKL
+<pre>
+Sprite,Foreground,Centre,d,0,0
+_M,0,0,,320,224
+_C,0,0,,255,0,0
+_M,0,100,,396.6,224
+_C,0,100,,255,0,25
+_M,0,200,300,450.7,224
+_C,0,200,,255,0,51
+_S,0,200,,1.1
+Sprite,Foreground,Centre,d,0,0
+_M,0,700,,190.1,224
+_C,0,700,,255,0,178
+_S,0,700,,1.2
+_M,0,800,,245.1,224
+_C,0,800,,255,0,204
+_S,0,800,,1.3
+_M,0,900,1000,321.9,224
+_C,0,900,,255,0,229
+</pre>
+{@caption Scene above exported to a storyboard.}
 
-{@h4 Rounding decimal values}
+Note: this storyboard code is partially compressed, see {@#=Compression| \
+compression} for more information.
 
-stack
+This scene was set to have a framedelta of {@code 100}. The resulting storyboard
+has 2 sprites to represent this single dot. This is because the dot is not
+visible during some time (when the distance to the camera is less than or equal
+to {@code 95} units, as written in the scene's code). It is of course possible
+to just hide the sprite and reuse it later when it becomes visible again. I did
+this in the beginning, but the generated storyboard is larger when doing this as
+opposed to just ditching the old sprite and making a new one when needed again.
+
+Every time {@code dot.update} was called, it checked for every property
+(position, color, opacity, scale) if the value is too different from the value
+in the previous command. If so, it will generate a new command for the property
+and add it to the list of commands. This is noticable for the scale command.
+While there are move and color commands for every frame, there are only 3 scale
+commands. This is because the value was rounded (in this case) to have only one
+decimal, and it is of course not needed to add a command every frame if the
+value didn't change from the previous frame/command. Note that this actually
+needs another scale command in the beginning to have a correct start value, see
+{@#=Default value quirk| default value quirk} for details.
+
+{@h4 Last frame adjustments}
+
+In almost every command in the generated example above, there is no endtime
+specified. This is because the endtime should be the same as the starttime, and
+if these are the same, the endtime can just be omitted to save space (see also
+{@#=End time and end values| end time and end values}). Only the last move
+command of both sprites has a different endtime. The reason behind this is that
+sprites are only visible from their lowest starttime in any command to the
+highest endtime in any command. This means that if the latest endtime is 900,
+the sprite will be visible at time 900 and disappear at time 901. But in this
+case, 900 is the time where the last frame starts, and that frame that should
+be visible from time 900 to 1000 (or rather, 999). This means the last frame
+will never be shown (or just for a millisecond). This leads to missing sprites,
+broken objects, and this potentially leaves a blank few milliseconds in the
+storyboard if that frame is the last one of its scene. To fix this, the last
+command (in this case, the last move command), will have its endtime changed to
+the time that the frame should end.
 
 {@h4 Adding interpolation}
+
+Only setting values at specific times using commands is not that great to make
+movement. To have motion that's more smooth, it would need a lot of commands
+with a tiny framedelta. Another options is to add (or rather, use)
+interpolation. Adding interpolation between the 2d projected positions isn't
+very correct, but it's not so noticable either. At least for the dots, if I try
+to add interpolation to the 3d objects (spectrum, heart, text), it fails
+miserably, expected. This is because those need very precise position / scaling
+/ rotation, which is not possible to interpolate (see {@#=Opaque surfaces| \
+opaque surfaces}).
+
+<pre>
+Sprite,Foreground,Centre,d,0,0
+_M,0,0,100,320,224,396.6,224
+_C,0,0,,255,0,0
+_M,0,100,200,396.6,224,450.7,224
+_C,0,100,,255,0,25
+_C,0,200,,255,0,51
+_S,0,200,,1.1
+Sprite,Foreground,Centre,d,0,0
+_M,0,700,800,190.1,224,245.1,224
+_C,0,700,,255,0,178
+_S,0,700,800,1.2,1.3
+_M,0,800,900,245.1,224,321.9,224
+_C,0,800,,255,0,204
+_C,0,900,,255,0,229
+</pre>
+{@caption Same scene as before, but with movement and scaling easing applied.}
+
+While writing this, I just remembered I didn't add interpolation for the color
+because it was not needed, so only the move and scale commands are eased in this
+example. Now each move command has an endtime that is different from the
+starttime, and the end position is also different from the starting position.
+Same for the scale commands.
+
+You may have noticed that the ending time is again wrong since the last frame
+for the first sprite is at time 300, but the last command only goes to time 200
+(the same applies to the second sprite). This is because there is no next frame
+to interpolate to, so this is pretty much unavoidable. The last frame adjustment
+technique can't be used because that would add a still frame at the end while
+it was moving before. To minimize this though, the scene's time can be extended
+to be a bit longer, compensating the missing frame's duration. If a sprite goes
+out of bounds, I'm also allowing one frame with out of bounds positions so it
+can interpolate to the edge of the screen instead of just disappearing. Same
+for when a sprite appears from an out of bounds position.
+
+<pre>
+without interpolation:
+100-200: A, 200-300: B, 300-400: C
+
+with interpolation:
+100-200: A->B, 200-300: B->C, 300-400: nothing to interpolate C to
+</pre>
+{@caption More clear example why the last frame is missing when interpolating.}
 
 {@h4 Phantom frames}
 
@@ -434,8 +537,12 @@ has missing pixels on a part that is moving;;Black hole warning.}
 The solution I made was to introduce so-called "phantom frames". Frames that
 don't really exist. Every scene now also has a phantom framedelta. For most
 scenes, the value is the same as the framedelta because it doesn't need phantom
-processing. When generating the storyboard commands at the end, every phantom
-frame is being examined to check if it introduces an object that wasn't visible
+processing. Every command that is generated in a phantom frame is marked as a
+phantom command. aaaaaaaa
+
+
+When generating the storyboard commands at the end, every phantom
+command is being examined to check if it introduces an object that wasn't visible
 before. If it does, that phantom frame is "promoted" to a real frame. All the
 other phantom frames are just being dropped.
 
@@ -443,6 +550,8 @@ The same applies to the reverse problem, when objects don't stay long enough
 because they disappear between frames. In that case, the last frame is used as
 the end position, even if it's a phantom frame.
 
+The only scenes that used phantom frames/commands are the {@#=Rubik's cube| \
+rubik's cube} and {@#=Starfield torus| starfield torus} scenes.
 
 {@h4 Combining multiple fade/scale commands}
 
@@ -458,15 +567,9 @@ to a storyboard file.}
 
 {@h3 3d projection}
 
-{@h3 Rasterisation}
+{@blockquote "use the tools that you have" on a whole new level}
 
-{@h3 Opaque surfaces}
-
-{@h3 Opaque 3d objects}
-
-{@h3 FFT}
-
-{@h3 Font rendering}
+{@h4 Intermezzo: .NET float parsing bullshit}
 
 {@blockquote (times I have been fucked by C# treating a comma as decimal
 separator for float.Parse() and using a . as thousand separator)++}
@@ -486,22 +589,35 @@ Thread.CurrentThread.CurrentCulture = c;
 </pre>
 {@caption Take that, annoying region and language settings!}
 
+{@h3 Rasterisation}
 
+{@h3 Opaque surfaces}
 
+{@h3 Opaque 3d objects}
 
-{@blockquote "use the tools that you have" on a whole new level}
+{@h3 FFT}
+
+{@h3 Font rendering}
 
 {@h2 Scene breakdown}
 
 {@h3 Rubik's cube}
 
+{@h3 Starfield torus}
+
 {@h2 Compression}
+
+Everything about reducing the size of the resulting storyboard file.
 
 {@h3 Line endings}
 
 {@h3 Sprite names}
 
 {@h3 Sprite sizes}
+
+{@h3 Initial position}
+
+{@h3 Rounding decimal values}
 
 {@h3 End time and end values}
 
@@ -519,6 +635,9 @@ on the live version, it only exists in the osu!wiki repository. I don't even...
 I made a pull request: {@a=https://github.com/ppy/osu-wiki/pull/1661 osu-wiki \
 PR#1661} to add a link to the shorthand page, so hopefully that will be fixed
 soon.
+
+{@b Note:} my pull request was merged before I even finished this blogpost, so
+yey!
 
 {@h3 Enum members}
 
