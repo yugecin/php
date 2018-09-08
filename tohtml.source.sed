@@ -88,7 +88,7 @@ s/\\}/~ESCAPEDENDTAG~/g
 		b nexttag
 	}
 
-	/{@ia=\([^ ]*\)\( \|$\)/ {
+	/{@ia=[^ ]*\( \|$\)/ {
 		H
 		g
 		s/\(.*\)\n.*$/\1\n<\/a>/
@@ -97,7 +97,7 @@ s/\\}/~ESCAPEDENDTAG~/g
 		b nexttag
 	}
 
-	/{@a=\([^ ]*\)\( \|$\)/ {
+	/{@a=[^ ]*\( \|$\)/ {
 		H
 		g
 		s_\(.*\)\n.*$_\1\n</a><img src="moin-www.png" alt="globe icon" title="external link"/>_
