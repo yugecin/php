@@ -11,7 +11,7 @@ Making of my osu! storyboard demo
 {@ul
   {@li {@a=https://youtube.com/watch?v=bOGJWGJOMOk YouTube video showing the \
 storyboard (original version)}}
-  {@li {@a=https://youtube.com/watch?v=bOGJWGJOMOk YouTube video showing the \
+  {@li {@a=https://youtube.com/watch?v=cPrhws8hevk YouTube video showing the \
 storyboard (highfps version)}}
   {@li {@a=https://old.ppy.sh/b/1756941?m=0 Beatmap on osu! website}}
   {@li {@a=https://github.com/yugecin/osusb1 GitHub repo}}
@@ -598,7 +598,23 @@ Thread.CurrentThread.CurrentCulture = c;
 
 {@h2 Scene breakdown}
 
+{@h3 Intro cube}
+
+{@h3 Tunnel}
+
+{@h3 Spectrum}
+
 {@h3 Rubik's cube}
+
+{@h3 Waves}
+
+{@h3 Heart}
+
+{@h3 Greetings}
+
+{@h3 Torus field}
+
+{@h3 Checkerboard and 3d text}
 
 {@h3 Starfield torus}
 
@@ -606,11 +622,74 @@ Thread.CurrentThread.CurrentCulture = c;
 
 Everything about reducing the size of the resulting storyboard file.
 
+Fun fact: when saving the beatmap using the editor in osu!, its size goes from
+27MB to 32.6MB (without variables).
+
 {@h3 Line endings}
+
+When I was messing with osb files in the very beginning to see how it all works,
+I noticed the line endings and realised a very easy way to lose some weight is
+to use {@code LF} instead of .NET's default {@code CRLF}. This saves one byte
+per line, which may not seem like a lot, but this saves almost a full megabyte
+since my storyboard ended up to be about 977K lines.
 
 {@h3 Sprite names}
 
+Changing sprite names to save some space was also a no-brainer. The osu!wiki
+shows a sample object declaration like this: {@code Sprite,Pass,Centre,"Text\
+\Play2-HaveFunH.png",320,240}. First of all, if you're making a storyboard
+like this (that will have lots of object declarations), why wouldn't you use
+a filename that's as short as possible? I've seen storyboard that use
+filename like {@code SB\alien\spaceship.png}. Maybe it might be a bit
+annoying while you're working on it (not for me since keeping track of only
+4 sprites is not that hard x3), but you can always change it to something
+shorter at the end.
+
+So I gave my sprites each only one letter as filename. The wiki states that
+the quotes are only really needed when the path has spaces in it, so I could
+ditch those too. Me being curious tried to remove the extension as well, and
+that seems to work just fine. So I my object declarations looked more or
+less like this: {@code Sprite,Foreground,Centre,d,0,0}.
+
+Then I thought, what would happen if I use an empty filename? So I tried just
+that, and it works too! I changed the most used sprite to just {@code .png}
+and loaded it by doing {@code Sprite,Foreground,Centre,,0,0}. The only side
+effect that this seems to have is that it crashes osu! when you try to open
+the sprite browser in the editor. You don't even have to use the sprite, just
+having a filename with only an extension in the directory makes this happen.
+
+{@img=blog/000/spritelibcrash.png;osu! crash reporter showing an \
+IndexOutOfRangeException;;Check your string lengths!}
+
 {@h3 Sprite sizes}
+
+This is not really related to the storyboard file, but why not make the sprite
+files themselves as small as possible? One of my favorite tools is
+{@a=https://pngquant.org/ pngquant}, which compresses png files (and does this
+really well).
+
+I use {@a=https://www.getpaint.net/ Paint.NET} for image editing
+(I shake my head at people who (illegally) use Adobe Photoshop to do simple
+image editing...), which adds 24 bytes of metadata to PNG files so everyone that
+looks at the PNG headers can see it was made with Paint.NET. It's not hard to
+remove that using a hex editor, so that's another easy 24 bytes per sprite.
+
+When I changed my 3x3 sprite into a 2x2 sprite, I noticed that the filesize
+stayed the same (122 bytes). I found that quite peculiar, so I mentioned it in
+the osu!fx discord. HoLLy responded that I should use a bitmap, which would
+probably be a lot smaller. The BMP header was a lot bigger than he expected,
+but the resulting file was still smaller, at only 70 bytes. When I checked it
+in osu!  I saw that it didn't load the sprite. It seems like it would only
+check for {@code .png} and maybe {@code .jpg} files when there's no file
+extension in the object declaration. Then HoLLy saved the day again, but
+saying I should just rename the file to a {@code .png}, since .NET apparently
+uses 1 method to load all images. Renaming the file worked, so I now had a
+sprite that was smaller than its PNG counterpart and I didn't have to specify
+the extension in the object declarations.
+
+Yes I know optimizing the sprite sizes by removing some bytes is nothing
+compared to the larger part but if it can be smaller with almost no effort,
+why not do it amirite?
 
 {@h3 Enum member values}
 
@@ -689,9 +768,9 @@ _S,16,500,900,1.61,0.33
 applied.}
 
 According to the {@#=Output report| output report}, combining commands like this
-was applied 11655 times, saving 61211 commands and about 760KB. On top of the
-space savings, this also means the scaling or fading will be a bit smoother
-compared to chained linear interpolated commands. The reason that the linear
+was done 11655 times, saving 61211 commands and about 760KB. On top of the space
+savings, this also means the scaling or fading will be a bit smoother compared
+to chained linear interpolated commands. The reason that the linear
 interpolation was applied so many times is probably due to many batches only
 having two commands.
 
@@ -745,6 +824,10 @@ variables.}
 
 Only sequential nesting is possible when using variables. However, in Lazer,
 proper nesting seems to be supported.
+
+{@h2 Epilogue}
+
+SB load?
 
 {@h2 Related work}
 
