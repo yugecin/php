@@ -68,3 +68,8 @@ p.img img {
 	max-width: 100%;
 	border: 2px solid LIGHTGREY;
 }
+a.s {
+	text-decoration: none;
+	color: LIGHTGREY;
+	float: right;
+}
