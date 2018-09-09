@@ -17,6 +17,9 @@ function makepage {
 	echo "$SKELETON4" >> $1
 	echo "$2" | sed -n '3p' >> $1
 	echo "$SKELETON5" >> $1
+	sed -i "$1" -f indexgen.sed
+	sed -i "$1" -f indexcpy.sed
+	rm INDEX
 	PAGEFILES+=($1)
 }
 
@@ -99,9 +102,6 @@ do
 	TOP=${TOP//~OUTPUTFILE~/"$OUTPUTFILE"}
 	TOP=${TOP//~PUBDATE~/"$DATE"}
 	makepage "$OUTPUTFILE" "$(tail -n +3 $INPUTFILE)" "$TOP"
-	sed -i "$OUTPUTFILE" -f indexgen.sed
-	sed -i "$OUTPUTFILE" -f indexcpy.sed
-	rm INDEX
 done
 
 # make pages
