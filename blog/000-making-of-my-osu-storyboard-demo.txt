@@ -10,7 +10,9 @@ Making of my osu! storyboard demo
 
 {@ul
   {@li {@a=https://youtube.com/watch?v=bOGJWGJOMOk YouTube video showing the \
-storyboard}}
+storyboard (original version)}}
+  {@li {@a=https://youtube.com/watch?v=bOGJWGJOMOk YouTube video showing the \
+storyboard (highfps version)}}
   {@li {@a=https://old.ppy.sh/b/1756941?m=0 Beatmap on osu! website}}
   {@li {@a=https://github.com/yugecin/osusb1 GitHub repo}}
   {@li {@a=https://github.com/yugecin/osusb1/releases GitHub releases}}
