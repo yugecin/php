@@ -972,6 +972,27 @@ variables.}
 
 {@h5 Upload failure}
 
+When I was done and tried to upload my map, I encountered a problem. The
+first time I pressed upload, osu! just crashed. But that's not really the
+problem (default behavior I guess). When I tried to submit the second time, I
+got greeted by following error after some time of osu! being stuck.
+
+{@img=blog/000/uploadf.png;A dialog saying there is an error in the \
+storyboarding script;;Uh-oh.}
+
+Murdered by my own creation. It seems like osu! saves and then reloads the
+beatmap before submitting, so it destroys the storyboard. We then thought about
+ways of uploading it without having to use the in-game submission. It's
+possible, but a bit sketchy and probably not a good idea. A few moments later
+I just thought "what happens if I set the file as read-only?". So I did just
+that. When attempting to upload again, it tried saving the beatmap again, but
+this time it showed a bubble error notification that osu! was unable to save the
+beatmap. Bingo. Luckily this didn't make the upload wizard upset, so now I could
+just upload the non-destroyed version, yey!
+
+{@img=blog/000/writeerr.png;In-game bubble notification saying osu! was unable \
+to write to file;;Take that, game!}
+
 {@h4 Stable vs Lazer}
 
 Only sequential nesting is possible when using variables. However, in Lazer,
