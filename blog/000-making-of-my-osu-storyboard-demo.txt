@@ -390,6 +390,10 @@ public override void draw(SCENE scene) {
 	}
 	dot.draw(scene.g);
 }
+
+public override void fin(Writer w) {
+	dot.fin(w);
+}
 </pre>
 {@caption Sample scene that draws a dot spinning in 3d space.}
 
@@ -402,6 +406,9 @@ distance from the projected point to the camera).
 
 The {@code dot.draw} method is only needed to draw the dot inside the preview in
 the application, it doesn't do anything during exporting.
+
+The {@code fin} method gets called after everything is rendered and the sprite
+should process the commands and write it to the storyboard file.
 
 <pre>
 Sprite,Foreground,Centre,d,0,0
@@ -762,6 +769,30 @@ would've only saved 4 bytes instead of 5 bytes, so using this method was a good
 (lucky) call.
 
 {@h3 Rounding decimal values}
+
+Another quick way to shave off some bytes is to reduce the amound of decimals.
+Very high precision is not always needed/noticed anyways. Only for the scenes
+with 3d opaque surfaces, like the spectrum and the heart, it is needed to have a
+high precision because otherwise the sprites wouldn't join nicely together and
+it would look slightly worse. I made it round to 5 decimals for these scenes,
+but even then it is sometimes visible that the sprites don't completely join.
+For the other scenes, it was mostly rounded to 1 decimal because it doesn't
+matter if the movement of the dots are slightly off.
+
+<pre>
+public override void draw(SCENE scene) {
+	ICommand.round_scale_decimals.Push(2);
+	// ...
+	ICommand.round_scale_decimals.Pop();
+}
+
+public override void fin(Writer w) {
+	ICommand.round_scale_decimals.Push(2);
+	// ...
+	ICommand.round_scale_decimals.Pop();
+}
+</pre>
+{@caption How the rounding is dynamically configured.}
 
 {@h3 End time and end values}
 
