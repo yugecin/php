@@ -106,11 +106,11 @@ that move commands did not allow decimal numbers (spoiler: it does), which
 is pretty essential if you want to have a good-looking wireframe cube. I blame
 the osu!wiki for this. For some reason it stated that move commands do not
 allow decimals. (I've submitted a pull request:
-{@a=https://github.com/ppy/osu-wiki/pull/1660 osu-wiki PR#1660} to fix this).
-I think I did try to use decimal numbers, but it gave an error when osu! tried
-to parse the storyboard. Decimals {@i are} allowed, so osu! shouldn't throw an
-error. I guess it's either a false memory or I managed to mess up something else
-that made the command invalid.
+{@a=https://github.com/ppy/osu-wiki/pull/1660 ppy/osu-wiki PR#1660} to fix
+this). I think I did try to use decimal numbers, but it gave an error when osu!
+tried to parse the storyboard. Decimals {@i are} allowed, so osu! shouldn't
+throw an error. I guess it's either a false memory or I managed to mess up
+something else that made the command invalid.
 
 {@img=blog/000/decimals.png;the move command specification on the osu!wiki, \
 with a highlight on text that says decimals are not allowed;seriously?;I \
@@ -661,6 +661,10 @@ having a filename with only an extension in the directory makes this happen.
 {@img=blog/000/spritelibcrash.png;osu! crash reporter showing an \
 IndexOutOfRangeException;;Check your string lengths!}
 
+After applying {@#=Variables| variables}, changing the sprite names to something
+as short as possible doesn't really matter much anymore but it's a fun thing
+to have, why not.
+
 {@h3 Sprite sizes}
 
 This is not really related to the storyboard file, but why not make the sprite
@@ -692,6 +696,44 @@ compared to the larger part but if it can be smaller with almost no effort,
 why not do it amirite?
 
 {@h3 Enum member values}
+
+Back when we were at Solskogen, Emily found out that several values were parsed
+using {@code Enum.Parse}. This allows us to write {@code 4,3,1,d,0,0} instead of
+{@code Sprite,Foreground,Centre,d,0,0}. Pretty neat, I would be surprised if
+anyone found out about that before. I've always wondered why the object
+declarations had to be written using those long words. It might make it easier
+to read the osb file (for humans), but at the end storyboards can have so many
+objects it's just unnecessarily taking up lots of space. But I guess the
+developers didn't really imagine people would add lots of particles and (faux)
+3d objects in their storyboards.
+
+This also works for sections names, so {@code [Events]} can be written as
+{@code [32]}, {@code [Variables]} is {@code [256]}, etc etc. These values can
+be found nowadays in the osu repository: {@a=https://github.com/ppy/osu/blob/\
+5e5a74293e2710690328dda0086ec0fe9617ac24/osu.Game/Beatmaps/Formats/\
+LegacyDecoder.cs#L127 LegacyDecoder.cs in ppy/osu}. Note that they messed it
+up there, the values for the sections are wrong.
+
+<pre>
+protected enum Section
+{
+    None = 0,
+    General = 1,
+    Editor = 2,
+    Metadata = 4,
+    Difficulty = 8,
+    Events = 16,
+    TimingPoints = 32,
+    Colours = 64,
+    HitObjects = 128,
+    Variables = 256,
+    Fonts = 512
+}
+</pre>
+{@caption The correct values for the sections.}
+
+Emily also made a pull request to add the values in the osu!wiki:
+{@a=https://github.com/ppy/osu-wiki/pull/1675 ppy/osu-wiki PR#1675}.
 
 {@h3 Initial position}
 
@@ -825,10 +867,6 @@ variables.}
 Only sequential nesting is possible when using variables. However, in Lazer,
 proper nesting seems to be supported.
 
-{@h2 Epilogue}
-
-SB load?
-
 {@h2 Related work}
 
 dualife, flower trip, (others I can't remember atm)
@@ -837,6 +875,13 @@ those had 3d wireframe objects, back in 2016. I found out about them when I
 was almost finished with my storyboard. I wish I saw them earlier, so I would
 know that decimals in move commands are allowed. Still, bad from my end that
 I didn't try enough to actually see if it was possible.
+
+{@h2 Epilogue}
+
+SB load?
+link her blog
+NaN and +Inf
+tweet
 
 {@hr}
 
