@@ -556,7 +556,7 @@ this actually also made things easier (phantom commands)
 
 {@h4 Output report}
 
-{@img=blog/000/export.png;image of the console showing how many Kb each scene \
+{@img=blog/000/export.png;image of the console showing how many KB each scene \
 is, and usage count of sprites and ease commands;;The output when exporting \
 to a storyboard file.}
 
@@ -736,6 +736,30 @@ Emily also made a pull request to add the values in the osu!wiki:
 {@a=https://github.com/ppy/osu-wiki/pull/1675 ppy/osu-wiki PR#1675}.
 
 {@h3 Initial position}
+
+In an object declaration, one can specify the position of the sprite. Now of
+course this doesn't have any meaning if the sprite is moved from the start, so
+this can be set to {@code 0,0} instead of the actual start location to save some
+quick bytes. I have 34847 sprites like this, so this saved about 146KB
+(34847x4.2 because 2 digits for each coordinate and on (guessed) average 0.2
+bytes per sprite in case negative coordinates are used because it's a widescreen
+storyboard).
+
+If the sprite is only going to move in the x or y direction, one coordinate
+could be set and the {@code _MX} or {@code _MY} command could be used to move
+the sprite. This is what I did for the text in the {@#=Starfield torus| \
+starfield torus} scene. I set the initial position's x coordinate to zero and
+the y coordinate to whatever y position it should be on, and use the {@code _MX}
+command to move the sprite horizontally. This saves about 5 bytes per pixel used
+to make the text (and there are 2725 of those so it saved 16KB).
+
+In retrospect I thought I would've saved more if I didn't do that, because using
+{@#=Variables| variables} might saved more. But I checked (just now), and by
+using variables it could've saved at maximum (using my current configration) 5
+bytes. Since there are lots of variable, I needed to use 2 byte identifiers
+because I ran out of characters. This means there was a high chance that it
+would've only saved 4 bytes instead of 5 bytes, so using this method was a good
+(lucky) call.
 
 {@h3 Rounding decimal values}
 
