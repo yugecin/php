@@ -694,11 +694,11 @@ probably be a lot smaller. The BMP header was a lot bigger than he expected,
 but the resulting file was still smaller, at only 70 bytes. When I checked it
 in osu!  I saw that it didn't load the sprite. It seems like it would only
 check for {@code .png} and maybe {@code .jpg} files when there's no file
-extension in the object declaration. Then HoLLy saved the day again, but
-saying I should just rename the file to a {@code .png}, since .NET apparently
-uses 1 method to load all images. Renaming the file worked, so I now had a
-sprite that was smaller than its PNG counterpart and I didn't have to specify
-the extension in the object declarations.
+extension in the object declaration. Then HoLLy saved the day again, by saying
+I should just rename the file to a {@code .png}, since .NET apparently uses 1
+method to load all images. Renaming the file worked, so I now had a sprite that
+was smaller than its PNG counterpart and I didn't have to specify the extension
+in the object declarations.
 
 Yes I know optimizing the sprite sizes by removing some bytes is nothing
 compared to the larger part but if it can be smaller with almost no effort,
@@ -944,13 +944,14 @@ applied.}
 According to the {@#=Output report| output report}, combining commands like this
 was done 11655 times, saving 61211 commands and about 760KB. On top of the space
 savings, this also means the scaling or fading will be a bit smoother compared
-to chained linear interpolated commands. The reason that the linear
-interpolation was applied so many times is probably due to many batches only
-having two commands.
+to chained linear interpolated commands.
 
 {@img=blog/000/easingusage.png;bar-graph with pink bars... too much data to \
 type down sorry;;Graph showing how much each easing is applied (slightly off). \
 Note the logarithmic x-axis.}
+
+The reason that the linear interpolation was applied so many times is probably
+due to many batches only having two commands.
 
 Now I'm wondering why I didn't try to do this with the move commands... On a
 second thought, this would be very hard to do for the move commands. Fade and
@@ -961,11 +962,189 @@ since those have two values that change instead of only one.
 
 {@h3 Variables}
 
+The wiki and the storyboard scripting official specifications forum post have
+a few words on variables. Basically it's telling that there's support for
+variables, but that it's very primitive. It's meant to be used to make life
+easier, for example for if you're using a specific color on different places.
+In that case you can make a variable and use that variable instead of needing
+to remember what the exact color combination was everytime you want to use it.
+It also makes it a bit easier to change the value everywhere it's used, because
+now you'd only have to change the variable.
+
+It took a while to get started with variables though. After a long while, we
+found out that the {@code [Variables]} sections needed to be {@i before} the
+{@code [Events]} section. Kinda makes sense afterwards because the storyboard
+file is probably processed sequentially.
+
+From the information that we found, variables are supposed to have a {@code $}
+prefix. After some messing around, we found out that this isn't the case.
+Basically a line has to contain a {@code $} character for variables to be
+processed for that line. This means you could make a sprite named {@code $.png}
+and every object declaration line using that sprite will be processed for
+variables.
+
+<pre>
+[256]
+xposition=200
+yposition=400
+[32]
+4,3,1,$,xposition,yposition
+</pre>
+
+Or if you already have a variable with a {@code $} prefix on a line, another
+variable on that line doesn't need the prefix because all variables are
+processed when a line contains the {@code $} character (similary to the case
+above where the sprite name had that character in its name).
+
+<pre>
+[256]
+xposition=200
+$yposition=400
+[32]
+4,3,1,b,xposition,$yposition
+</pre>
+
+Variables are processed sequentially by using {@code String.Replace} in the
+order that they're defined, so the following code won't work.
+
+<pre>
+[256]
+$a=200
+$aa=400
+[32]
+4,3,1,b,$a,$aa
+</pre>
+{@caption The result will be {@code 4,3,1,b,200,200a}, which will cause an \
+error.}
+
+This also means variables can be nested, but only if the nested variable
+appears after the variable that nests it.
+
+<pre>
+[256]
+$fade=_F,0,$time,0,1
+$scale=_S,0,$time,2,5
+$time=2000,3000
+[32]
+4,3,1,b,0,0
+$fade
+$scale
+</pre>
+{@caption If {@code $time} was defined before {@code $fade} or {@code $scale} \
+this would fail.}
+
+Of course using variables will make loading the map slower, especially if there
+are lots of them, which was the case for my storyboard. I generated 554
+variables and pretty much every line used a variable. Having osu! go through
+554 variables for about a million lines made the loading time jump from about 3
+seconds to roughly 45 seconds... :D
+
+When saving the map, osu! tries to insert the variables into the storyboard
+code. However, we found out that this only happens if the value of the variable
+is preceded by a comma.
+
+<pre>
+[256]
+$pos=10
+[32]
+4,3,1,d,10,510
+</pre>
+{@caption The line will be replaced to {@code 4,3,1,d,$pos,510} when saving.}
+
+{@h4 Generating variables}
+
 {@img=blog/000/minify.png;image of the console showing variable process \
 progress and the top variable replacements;;The output when minifying using \
 variables.}
 
+{@h4 Stable vs Lazer}
+
+As mentioned before, only sequential nesting is possible when using variables in
+stable. However, in Lazer, proper nesting seems to be supported. In lazer, a
+line is processed as long as it has a {@code $} in it and if the line after
+variable processing is different from the line before it was processed.
+
+<pre>
+[256]
+$time=2000,3000
+$fade=_F,0,$time,0,1
+$scale=_S,0,$time,2,5
+[32]
+4,3,1,b,0,0
+$fade
+$scale
+</pre>
+{@caption Same as before, but this will fail in stable and work in Lazer.}
+
+This also means it's easy to make Lazer go into an infinite loop and eventually
+run out of memory by making a variable reference itself.
+
+<pre>
+[256]
+$expandme=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx$expandme
+[32]
+$expandme
+</pre>
+{@caption Prepare your RAM to be eaten.}
+
+{@h2 Shenanigans}
+
+end with 2 LFs
+SB load? (remove bg)
+NaN and +Inf
+
+{@h3 Destroying the storyboard on save}
+
+By combining the things we found out about variables, it's very easy to write
+some storyboard code that will be destroyed by osu! when saving the map using
+the in-game editor.
+
+<pre>
+[256]
+$a=200
+$aa=400
+[32]
+4,3,1,b,400,400
+</pre>
+
+As mentioned before, osu! will try to insert variables when saving.
+The {@code 400} matches the value of the {@code $aa} variable. Since it is
+preceded by a comma, the variable is inserted. The line is now
+{@code 4,3,1,b,$aa,$aa}. This would not be a problem if it wasn't for the
+{@code $a} variable being there. Since variables are processed sequentially,
+osu! will replace the line to {@code 4,3,1,b,200a,200a} and throw an error
+when attempting to open the map again.
+
+{@h4 Expanding storyboard}
+
+Of course we came up with some more ideas. Just making the storyboard invalid
+wasn't enough, we needed more. We found a way to make the storyboard file grow
+in size each time someone saves it.
+
+<pre>
+[256]
+,,,=,,,,,,
+,,,,,=,,,
+[32]
+4,3,1,d,0,0
+_M,0,0,1000,100,100,400,400
+</pre>
+
+Only the two variables are really needed, the one sprite with the move command
+is just there to show the storyboard keeps working while this happens. After
+saving this map, variables section looks like this:
+
+<pre>
+[Variables]
+,,,=,,,,,,,,
+,,,,,,,=,,,
+</pre>
+
+The variable grew a bit longer, and it keeps growing when saving the map again.
+
 {@h4 Staircase of death}
+
+It needed to be completely annihilated &gt;:D.
 
 {@blockquote we should call this the staircase of death}
 {@caption Emily - August 26, 2018}
@@ -993,10 +1172,6 @@ just upload the non-destroyed version, yey!
 {@img=blog/000/writeerr.png;In-game bubble notification saying osu! was unable \
 to write to file;;Take that, game!}
 
-{@h4 Stable vs Lazer}
-
-Only sequential nesting is possible when using variables. However, in Lazer,
-proper nesting seems to be supported.
 
 {@h2 Related work}
 
@@ -1009,9 +1184,7 @@ I didn't try enough to actually see if it was possible.
 
 {@h2 Epilogue}
 
-SB load?
 link her blog
-NaN and +Inf
 tweet
 
 {@hr}
