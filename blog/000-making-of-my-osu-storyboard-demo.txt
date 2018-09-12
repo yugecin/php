@@ -1055,9 +1055,43 @@ $pos=10
 
 {@h4 Generating variables}
 
+I figured using variables was going to save quite a bit of space, so I just let
+the program generate lots of variables for some patterns. The first obvious
+things to replace with variables were object declarations and the loop commands
+that were using to let the text twinkle out in the {@#=Greetings| greetings}
+scene. The two commands in those loops are used 3934 times. By putting those
+whole lines inside variables, I saved about 95KB.
+
+Another few that I thought may help were the colors black and white, so I put
+{@code ,255,255,255} and {@code ,0,0,0} inside variables as well. I didn't think
+it would save very much, but that did save about 108KB.
+
+Then I also threw in all the possible object declarations and all the commands
+followed by every number from 10 to 99. For example, there was a variable for
+{@code _M,0,10}, {@code _M,0,11}, .. all the way up to {@code _M,0,99}. Same
+thing for the scale, rotation, fade, color commands.
+
 {@img=blog/000/minify.png;image of the console showing variable process \
 progress and the top variable replacements;;The output when minifying using \
 variables.}
+
+Since variables are just plain string replacements, any character or
+combination of characters can be used. This also means non-printable characters
+and characters like spaces and tabs. So of course that's what I did.
+
+In the end I had 554 variables. This means I needed variables with 2 byte
+identifiers, so while generating them, I made it sort the replacements based
+on how many bytes could be saved when putting the value in a variable. The ones
+that could save the most would receive a one byte identifier and the rest would
+get a two byte identifier.
+
+{@img=blog/000/variables.png;10 commands in the storyboard file, minified and \
+non-minified;;Left: normal, right: with variables.}
+
+The black boxes displayed in the picture above are non-printable characters as
+displayed by notepad++. The whitespace is in fact a tab character. It naturally
+shows as an indent size of 8 characters in text editors, but of course it's only
+1 byte in size.
 
 {@h4 Stable vs Lazer}
 
@@ -1161,11 +1195,11 @@ _M,0,1,1000,100,200,200,100
 When saving the first time, the object declaration will be changed to
 {@code Sprite,Foreground,Centre,d,0,0}. Then the variables will be processed,
 changing that line to {@code Sprite,,,,Centre,d,0,0}, effectively making this
-object declaration invalid. This will happen to every object (except for
-objects that are not on the {@code Foreground} layer). This means the saved
-storyboard will only contain invalid objects. The result is that osu! will
-just delete the osb file when it's being saved again because it doesn't have
-any objects anymore.
+object declaration invalid. This will happen to every object, so the saved
+storyboard will only contain invalid objects (except if there are objects that
+are not on the {@code Foreground} layer, but more variables can be added to
+make everything corrupt). The result is that osu! will just delete the osb file
+when it's being saved again because it doesn't have any objects anymore.
 
 {@h3 Diskfiller}
 
