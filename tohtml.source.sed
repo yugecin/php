@@ -25,6 +25,12 @@
 	N
 	s/\n//
 	:pre
+	:concatpre
+	/\\$/ {
+		N
+		s/\\\n//
+		b concatpre
+	}
 	n
 	/^<\/pre>$/ !{
 		b pre

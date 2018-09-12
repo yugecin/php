@@ -21,6 +21,7 @@ code {
 }
 pre {
 	white-space: pre-wrap;
+	word-break: break-all;
 	padding: 1em;
 	border: 2px solid DARKGREY;
 	font-size: smaller;
