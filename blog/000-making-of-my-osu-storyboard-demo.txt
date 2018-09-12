@@ -973,8 +973,8 @@ now you'd only have to change the variable.
 
 It took a while to get started with variables though. After a long while, we
 found out that the {@code [Variables]} sections needed to be {@i before} the
-{@code [Events]} section. Kinda makes sense afterwards because the storyboard
-file is probably processed sequentially.
+{@code [Events]} section. Kinda makes sense when thinking about it because the
+storyboard file is probably processed sequentially.
 
 From the information that we found, variables are supposed to have a {@code $}
 prefix. After some messing around, we found out that this isn't the case.
@@ -990,6 +990,7 @@ yposition=400
 [32]
 4,3,1,$,xposition,yposition
 </pre>
+{@caption Working variables without the {@code $} prefix.}
 
 Or if you already have a variable with a {@code $} prefix on a line, another
 variable on that line doesn't need the prefix because all variables are
@@ -1003,6 +1004,7 @@ $yposition=400
 [32]
 4,3,1,b,xposition,$yposition
 </pre>
+{@caption All you need is at least one {@code $}.}
 
 Variables are processed sequentially by using {@code String.Replace} in the
 order that they're defined, so the following code won't work.
@@ -1074,7 +1076,8 @@ $scale=_S,0,$time,2,5
 $fade
 $scale
 </pre>
-{@caption Same as before, but this will fail in stable and work in Lazer.}
+{@caption Same as before, but since the {@code $time} comes first, this will \
+fail in stable but work in Lazer.}
 
 This also means it's easy to make Lazer go into an infinite loop and eventually
 run out of memory by making a variable reference itself.
@@ -1087,17 +1090,14 @@ $expandme
 </pre>
 {@caption Prepare your RAM to be eaten.}
 
-{@h2 Shenanigans}
-
-end with 2 LFs
-SB load? (remove bg)
-NaN and +Inf
-
-{@h3 Destroying the storyboard on save}
+{@h2 Self destruction}
 
 By combining the things we found out about variables, it's very easy to write
 some storyboard code that will be destroyed by osu! when saving the map using
-the in-game editor.
+the in-game editor. Of course I decided to add this to my storyboard, because
+it's fun.
+
+{@h3 Corrupting the storyboard on save}
 
 <pre>
 [256]
@@ -1106,6 +1106,7 @@ $aa=400
 [32]
 4,3,1,b,400,400
 </pre>
+{@caption Self corrupting variable configuration.}
 
 As mentioned before, osu! will try to insert variables when saving.
 The {@code 400} matches the value of the {@code $aa} variable. Since it is
@@ -1115,41 +1116,168 @@ preceded by a comma, the variable is inserted. The line is now
 osu! will replace the line to {@code 4,3,1,b,200a,200a} and throw an error
 when attempting to open the map again.
 
-{@h4 Expanding storyboard}
+{@h3 Deleting the storyboard file on save}
 
-Of course we came up with some more ideas. Just making the storyboard invalid
-wasn't enough, we needed more. We found a way to make the storyboard file grow
-in size each time someone saves it.
+For object declarations that are sprites or animations, osu! will simply
+ignore the object and all its commands if the declarative line is incorrect.
+It won't even show an error, even if the commands contain garbage.
+
+<pre>
+[32]
+Sprite
+ hey look it's a bad object declaration
+ osu! will just skip all these lines
+            .____________.
+           ./\  ________ \.
+          ./  \ \______/\ \.
+         ./ /\ \ \  / /\ \ \.
+        ./ / /\ \ \/ / /\ \ \.
+       ./ / /__\_\/ / /__\_\ \.
+      ./ /_/_______/ /________\.
+      .\ \ \______ \ \______  /.
+       .\ \ \  / /\ \ \  / / /.
+        .\ \ \/ / /\ \ \/ / /.
+         .\ \/ / /__\_\/ / /.
+          .\  / /______\/ /.
+           .\/___________/.
+</pre>
+{@caption Who needs comments?}
+
+When the storyboard contains no object declarations at all, osu! for some
+reason just deletes the osb file. Since invalid objects are skipped, this means
+that the file will also be deleted if it only has invalid objects. This idea can
+be combined with the corrupting commands to make a working storyboard that will
+be deleted after saving it twice.
 
 <pre>
 [256]
-,,,=,,,,,,
-,,,,,=,,,
+,,,=Foreground,
 [32]
 4,3,1,d,0,0
-_M,0,0,1000,100,100,400,400
+_M,0,1,1000,100,200,200,100
 </pre>
+{@caption Storyboard that will corrupt and eventually be deleted.}
 
-Only the two variables are really needed, the one sprite with the move command
-is just there to show the storyboard keeps working while this happens. After
-saving this map, variables section looks like this:
+When saving the first time, the object declaration will be changed to
+{@code Sprite,Foreground,Centre,d,0,0}. Then the variables will be processed,
+changing that line to {@code Sprite,,,,Centre,d,0,0}, effectively making this
+object declaration invalid. This will happen to every object (except for
+objects that are not on the {@code Foreground} layer). This means the saved
+storyboard will only contain invalid objects. The result is that osu! will
+just delete the osb file when it's being saved again because it doesn't have
+any objects anymore.
+
+{@h3 Diskfiller}
+
+Of course we came up with some more ideas. Just making the storyboard invalid
+wasn't enough, we needed more. We found a way to make the storyboard file grow
+in size each time it's being saved.
 
 <pre>
-[Variables]
-,,,=,,,,,,,,
-,,,,,,,=,,,
+[256]
+,,=,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,=,,
+[32]
+4,3,1,d,0,0
 </pre>
+{@caption The single event line is just there because osu! doesn't load \
+storyboards without commands.}
 
-The variable grew a bit longer, and it keeps growing when saving the map again.
+When opening this in the editor and saving, you'll notice that it changed
+slightly. Apparently every line in the variable section is also checked for
+variable replacement when saving the map.
 
-{@h4 Staircase of death}
+{@img=blog/000/fill.png;an editor with the storyboard file open, there are \
+way more comma's than in the previous code block;;That's a bit more comma's \
+than there were earlier.}
 
-It needed to be completely annihilated &gt;:D.
+Re-open and save this two more times. Saving the beatmap three times made the
+file size grow from a humble 92 bytes to a whopping 165.785.012 bytes (165MB)!
+At this point osu! fails to even load the storyboard again.
+
+It's also possible to start with less comma's in the beginning, so it would
+take a little more save cycles to make it grow so big. It is hard to get it
+right though. The sample I showed above seemed to have the best outcome on my
+machine. I tried various amounts of comma's at the start, but that almost always
+ended with a file that's 'only' a few hundred kilobytes in size and trying to
+save it once more just results in osu! running out of memory and erroring.
+
+The fun thing is that this is not really noticable (other than the load and save
+times) since the whole storyboard keeps working like there's nothing wrong. It's
+only those two lines that are being expanded, which doesn't affect the other
+parts.
+
+{@h3 Staircase of death}
+
+Filling the disk is cool and all, but not very reliable. It's possibly also very
+dependent on the user's machine. And it's more fun to completely annihilate the
+storyboard instead of just filling it &gt;:D. So I came up with the following
+configuration (the commands under events are just some commands I copied from my
+storyboard to provide an example on what this does later).
+
+<pre>
+[256]
+$,=,
+$,$,=1
+$,$,$,=2
+$,$,$,$,=3
+$,$,$,$,$,=4
+$,$,$,$,$,$,=5
+$,$,$,$,$,$,$,=6
+$,$,$,$,$,$,$,$,=7
+$,$,$,$,$,$,$,$,$,=8
+$,$,$,$,$,$,$,$,$,$,=9
+$,$,$,$,$,$,$,$,$,$,$,=0
+[32]
+4,3,8,2,0,0
+_R,0,15300,,2.97734
+_M,0,15300,,273.4028,320.43344
+_V,0,15300,,14.03057,0.5
+_R,0,15350,,3.01256
+_M,0,15350,,273.80444,321.19431
+_V,0,15350,,14.08539,0.5
+_R,0,15400,,3.0477
+</pre>
+{@caption The staircase of death.}
+
+The {@code $} can be replaced with anything, really, but this is kind of what I
+ended up using.
 
 {@blockquote we should call this the staircase of death}
 {@caption Emily - August 26, 2018}
 
-{@h5 Upload failure}
+After saving the map in osu!, the commands as shown in the example will look
+quite a bit different.
+
+<pre>
+Sprite,Foreground,BottomLeft,"2",$,$,$,$,$,$,$,$,$,$,$,,$,$,$,$,$,$,$,$,$,$,$,
+ M,$,$,$,$,$,$,$,$,$,$,$,,$,$,$,$,$,$,$,$,300,$,$,$,$,$,$,$,$,$,$,$,$,3.4028,$\
+,$,$,$,20.4334
+ R,$,$,$,$,$,$,$,$,$,$,$,,$,$,$,$,$,$,$,$,300,$,$,$,$,.97734
+ V,$,$,$,$,$,$,$,$,$,$,$,,$,$,$,$,$,$,$,$,300,$,$,$,$,$,$,$,$,.03057,$,$,$,$,$\
+,$,$,$,$,$,$,.5
+ M,$,$,$,$,$,$,$,$,$,$,$,,$,$,$,$,$,$,$,$,350,$,$,$,$,$,$,$,$,$,$,$,$,3.8044,$\
+,$,$,$,21.1943
+ R,$,$,$,$,$,$,$,$,$,$,$,,$,$,$,$,$,$,$,$,350,$,$,$,$,$,.01256
+ V,$,$,$,$,$,$,$,$,$,$,$,,$,$,$,$,$,$,$,$,350,$,$,$,$,$,$,$,$,.08539,$,$,$,$,$\
+,$,$,$,$,$,$,.5
+ R,$,$,$,$,$,$,$,$,$,$,$,,$,$,$,$,$,$,$,$,400,$,$,$,$,$,.0477
+</pre>
+{@caption Osu! won't like this.}
+
+Now imagine a million lines like that... Osu! did run out of memory when I tried
+to do it on the finished storyboard, so I reduced the staircase to only have the
+3 first steps. It probably could've handled more, but I probably didn't feel
+like testing that since it takes 50 seconds to load the storyboard and another
+45 seconds to save it. But even with only the first three steps, the file goes
+from 25MB to 41MB in size.
+
+Another fun thing is that osu! shows a messagebox everything it couldn't parse
+a command. Since there are now almost a million lines that are invalid, osu!
+will throw a million messageboxes at your face when you try to re-open the map.
+The only effective way to get out of that is to just kill the osu! process.
+
+{@h4 Upload failure}
 
 When I was done and tried to upload my map, I encountered a problem. The
 first time I pressed upload, osu! just crashed. But that's not really the
@@ -1172,6 +1300,11 @@ just upload the non-destroyed version, yey!
 {@img=blog/000/writeerr.png;In-game bubble notification saying osu! was unable \
 to write to file;;Take that, game!}
 
+{@h2 Shenanigans}
+
+end with 2 LFs
+SB load? (remove bg)
+NaN and +Inf
 
 {@h2 Related work}
 
