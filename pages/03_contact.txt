@@ -1,6 +1,6 @@
 contact
 
-01 Sep 2018
+12 Sep 2018
 --------------------------------------------------------------------------------
 {@h1 contact {@small {@ia=pages/03_contact.txt [txt]}}}
 
@@ -23,4 +23,7 @@ Here are some ways to contact me or places where you can find me on the net.
     }
   }
 }
+
+Note that I have very low tolerance for bullshit, memes and shitposting so
+don't even bother if that's what you want to do.
 
