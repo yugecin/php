@@ -561,7 +561,41 @@ rubik's cube} and {@#=Starfield torus| starfield torus} scenes.
 
 {@h4 Default value quirk}
 
-this actually also made things easier (phantom commands)
+At some point I saw something rather strange. Consider the following code.
+
+<pre>
+Sprite,Foreground,Centre,d,100,200
+_F,0,1000,,1
+_M,0,5000,,200,200
+_S,0,5000,,2
+_C,0,5000,,255,0,255
+_F,0,9000,,1
+</pre>
+
+The idea is that the sprite shows up at the first second. On the 5th second, it
+should be moved to the coordinates {@code 200,200}, colored magenta and scaled
+to 2x the size. Then at the 9th second it should disappear again.
+
+Here's the weird thing: what actually happens is that the sprite shows up at the
+first second (as expected), but it already is at position {@code 200,200},
+colored magenta and scaled to 2x the size. It seems like as soon as there is a
+command for a property, the default value of that property will change to the
+start values of that command. Take the scale command for example. One would
+expect the default value for scaling is 1x, and it is. But as soon as there is
+one scale command, like in the example above, somehow the default value from the
+start is the value as seen in that first command (so 2x in this case). This
+happens for every property, so here the {@code 100,200} initial position is also
+ignored because there's a move command later on. The default color mask is
+white, but here the color is magenta from the start since there's a color
+command and its start value is magenta.
+
+I'm not sure if this is a bug or intented but it did cause me some headaches
+every now and then as to why some sprites were rotated/scaled/faded/colored
+incorrectly, until I remembered that this is a thing.
+
+On the other side, I think this actually also made things easier for the
+phantom commands, since the color command for a phantom object is timed later
+than the time at which the object should appear.
 
 {@h4 Output report}
 
@@ -1339,6 +1373,7 @@ to write to file;;Take that, game!}
 end with 2 LFs
 SB load? (remove bg)
 NaN and +Inf
+compare yt comment world.execute
 
 {@h2 Related work}
 
