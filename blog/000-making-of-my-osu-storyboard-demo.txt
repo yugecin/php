@@ -599,6 +599,19 @@ than the time at which the object should appear.
 
 {@h4 Output report}
 
+During export, progress is printed every 5% to make it visible how much is done.
+This was quite useful because it takes several minutes to render the whole
+thing, most likely because nothing is really optimized since it's not really
+needed.
+
+After everything is rendered, the commands are being processed per scene and
+some more output is shown. For every scene, it shows the name, fps, phantom fps,
+and how large it is (as in how many bytes). Then the total size is shown and
+how much each sprite is used. At the end the easing results are also shown (see
+{@#=Combining multiple fade/scale commands |combining multiple fade/scale
+commands}): how many times it succeeded and failed, how many commands are saved,
+and how many bytes it saved.
+
 {@img=blog/000/export.png;image of the console showing how many KB each scene \
 is, and usage count of sprites and ease commands;;The output when exporting \
 to a storyboard file.}
