@@ -618,6 +618,59 @@ to a storyboard file.}
 
 {@h3 Type 'library'}
 
+In the beginning I started with a {@code P3D} struct and some extension methods
+so I could do things like {@code P3D p = p1.sub(p2)}. When I see other people's
+vector code, it's usually pretty object oriented and I don't like that. Mine
+wasn't very object oriented, but still too much to my likings. Luckily I
+remembered C# has operator overloading, so it's actually possible to write these
+things like we can in shader code. At this point I was very happy I chose to do
+this in C# rather than Java, since this isn't possible in Java in the current
+year.
+
+<pre>
+vec3 dp = v3(0f);
+float pr = progress(134000, 138200, scene.time);
+vec3 fr = v3(2 * -35f, 25f, -10f);
+vec3 to = v3(2 * 35f, 25f, -10f);
+dp += lerp(fr, to, eq_cub(pr, v2(.2f, .4f), v2(.9f, .6f))) * 2f;
+vec3 lookat = v3(-10f) * cos(pr * TWOPI);
+lookat.xy = 0f;
+vec3 dir = dp - lookat;
+vec3 basecolor = lerp(v3(0f), v3(.6f, .4f, 1f), scene.progress);
+vec4 color = v4(basecolor, 1f);
+</pre>
+{@caption Random code showing how things are being done.}
+
+{@code v3()} is method that allows me to write {@code new vec3()} but shorter.
+Same for {@code v2()} and {@code v4()} (yes I made those classes with
+lowercase name because it looks better #shaders, fight me). {@code progress()}
+is basically a reversed {@code lerp()}. {@code eq_cub()} is a cubic bezier
+interpolation with 2 given vec2's that define the curve. Thanks to operator
+overloading I can do things like {@code vec3 - vec3 * number}.
+
+In projects like these, I like to put everything inside a partial class. This
+basically creates a global scope and allows me to simply write {@code rad(x)}
+instead of something stupid like {@code MathHelper.rad(x)}. I wrote some
+simple functions so I can just do {@code cos(x)} instead of {@code (float) \
+Math.cos(x)}. Not doing this makes me insane. Like really, which variant
+would you prefer?
+
+<pre>
+dp += lerp(fr, to, eq_cub(pr, v2(.2f, .4f), v2(.9f, .6f))) * 2f;
+vec3 lookat = v3(-10f) * cos(pr * TWOPI);
+</pre>
+{@caption Two lines from the previous example showing simplicity.}
+
+<pre>
+dp += Utils.lerp(fr, to, Equations.eq_cub(pr, new vec2(.2f, .4f), new vec2\
+(.9f, .6f))) * 2f;
+vec3 lookat = new vec3(-10f) * (float) Math.cos(pr * (float) Math.PI * 2f);
+</pre>
+{@caption Same code as before, but stupid.}
+
+My choice is instantly made. Another option is to use static imports, but that
+only works since C# 6.0 and I don't use that.
+
 {@h3 3d projection}
 
 {@blockquote "use the tools that you have" on a whole new level}
