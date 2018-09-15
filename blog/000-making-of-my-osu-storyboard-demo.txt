@@ -750,9 +750,10 @@ shows a sample object declaration like this: {@code Sprite,Pass,Centre,"Text\
 like this (that will have lots of object declarations), why wouldn't you use
 a filename that's as short as possible? I've seen storyboard that use
 filename like {@code SB\alien\spaceship.png}. Maybe it might be a bit
-annoying while you're working on it (not for me since keeping track of only
-4 sprites is not that hard x3), but you can always change it to something
-shorter at the end.
+annoying to use one letter filenames while you're working on it if you have
+many sprites (not for me since keeping track of only 4 sprites is not that
+hard x3), but you can always change the names to something shorter when it's
+finished.
 
 So I gave my sprites each only one letter as filename. The wiki states that
 the quotes are only really needed when the path has spaces in it, so I could
@@ -814,29 +815,28 @@ declarations had to be written using those long words. It might make it easier
 to read the osb file (for humans), but at the end storyboards can have so many
 objects it's just unnecessarily taking up lots of space. But I guess the
 developers didn't really imagine people would add lots of particles and (faux)
-3d objects in their storyboards.
+3d objects in their storyboards back when they made this 10+ years ago.
 
 This also works for sections names, so {@code [Events]} can be written as
-{@code [32]}, {@code [Variables]} is {@code [256]}, etc etc. These values can
-be found nowadays in the osu repository: {@a=https://github.com/ppy/osu/blob/\
-5e5a74293e2710690328dda0086ec0fe9617ac24/osu.Game/Beatmaps/Formats/\
+{@code [32]}, {@code [Variables]} is {@code [256]}, etc etc. All these values
+can be found nowadays in the osu repository: {@a=https://github.com/ppy/osu/\
+blob/5e5a74293e2710690328dda0086ec0fe9617ac24/osu.Game/Beatmaps/Formats/\
 LegacyDecoder.cs#L127 LegacyDecoder.cs in ppy/osu}. Note that they messed it
 up there, the values for the sections are wrong.
 
 <pre>
 protected enum Section
 {
-    None = 0,
-    General = 1,
-    Editor = 2,
-    Metadata = 4,
-    Difficulty = 8,
-    Events = 16,
-    TimingPoints = 32,
-    Colours = 64,
-    HitObjects = 128,
-    Variables = 256,
-    Fonts = 512
+	Unknown = 0,
+	General = 1,
+	Colours = 2,
+	Editor = 4,
+	Metadata = 8,
+	TimingPoints = 16,
+	Events = 32,
+	HitObjects = 64,
+	Difficulty = 128,
+	Variables = 256,
 }
 </pre>
 {@caption The correct values for the sections.}
@@ -917,7 +917,7 @@ live version, it only exists in the osu!wiki repository. I don't even...  I made
 a pull request: {@a=https://github.com/ppy/osu-wiki/pull/1661 osu-wiki PR#1661}
 to add a link to the shorthand page, so hopefully that will be fixed soon.
 
-{@b Note:} my pull request was merged before I even finished this blogpost, so
+{@b Note:} that pull request was merged before I even finished this blogpost, so
 yey!
 
 {@h3 Initial position}
@@ -1293,13 +1293,15 @@ _M,0,1,1000,100,200,200,100
 {@caption Storyboard that will corrupt and eventually be deleted.}
 
 When saving the first time, the object declaration will be changed to
-{@code Sprite,Foreground,Centre,d,0,0}. Then the variables will be processed,
-changing that line to {@code Sprite,,,,Centre,d,0,0}, effectively making this
-object declaration invalid. This will happen to every object, so the saved
-storyboard will only contain invalid objects (except if there are objects that
-are not on the {@code Foreground} layer, but more variables can be added to
-make everything corrupt). The result is that osu! will just delete the osb file
-when it's being saved again because it doesn't have any objects anymore.
+{@code Sprite,Foreground,Centre,d,0,0}, because that's the way osu! saves that.
+Then the variables will be processed, changing that line to
+{@code Sprite,,,,Centre,d,0,0}, effectively making this object declaration
+invalid. This will happen to every object, so the saved storyboard will only
+contain invalid objects (except if there are objects that are not on the
+{@code Foreground} layer, but more variables can be added to make everything
+corrupt). The result is that osu! will just delete the osb file when it's being
+saved a second time because it doesn't have any objects anymore since the
+invalid ones are skipped.
 
 {@h3 Diskfiller}
 
@@ -1322,17 +1324,17 @@ slightly. Apparently every line in the variable section is also checked for
 variable replacement when saving the map.
 
 {@img=blog/000/fill.png;an editor with the storyboard file open, there are \
-way more comma's than in the previous code block;;That's a bit more comma's \
+way more commas than in the previous code block;;That's a bit more commas \
 than there were earlier.}
 
 Re-open and save this two more times. Saving the beatmap three times made the
 file size grow from a humble 92 bytes to a whopping 165.785.012 bytes (165MB)!
 At this point osu! fails to even load the storyboard again.
 
-It's also possible to start with less comma's in the beginning, so it would
+It's also possible to start with less commas in the beginning, so it would
 take a little more save cycles to make it grow so big. It is hard to get it
 right though. The sample I showed above seemed to have the best outcome on my
-machine. I tried various amounts of comma's at the start, but that almost always
+machine. I tried various amounts of commas at the start, but that almost always
 ended with a file that's 'only' a few hundred kilobytes in size and trying to
 save it once more just results in osu! running out of memory and erroring.
 
@@ -1433,6 +1435,10 @@ just upload the non-destroyed version, yey!
 
 {@img=blog/000/writeerr.png;In-game bubble notification saying osu! was unable \
 to write to file;;Take that, game!}
+
+{@h3 Valid corruption}
+
+
 
 {@h2 Shenanigans}
 
