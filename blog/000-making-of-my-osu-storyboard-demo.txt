@@ -49,12 +49,12 @@ mode, it's not a human playing.
 {@h2 Backstory and timeline}
 
 {@blockquote
-robin_be: is anyone familiar with storyboarding?<br/>
-Emily | Sunpy: I am somewhat familiar with it. But I havent done any
+{@b robin_be:} is anyone familiar with storyboarding?<br/>
+{@b Emily | Sunpy:} I am somewhat familiar with it. But I havent done any
 storyboarding in along time. But im guessing you are thinking about opsu
 port?<br/>
-robin_be: nah I'm planning something that's gonna fail miserably<br/>
-robin_be: what is an .osb file?
+{@b robin_be:} nah I'm planning something that's gonna fail miserably<br/>
+{@b robin_be:} what is an .osb file?
 }
 {@caption yeah... silly me in #offtopic in Knorke discord, July 12th 2017}
 
@@ -597,6 +597,47 @@ On the other side, I think this actually also made things easier for the
 phantom commands, since the color command for a phantom object is timed later
 than the time at which the object should appear.
 
+{@h4 Empty lines error}
+
+I have no idea what to call this but for some reason osu! throws an error when
+the last non-empty line is a command and it's not followed by at least 2 empty
+lines.
+
+<pre>
+[Events]
+Sprite,Foreground,Centre,t.png,100,100
+_F,0,0,10000,1,1
+</pre>
+{@caption Osu! doesn't like this.}
+
+{@img=blog/000/lines.png;error messagebox saying 'Loading this beatmap \
+failed.Storyboard error on line 3Would you like to edit as a new map?';;\
+Yeap, osu! doesn't like this.}
+
+It shows this error dialog but if you click 'No' you see that everything did
+load. When adding two empty lines at the end, this problem does not show up.
+When saving the map again, osu! adds comments to the storyboard file, so the
+last line is now a comment followed by a single empty line and suddenly it's not
+a problem anymore.
+
+<pre>
+[Events]
+//Background and Video events
+//Storyboard Layer 0 (Background)
+//Storyboard Layer 1 (Fail)
+//Storyboard Layer 2 (Pass)
+//Storyboard Layer 3 (Foreground)
+Sprite,Foreground,Centre,"t.png",100,100
+ F,0,0,10000,1
+//Storyboard Sound Samples
+</pre>
+{@caption Osu! does like this.}
+
+It's weird behavior but the reason I'm even mentioning this is that this exact
+issue made me lose a lot of time and caused lots of headaches as to why the
+storyboard didn't work when I tried to make a working storyboard at the very
+beginning of starting this whole project. Was not fun.
+
 {@h4 Output report}
 
 During export, progress is printed every 5% to make it visible how much is done.
@@ -731,7 +772,7 @@ generated file and read all the data. Every time before a frame gets rendered,
 the time is checked and the correct matrix is then used to perform the
 projection multiplication.
 
-But after a while it because clear that I was not going to move the camera in
+But after a while it became clear that I was not going to move the camera in
 SA, but rather use rotations in the scenes to move the world instead of using
 the camera. In the end, the whole data file is not used anymore and the
 projection multiplication is always done with the same matrix values. The
@@ -779,9 +820,127 @@ Thread.CurrentThread.CurrentCulture = c;
 
 {@h3 Rasterisation}
 
+To make an actual opaque cube, I thought of just having lots of square sprites
+in a large grid, effectively having a matrix of pixels, or (as I call it) a
+pixelscreen. In order to do that, I needed a rasterizer. I found a nice tutorial
+video on how to make one: {@a=https://www.youtube.com/watch?v=9A5TVh6kPLA \
+YouTube: 3D Programming Fundamentals [Triangle Rasterization] Tutorial 5}. The
+videos in that series are quite nice. They're also pretty to the point. The
+videos are maybe slightly long but I just look at the theory section and skip
+everything else and then just go implement it myself using the theory I just
+learned.
+
+{@img=blog/000/pixelscreen.png;4 pixelated cubes with different pixel sizes, \
+the last one having some spacing between the pixels;;Pixelscreen using pixel \
+sizes of 2, 6, 10, 6.}
+
 {@h3 Opaque surfaces}
 
+One day after Emily showed me her wireframe cube, she came up with a method to
+draw any 4 point polygon with just 4 right triangles. It's actually very simple
+but you just have to think of it. The idea is that every triangle can be made
+with two right triangles by splitting the longest side in two. Since a (skewed)
+rectangle can be easily split into two triangles, at the end all we need is one
+right triangle sprite and use 4 of those to make {@i any} skewed rectangle.
+
+{@img=blog/000/cubs.gif;rotating cube animation with each triangle having a \
+distinct color;;How 12 right triangles can make a cube (this is the {@code \
+ztestcube3} scene slightly modified).}
+
+After messing with positioning, rotation and scaling, I made it work in the
+storyboard with a 100x100 right triangle using the {@code BottomLeft} origin.
+
+{@img=blog/000/tricub.gif;animation showing how 12 right triangles are being \
+scaled and rotated to make the cube;;Scaling and rotation being applied to the \
+triangles.}
+
 {@h3 Opaque 3d objects}
+
+A cube is easy in the sense that it doesn't have any overlapping surfaces. But
+using multiple cubes or objects comes with overlapping issues. In storyboard
+code, a sprite will be drawn on top of any other sprite that was declared
+before. The order of the declarations in the file affects the overlapping.
+
+For example, for the 3d text scene I could order the declarations from right
+to left or left to right. Either way comes with issues because the last ones
+will overlap the previous ones.
+
+{@img=blog/000/orderbad.png;3d text where surfaces that should be in the \
+background are actually drawn on top;;Drawing order from right to left and \
+left to right. Both have overlapping issues.}
+
+The way I fixed this was to add a second copy of every triangle (only when it's
+actually needed of couse). When the left side of the cube should be culled, it
+uses the copy in the left-to-right batch. If it shouldn't be culled, it uses the
+copy in the right-to-left batch. In the storyboard file, I dumped all the
+sprites used for right-to-left first, followed by all the sprites used for
+left-to-right. By rendering the right copy at the right time, no overlapping
+issues appeared (except perhaps in the middle at the part where they join).
+
+Note that there are still overlapping issues, but vertically instead of
+horizontally. In theory I think that should be fixable by having more batches
+where the vertical order changes too. I didn't really need this because at the
+end that issue was never visible with camera angles that I used.
+
+{@img=blog/000/ordergood.png;3d text with correct overlapping;;The same text \
+but using both copies. The part with the grey background are sprites from the \
+right-to-left group.}
+
+The overlapping is actually visible at the end of the heart rotation, just
+before the greetings part. I didn't bother adding overlapping correction to
+that part because it's slightly more complicated than having a few cubes
+horizontally next to each other and it wasn't too visible thanks to the camera
+angles.
+
+{@h3 Culling bug}
+
+I noticed a strange problem when I was drawing the cube in the very beginning.
+Sometimes some random parts of surfaces that shouldn't be visible popped up.
+
+{@img=blog/000/culbug.png;cube with a small line from a surface that shouldn't \
+be visible;;Yea that cyan line-ish thing shouldn't be there.}
+
+After I while I finally found out that I made a mistake in the cross product
+calculations, used for backface culling.
+
+{@img=blog/000/culbugc.png;the diff of the commit, showing a - was replaced \
+with a *;;Oops.}
+
+{@blockquote
+{@b yugecin:} aaaaaaa<br/>
+{@b yugecin:} that second `-` should be a `*`<br/>
+{@b yugecin:} good thing I figured that out before going bonkers on debugging\
+<br/>
+{@b yugecin:} actually I was preparing debugging and saw it xd
+}
+{@caption March 4, 2018}
+
+But after that fix there was still a culling issue that showed up very rarely.
+Sometimes it would show entire triangles that shouldn't be visible and at other
+times it wouldn't show them they they should be visible.
+
+{@img=blog/000/culbug2.png;cube with a small line from a surface that \
+shouldn't be visible;;That on the left shouldn't be there, on the right the \
+top is missing.}
+
+I had a hard time finding the cause here so I let it be like this for 4 months
+until I finally found the culprit. As it turns out, I made the same mistake
+twice. This time it took me longer to find the issue though (maybe you noticed
+it in the previous image?).
+
+{@img=blog/000/culbug2c.png;the diff of the commit, showing a - was replaced \
+with a *, this time on a different place;;Oops<sup>2</sup>.}
+
+{@blockquote
+{@b yugecin:} aaaaaaaaaa I got the same issue again with my cross product
+like the one I told you about .. 4 months ago.. where the last minus should be
+multiplication<br/>
+{@b yugecin:} only this time I wasted way more time debugging on it<br/>
+{@b yugecin:} actually its not the same exact mistake<br/>
+{@b yugecin:} turns out I did it wrong 2 times<br/>
+{@b yugecin:} but on the 2nd place it had a way more subtle result
+}
+{@caption August 2, 2018}
 
 {@h3 FFT}
 
@@ -860,9 +1019,10 @@ to have, why not.
 {@h3 Sprite sizes}
 
 This is not really related to the storyboard file, but why not make the sprite
-files themselves as small as possible? One of my favorite tools is
-{@a=https://pngquant.org/ pngquant}, which compresses png files (and does this
-really well).
+files themselves as small as possible? One of my favorite tools to do this is
+{@a=https://pngquant.org/ pngquant}, which compresses png files and does this
+really well (I also used this to compress the images I used in this blogpost,
+to save bandwidth and speed up the loading time).
 
 I use {@a=https://www.getpaint.net/ Paint.NET} for image editing
 (I shake my head at people who (illegally) use Adobe Photoshop to do simple
