@@ -1,6 +1,6 @@
 projects
 
-16 Sep 2018
+17 Sep 2018
 --------------------------------------------------------------------------------
 {@h1 projects {@small {@ia=pages/30_projects.txt [txt]}}}
 
@@ -144,6 +144,26 @@ this list}
 
 <hr/>
 
+{@h2 colandreas-db-modelselector}
+
+{@b Status:} finished
+
+Tiny program that filters {@a=https://github.com/Pottus/ColAndreas ColAndreas}
+database files. ColAndreas is a plugin for a SA-MP server to provide collision
+insight in the game world. The thing is that its database file containing all
+the model collision data is easily 44MB and this all ends up in memory of the
+server. This script allows one to filter to data file to only contain the
+models that are actually necessary, reducing the memory footprint of the server.
+
+{@lang-c}
+
+{@ul
+  {@li {@a=https://github.com/basdon/colandreas-db-modelselector GitHub:
+basdon/colandreas-db-modelselector}}
+}
+
+<hr/>
+
 {@h2 txtnotes}
 
 {@b Status:} finished, maintenance
@@ -154,6 +174,26 @@ Simple web-based plaintext notekeeper. I used this one myself a lot, every day.
 
 {@ul
   {@li {@a=https://github.com/yugecin/txtnotes GitHub: yugecin/txtnotes}}
+}
+
+<hr/>
+
+{@h2 plquery}
+
+{@b Status:} finished
+
+A php script that queries a SA-MP server to make activity graphs (using the
+{@a=https://github.com/goat1000/SVGGraph SVGGraph library}). Was made for a
+specific server that is now down, but can be easily modified to work for any
+server.
+
+{@lang-php}
+
+{@ul
+  {@li {@a=https://github.com/thepilotslife/plquery GitHub:
+thepilotslife/plquery}}
+  {@li {@a=https://robin.thisisgaming.org/pl/stats/ data (now archived since
+target server doesn't exist anymore}}
 }
 
 <hr/>
