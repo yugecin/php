@@ -4,5 +4,101 @@ projects
 --------------------------------------------------------------------------------
 {@h1 projects {@small {@ia=pages/30_projects.txt [txt]}}}
 
-todo
+An (incomplete) list of project I'm working on or have been working on.
+
+~INDEXGOESHERE~
+
+<hr/>
+
+{@h2 basdon-fly}
+
+{@b Status:} coming soon-ish
+
+Codename for now. Planned aviation themed San Andreas Multiplayer server
+currently under development. Also contains a website.
+
+{@lang-pawn} {@lang-c} {@lang-java} {@lang-php}
+
+<hr/>
+
+{@h2 opsu-dance}
+
+{@b Status:} long-running, paused, occasional updates
+
+Is a fork of {@a=https://github.com/itdelatrisu/opsu opsu!}, which is an
+open-source clone of the {@a=https://osu.ppy.sh osu!} game. My fork has more
+UI/UX improvements (subjective) and contains cursor dance stuff and more
+customization. I'm also a contributor to the opsu! project, mostly doing UI
+stuff.
+
+{@lang-java}
+
+{@ul
+  {@li {@a=https://github.com/yugecin/opsu-dance GitHub: yugecin/opsu-dance}}
+}
+
+<hr/>
+
+{@h2 osukps}
+
+{@b Status:} largely finished, occasional updates
+
+{@lang-csharp}
+
+{@ul
+  {@li {@a=https://github.com/yugecin/osukps GitHub}}
+}
+
+<hr/>
+
+{@h2 php}
+
+{@b Status:} finished, maintenance
+
+My personal home page. The thing you're probably watching right now. Is
+basically a static site generator using sed and bash scripts.
+
+{@lang-sed} {@lang-shell}
+
+{@ul
+  {@li {@a=https://github.com/yugecin/php GitHub: yugecin/php}}
+  {@li {@a=https://robin.basdon.net website (you're probably watching it now)}}
+}
+
+<hr/>
+
+{@h2 tsstats}
+
+{@b Status:} finished, maintenance
+
+A teamspeak3 bot that idles on a server and collects statistics like user
+activity, channel activity, country activity, kicks &amp; bans. Also includes a
+live (updated every 5 minutes) viewer of the server.
+
+Also has a webviewer (in a separate repo) which shows the stats in a friendly
+way. Is not necessary to use, but is useful if you don't want to write your own
+thing or can be used as reference.
+
+Beware: this was written years ago and might be coded weirdly.
+
+{@ul
+  {@li {@a=https://github.com/yugecin/tsstats GitHub: yugecin/tsstats}}
+  {@li {@a=https://github.com/yugecin/tsstats-webviewer GitHub:
+yugecin/tsstats-webviewer}}
+}
+
+See it in action:
+
+{@ul
+  {@li {@a=https://tsstats.thisisgaming.org/ TiG, since 24 Aug 2014}}
+  {@li {@a=https://exp-gaming.net/teamspeak/ exp-gaming, since 1 May 2017)}}
+  {@li {@a=http://stats.sonic-server.net/ Sonic Fidelitus Gaming, since 1 Jan
+2018)}}
+}
+
+{@i {@ia=contact.html Contact me} if you use this and want to be featured in this list}
+
+{@lang-java} {@lang-php}
+
+<hr/>
 

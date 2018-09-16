@@ -74,3 +74,14 @@ a.s {
 	color: LIGHTGREY;
 	float: right;
 }
+span.l {
+	width: .9em;
+	height: .9em;
+	position: relative;
+	top: 2px;
+	display: inline-block;
+	border-radius: 50%;
+}
+span.l + span.l {
+	margin-left: 1em;
+}
