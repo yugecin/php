@@ -33,7 +33,7 @@ it's a rythm game where you have to click circles which are (hopefully) synced
 with the music playing. There are multiple game modes, but the circle clicking
 one (also called 'osu!standard') is the most popular one.
 
-Beatmaps (which basically contain the music & metadata and describe when and
+Beatmaps (which basically contain the music &amp; metadata and describe when and
 where circles, sliders, spinners, etc should be) can also include a video and/or
 a storyboard. A storyboard, in its bare essence, describes a series of images
 and each image can have a timed series of transformations that will be applied
@@ -589,7 +589,7 @@ ignored because there's a move command later on. The default color mask is
 white, but here the color is magenta from the start since there's a color
 command and its start value is magenta.
 
-I'm not sure if this is a bug or intented but it did cause me some headaches
+I'm not sure if this is a bug or intended but it did cause me some headaches
 every now and then as to why some sprites were rotated/scaled/faded/colored
 incorrectly, until I remembered that this is a thing.
 
@@ -637,6 +637,7 @@ It's weird behavior but the reason I'm even mentioning this is that this exact
 issue made me lose a lot of time and caused lots of headaches as to why the
 storyboard didn't work when I tried to make a working storyboard at the very
 beginning of starting this whole project. Was not fun.
+
 
 {@h4 Output report}
 
@@ -944,13 +945,69 @@ multiplication<br/>
 
 {@h3 FFT}
 
+Since I also wanted to add a spectrum or something with music, it would be nice
+if I had some audio data. At first I used
+{@a=https://github.com/malictus/fftexport fftexport}, but somehow I couldn't get
+it right, the result seemed a bit off. Maybe I used wrong settings (I have no
+idea about anything audio related) or maybe I failed to parse the resulting file
+correctly (although the result was decent enough so it would be impressive if I
+managed to do that wrong and still get somewhat accurate results).
+
+In the end I just used {@a=https://old.ppy.sh/forum/t/399437 spectrumGenerator}
+made by someone named {@a=https://old.ppy.sh/u/1331447 XinCrin}. This tool can
+generate storyboard commands that will display a spectrum given the settings
+you feed it. Then I made a little program (in Java) that parses said generated
+storyboard file and makes a file with raw values, which I then used in my
+application.
+
 {@h3 Font rendering}
+
+Throwback to 2015, when we had to make a group project in school. Every group
+had to make the same thing, a puzzle bobble game. Most of the groups did this by
+moving UI objects around (which was actually also the method that the teachers
+used and told us to use if we didn't know how to do it...). Our group, however,
+decided to make everything ourselves. We just used one big canvas (javafx) and
+made our own UI components. We also decided to go full retro.
+
+{@img=blog/000/puzbob.png;main menu of the game... idk how to describe this;;\
+Puzzle bobble project showing the same font rendering (and Rickroll easter egg \
+in the background).}
+
+{@img=blog/000/puzbobgame.png;game play of the bubble shooter;;Actual gameplay \
+for the curious people.}
+
+You may notice that the text in these images are very similar to the text in my
+storyboard. That's because they are in fact using the same font. It's a bitmap
+font which is used in the {@a=https://en.wikipedia.org/wiki/BBC_Micro BBC
+micro}. I basically copied the old code I wrote for this project and converted
+it to C# for use in the storyboard.
+
+{@img=blog/000/bbcmode1.png;image showing characters in the bbc mode 1 font\
+;;BBC micro mode 1 font.}
+
+Since it's a bitmap font, I decided to store it in a binary format. The first
+byte in the font file is how tall the characters are, the charheight. After
+that are the actual characters stored. Each character starts with one byte which
+describes the width of the character. Then come a number of bytes, the same
+amount as charheight. Each byte describes which pixel needs to be on for that
+row in the character. After that comes either the next character or EOF.
+
+To use it you only need to do some bitwise operations. Basic stuff. Like come
+on, if you consider yourself a programmer you should be familiar with working on
+the bits and bytes level (maybe unless you're a javascript dev or something...).
+
+{@img=blog/000/font.png;dissecting the font file;;Example of how the \
+{@code &amp;} character is saved.}
 
 {@h2 Scene breakdown}
 
 {@h3 Intro cube}
 
 {@h3 Tunnel}
+
+Idea from the lighting show at Rampage 2017/Zillion.xxx 2017. I didn't go there,
+but I saw it on different videos. Example: (epilepsy warning)
+{@a=https://youtu.be/LAoX8WSiLm0?t=223 YouTube: Zillion.xxx 17/02/2017} at 3:43.
 
 {@h3 Spectrum}
 
@@ -990,7 +1047,7 @@ shows a sample object declaration like this: {@code Sprite,Pass,Centre,"Text\
 \Play2-HaveFunH.png",320,240}. First of all, if you're making a storyboard
 like this (that will have lots of object declarations), why wouldn't you use
 a filename that's as short as possible? I've seen storyboard that use
-filename like {@code SB\alien\spaceship.png}. Maybe it might be a bit
+filenames like {@code SB\alien\spaceship.png}. Maybe it might be a bit
 annoying to use one letter filenames while you're working on it if you have
 many sprites (not for me since keeping track of only 4 sprites is not that
 hard x3), but you can always change the names to something shorter when it's
@@ -1703,30 +1760,112 @@ When loading again, it gets replaced to {@code _V,0,50,,00.21683,0.5}. The x
 scale is now changed from {@code 1.21683} to {@code 0.21683}. This happens to
 every value, including times and colors etc.
 
-{@h2 Shenanigans}
-
-end with 2 LFs
-SB load? (remove bg)
-NaN and +Inf
-compare yt comment world.execute
-
 {@h2 Related work}
 
-dualife, flower trip, (others I can't remember atm)
+When I was almost finished with my storyboard, I found out about the
+{@a=https://old.ppy.sh/s/525470 dualive beatmap}. Its storyboard features a 3d
+wireframe tetrahedron and spectrum. (Epilepsy warning)
+{@a=https://youtube.com/watch?v=GDIxvM5PHqE YouTube: Quarks - Dualive (Cinema)}.
 
-those had 3d wireframe objects, back in 2016. I found out about them when I
-was almost finished with my storyboard. I wish I saw them earlier, so I would
-know that decimals in move commands are allowed. Still, bad from my end that
-I didn't try enough to actually see if it was possible.
+I also found another one, made by the same creator,
+{@a=http://maxrchung.com/ Max}. In his
+{@a=http://maxrchung.com/projects/flowertrip Flower Trip blogpost} he links to
+this video of a 3d wireframe spectrum: {@a=https://youtu.be/YwqXa2dkG00 YouTube:
+Spectrum} (sorry Max I can't seem to find a full video of the whole map with
+storyboard).
+
+So those had 3d wireframe objects, back in 2016. I kind of wish I saw them
+earlier, so I would know that decimals in move commands are allowed and not
+ditch this project for months. Still, stupid from my end that I didn't try
+enough to actually see if it was possible.
+
+I'm not really involved in the osu! community so I don't know if there's more
+of these...
+
+There's also of course the {@a=https://old.ppy.sh/b/1012836
+world.execute(me);} storyboard by Exile-. Someone in the comments of my video
+asked if my storyboard could have a higher framerate. I replied that it would
+increase the size of the file greatly, to which someone mentioned the
+world.execute(me); storyboard. I replied the following:
+
+{@blockquote
+{@b robin_be:} the 3D objects in world.execute are in one position and have a
+constant rotation which are cleverly being done by only a few commands in a
+loop, which are eased from beginning to end, making the result very fluid (it
+basically has as much fps as osu is running on afaik). But the rotations here
+are not constant at all, not to mention that the camera is not in a static
+position, so it's pretty much impossible to do it as smooth. (Do note that some
+parts that are only made of dots: the tunnel, cube, waves, torus, stars, text,
+.. are eased and fluent, but that's just not possible with the opaque objects).
+}
+
+{@blockquote
+{@b Living Flower:} but still world.execute eats pretty much my whole pc when
+I'm trying to run it on on storyboard mode
+}
+
+{@blockquote
+{@b robin_be:} Same here. I just checked and the last 3d scene in world.execute
+(the heart with wings) is made using 10389 moving sprites and I guess that takes
+its toll. For comparison, my heart is made of 384 sprites (and less than half of
+those are shown simultaneously, because most are facing backwards) and the 3D
+text scene is made of 1036 sprites (maybe 500-ish or less shown simultaneously).
+Using that metric, my most demanding scene is the greetings part, because all
+the text is made using 3934 2x2 sprites.
+}
 
 {@h2 Epilogue}
 
-link her blog
-tweet
+So... this whole project (and blogpost) took a fair amount of my time, while I
+also wanted to work on different projects. But since this one is finite (ie it
+stops when it's finished), I felt like I couldn't really work on other
+long-running projects as long as this wasn't finished...
+
+It was fun to do and I'm quite content with the result. There are only a few
+things in my mind, like in retrospect it would've been cooler if it was a bit
+longer, I liked the pixelscreen used for the heart but I wanted to see more of
+it because it's such a nice effect in my opinion, I could've made some more
+complex 3d scenes... Maybe next time though ;)
+
+I managed to make this post so damn long but I have no idea what to write here.
+Welp, thanks for reading this.
+
+{@h3 Fun stuff}
+
+Since C#'s {@code float.Parse} also accepts {@code NaN} and the inifinity
+symbol, we also added that in the last line of the storyboard, just for the
+lols :)
+
+<pre>
+4,3,1,,NaN,-&infin;
+</pre>
+{@caption Won't be visible, but fun to have.}
+
+Emily also found out that if you put {@code NaN} as value in the osu file for
+{@code DistanceSpacing} in the {@code Editor} section, osu! just freezes and
+crashes when you press {@code ALT} in the editor on the compose tab. So of
+course I added that as well :) This reportedly seems to make this beatmap
+unimportable in lazer though, but I don't really care about lazer. It doesn't
+feel like osu! and it doesn't even run on my computer, it just crashes.
+
+{@h3 Storyboard load}
+
+The max storyboard load I've seen in my map is 6.95x for a split second just
+when the 3d text part starts but in the other parts it stays far below 0.25x
+(except in the last part of the tunnel scene where it zooms out). The SB load
+metric is flawed anyways, but it's still interesting to see. Especially because
+I've seen some other storyboards that go as far as 18.72x. I'm not complaining
+of course, just using a background makes it go to 1x, but 18x is a bit high
+(and that map is ranked).
 
 {@hr}
 
 {@blockquote also, turns out writing a blogpost takes a long while &lt;.&lt;}
 {@caption robin_be - September 3, 2018}
 
+Yes of course, especially if you almost make it longer then your bachelor's
+thesis (in terms of word count)... I swear I didn't plan to make it {@i this}
+long...
+
+{@a=https://blog.osufx.com/ Emily her blog}
 
