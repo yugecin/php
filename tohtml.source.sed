@@ -113,6 +113,15 @@ s_{@lang #\([0-9a-fA-F]\{6\}\)}_<span class="l" style="background-color: #\1"></
 		b nexttag
 	}
 
+	/{@nfa=[^ ]*\( \|$\)/ {
+		H
+		g
+		s_\(.*\)\n.*$_\1\n</a><img src="moin-www.png" alt="globe icon" title="external link"/>_
+		x
+		s/.*\n\(.*\){@nfa=\([^ ]*\) \?\(.*\)/\1<a href="\2" rel="nofollow">\3/
+		b nexttag
+	}
+
 	/{@a=[^ ]*\( \|$\)/ {
 		H
 		g

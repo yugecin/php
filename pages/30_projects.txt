@@ -92,7 +92,7 @@ See it in action:
 {@ul
   {@li {@a=https://tsstats.thisisgaming.org/ TiG, since 24 Aug 2014}}
   {@li {@a=https://exp-gaming.net/teamspeak/ exp-gaming, since 1 May 2017)}}
-  {@li {@a=http://stats.sonic-server.net/ Sonic Fidelitus Gaming, since 1 Jan
+  {@li {@nfa=http://stats.sonic-server.net/ Sonic Fidelitus Gaming, since 1 Jan
 2018)}}
 }
 
