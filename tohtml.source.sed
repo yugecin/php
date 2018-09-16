@@ -46,12 +46,14 @@ s/\\}/~ESCAPEDENDTAG~/g
 
 s_{@lang-java}_{@lang #b07219} Java_g
 s_{@lang-c}_{@lang #555555} C_g
+s_{@lang-cpp}_{@lang #f34b7d} C++_g
 s_{@lang-csharp}_{@lang #178600} C#_g
 s_{@lang-shell}_{@lang #89e051} Shell_g
 s_{@lang-asm}_{@lang #6e4c13} Assembly_g
 s_{@lang-php}_{@lang #4f5d95} PHP_g
 s_{@lang-pawn}_{@lang #dbb284} PAWN_g
 s_{@lang-sed}_{@lang #64b970} Sed_g
+s_{@lang-none}_<span class="l" style="border: 1px solid #555"></span>_g
 s_{@lang #\([0-9a-fA-F]\{6\}\)}_<span class="l" style="background-color: #\1"></span>_g
 
 :moretags

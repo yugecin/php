@@ -4,7 +4,9 @@ projects
 --------------------------------------------------------------------------------
 {@h1 projects {@small {@ia=pages/30_projects.txt [txt]}}}
 
-An (incomplete) list of project I'm working on or have been working on.
+An (incomplete) list of project or other stuff I'm working on or have been
+working on. Only the more 'important' ones are on here, check out my
+{@a=https://github.com/yugecin GitHub profile} for more (random) things.
 
 ~INDEXGOESHERE~
 
@@ -43,10 +45,33 @@ stuff.
 
 {@b Status:} largely finished, occasional updates
 
+A little program that shows keystates, keys per second and total keys for rythm
+games (osu!, stepmania etc). Useful for making videos or livestreaming.
+
 {@lang-csharp}
 
 {@ul
-  {@li {@a=https://github.com/yugecin/osukps GitHub}}
+  {@li {@a=https://github.com/yugecin/osukps GitHub: yugecin/osukps}}
+}
+
+<hr/>
+
+{@h2 osusb1}
+
+{@b Status:} finished
+
+A (sort of) demo in the form of an {@a=https://osu.ppy.sh osu!} storyboard.
+
+{@lang-csharp}
+
+{@ul
+  {@li {@ia=blog-000-making-of-my-osu-storyboard-demo.html blogpost}}
+  {@li {@a=https://github.com/yugecin/osusb1 GitHub: yugecin/osusb1}}
+  {@li {@a=https://youtube.com/watch?v=bOGJWGJOMOk YouTube video showing the \
+storyboard (original version)}}
+  {@li {@a=https://youtube.com/watch?v=cPrhws8hevk YouTube video showing the \
+storyboard (highfps version)}}
+  {@li {@a=https://old.ppy.sh/b/1756941?m=0 Beatmap on osu! website}}
 }
 
 <hr/>
@@ -63,6 +88,22 @@ basically a static site generator using sed and bash scripts.
 {@ul
   {@li {@a=https://github.com/yugecin/php GitHub: yugecin/php}}
   {@li {@a=https://robin.basdon.net website (you're probably watching it now)}}
+}
+
+<hr/>
+
+{@h2 gtasa}
+
+{@b Status:} active
+
+Not really a project, but I've been messing around a lot with GTA:SA, making
+small scripts and hacking the game.
+
+{@lang-asm} {@lang-none} CLEO/III-era mission code {@lang-cpp} {@lang-csharp}
+
+{@ul
+  {@li {@a=https://github.com/yugecin/scmcleoscripts GitHub:
+yugecin/scmcleoscripts}}
 }
 
 <hr/>
@@ -90,15 +131,30 @@ yugecin/tsstats-webviewer}}
 See it in action:
 
 {@ul
-  {@li {@a=https://tsstats.thisisgaming.org/ TiG, since 24 Aug 2014}}
-  {@li {@a=https://exp-gaming.net/teamspeak/ exp-gaming, since 1 May 2017)}}
-  {@li {@nfa=http://stats.sonic-server.net/ Sonic Fidelitus Gaming, since 1 Jan
+  {@li {@a=https://tsstats.thisisgaming.org/ TiG (since 24 Aug 2014)}}
+  {@li {@a=https://exp-gaming.net/teamspeak/ exp-gaming (since 1 May 2017)}}
+  {@li {@nfa=http://stats.sonic-server.net/ Sonic Fidelitus Gaming (since 1 Jan
 2018)}}
 }
 
-{@i {@ia=contact.html Contact me} if you use this and want to be featured in this list}
+{@i {@ia=contact.html Contact me} if you use this and want to be featured in
+this list}
 
 {@lang-java} {@lang-php}
+
+<hr/>
+
+{@h2 txtnotes}
+
+{@b Status:} finished, maintenance
+
+Simple web-based plaintext notekeeper. I used this one myself a lot, every day.
+
+{@lang-php}
+
+{@ul
+  {@li {@a=https://github.com/yugecin/txtnotes GitHub: yugecin/txtnotes}}
+}
 
 <hr/>
 
