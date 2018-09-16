@@ -25,13 +25,13 @@ currently under development. Also contains a website.
 
 {@h2 opsu-dance}
 
-{@b Status:} long-running, paused, occasional updates
+{@b Status:} long-running, semi-paused, occasional updates
 
 Is a fork of {@a=https://github.com/itdelatrisu/opsu opsu!}, which is an
 open-source clone of the {@a=https://osu.ppy.sh osu!} game. My fork has more
 UI/UX improvements (subjective) and contains cursor dance stuff and more
-customization. I'm also a contributor to the opsu! project, mostly doing UI
-stuff.
+customization. I'm also a contributor to the upstream opsu! project, mostly
+doing UI stuff.
 
 {@lang-java}
 
