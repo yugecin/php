@@ -1,8 +1,8 @@
 contact
 
-12 Sep 2018
+16 Sep 2018
 --------------------------------------------------------------------------------
-{@h1 contact {@small {@ia=pages/03_contact.txt [txt]}}}
+{@h1 contact {@small {@ia=pages/40_contact.txt [txt]}}}
 
 Here are some ways to contact me or places where you can find me on the net.
 
@@ -13,6 +13,7 @@ Here are some ways to contact me or places where you can find me on the net.
   register you can use my {@a=http://whatpulse.org/ref/316450 referral
   link})}
   {@li {@a=https://www.youtube.com/c/robin_be YouTube: robin_be}}
+  {@li {@a=https://steamcommunity.com/id/yugecin Steam: yugecin}}
   {@li Discord: username: robin_be tag: 2125}
   {@li IRC: robin_be on irc.exp-gaming.net}
   {@li E-mail (pick one, not for spam or advertising):
@@ -26,4 +27,6 @@ Here are some ways to contact me or places where you can find me on the net.
 
 Note that I have very low tolerance for bullshit, memes and shitposting so
 don't even bother if that's what you want to do.
+
+Don't fall for impersonation (of anyone).
 

@@ -1,6 +1,6 @@
 about me
 
-01 Sep 2018
+16 Sep 2018
 --------------------------------------------------------------------------------
 {@h1 about me {@small {@ia=pages/01_about.txt [txt]}}}
 
@@ -9,5 +9,34 @@ born and live in Belgium, more specifically in
 {@a=https://en.wikipedia.org/wiki/Flanders Flanders}, so my native tongue is
 Dutch and my French is horrible :)
 
-This page needs more content.
+If you would randomly ask me what I'm doing, the answer is probably going to be
+'programming something'. I spend most of my time in front of one or more
+screens (and I am fine with that).
+
+{@h3 Things I do a lot}
+
+{@ul
+  {@li Java}
+  {@li GTA:SA stuff (CLEO/SCM/PAWN)}
+  {@li Procrastinate}
+}
+
+{@h3 Things I do sometimes}
+
+{@ul
+  {@li C# (5)}
+  {@li php and web stuff (no js)}
+  {@li asm}
+}
+
+{@h3 Things I want to do more}
+
+{@ul
+  {@li c}
+  {@li asm/RE}
+  {@li sleep}
+}
+
+If you want to know what I really do, check out the {@ia=projects.html \
+projects page}.
 
