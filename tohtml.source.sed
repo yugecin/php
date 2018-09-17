@@ -77,6 +77,8 @@ s_{@lang #\([0-9a-fA-F]\{6\}\)}_<span class="l" style="background-color: #\1"></
 	#SIMPLETAG i
 	#SIMPLETAG u
 	#SIMPLETAG blockquote
+	#SIMPLETAG sup
+	#SIMPLETAG sub
 
 	/{@small\( \|$\)/ {
 		H
