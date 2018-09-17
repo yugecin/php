@@ -149,7 +149,7 @@ s_{@lang #\([0-9a-fA-F]\{6\}\)}_<span class="l" style="background-color: #\1"></
 		s/^.*{@#=//
 		s/|.*$//
 		# this should be the same as the regex in indexgen.sed!
-		s/[^a-zA-Z0-9\-_.]//g
+		s/[^a-zA-Z0-9_.-]//g
 		s/^/~~@#~~/
 		H
 		g
