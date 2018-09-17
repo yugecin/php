@@ -1299,9 +1299,67 @@ up looking really awesome in my opinion.
 
 {@h3 Checkerboard and 3d text}
 
---------------------------------------------------------------------------------
+This point in the song gets even more intensive so from the beginning I had the
+idea of adding more 'awesome' (debatable) 3d things at this part.
+
+I did not really know what to put there so I just put my and Emily's name
+there. I always feel pretty narcissistic when I watch this part... This time
+it's not really related to a demo but I did get the idea for some of the
+rotations by a BGA: {@a=https://youtu.be/XhzvgF-y6MA?t=106 YouTube: [[BOFU2016]]
+GOODBOUNCE [[BGA]]} (at 1:46).
+
+The checkerboard is ... a checkerboard, nothing really special about it. I do
+think it adds to the scene because there are already so many scenes that just
+have a plain black background and this is something different I guess.
+
+The text is somewhat special though. Instead of making only having the cubes
+where the pixels should be, I made it combine different cubes together
+vertically in order to reduce the amount of sprites. That ended up being a
+pretty effective way for saving some space.
+
+{@img=blog/000/text.png;the 3d text with each 'part' having a different color;;\
+The text, each 'cube' having a different color in an attempt to show show \
+cubes are combined.}
 
 {@h3 Starfield torus}
+
+The last scene. The startfield is nothing really special, it's just dots coming
+closer to the camera. The torus itself is not very special either. The torus
+is sort of made out of rectangles and each rectangle is replaced by a single dot
+that has its position in the middle of its rectangle. The size of the dot is
+determined by the size of the projected rectangle, and the shade of the
+rectangle decides what color the dot will receive.
+
+The real 'magic' part is how the scrolling text disappears behind the torus
+while the torus isn't even solid. This is once again done by using a
+pixelscreen and a colored surface. There is a non-rendered red surface being
+drawn onto the pixelscreen. The z-buffer makes the intersection between the
+torus and the surface look correct and so the text pixels only get drawn when
+the color on the pixelscreen at the text pixel's position is red.
+
+{@img=blog/000/torus.png;a torus intersecting with a red plane, text being \
+drawn on the red plane;;Same magic trick as in the first scene.}
+
+The text in this scene is quite special too. Since it only scrolls horizontally,
+each pixel consist of only one single move command (MX). It also uses
+{@#=Phantom frames| phantom frame} processing to correct the time when the pixel
+should show or hide. When processing all the generated commands, all the move
+commands are replaced by a single one with the start value of the first command
+and the end value of the last command.
+
+<pre>
+4,3,1,2,0,260
+_MX,0,150150,152025,214.3,0
+4,3,1,2,0,264
+_MX,0,146425,149775,638,255.1
+4,3,1,2,0,264
+_MX,0,150175,152000,209.4,0.9
+4,3,1,2,0,264
+_MX,0,146450,149800,637.1,254.3
+4,3,1,2,0,264
+_MX,0,150200,152025,208.6,0
+</pre>
+{@caption Some of the commands generated for the scrolling text.}
 
 {@h2 Compression}
 
