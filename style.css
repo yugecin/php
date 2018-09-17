@@ -85,3 +85,6 @@ span.l {
 span.l + span.l {
 	margin-left: 1em;
 }
+span.s {
+	text-decoration: line-through;
+}

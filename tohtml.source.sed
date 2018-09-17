@@ -87,6 +87,15 @@ s_{@lang #\([0-9a-fA-F]\{6\}\)}_<span class="l" style="background-color: #\1"></
 		b nexttag
 	}
 
+	/{@s\( \|$\)/ {
+		H
+		g
+		s/\(.*\)\n.*$/\1\n<\/span>/
+		x
+		s/.*\n\(.*\){@s \?\(.*\)/\1<span class="s">\2/
+		b nexttag
+	}
+
 	/{@caption / {
 		H
 		g
