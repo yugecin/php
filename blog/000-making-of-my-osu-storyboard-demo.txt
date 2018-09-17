@@ -1172,7 +1172,8 @@ int[][] rotmat =
 int[] rmref = {0,1,1,2,2,0,2,0,1};
 int[] dirfix = {0,2,0,0,2,2,0,2,2};
 </pre>
-{@caption Lots of arrays describing the way parts should be moved.}
+{@caption Lots of arrays describing the way parts should be moved. I don't \
+really like the jagged array notation in C#.}
 
 At the end I saw that it looked a bit buggy when one side is only slightly
 visible, it looks like the colors of the pixels changed a lot because of how
@@ -1182,6 +1183,11 @@ it's how it is now.
 {@img=blog/000/cubg.gif;animated image showing pixels on the side changing \
 color really fast, making it look bad;;Buggy part visible on the bottom and \
 right sides.}
+
+Actually, now that I see that, it seems like it's a bug with the coloring of
+the dots. Because you can see all the white sides are either in the front
+face or at the part on the left, so there shouldn't be any white dots at the
+bottom or left face... Weird, but a little bit too late to fix that now.
 
 {@h3 Waves}
 
@@ -1237,11 +1243,63 @@ heart. I then exported it to an .obj file and parsed that in the application.
 
 {@h3 Greetings}
 
---------------------------------------------------------------------------------
+This is actually a special scene because the whole greetings scene is made by
+inserting commands rather then rendering objects and tracking the properties.
+
+Since all the text is made using single pixels, the coloring effect turned out
+pretty good. This one also brought problems though, because of the
+{@#=Default value quirk| default value quirk}. The coloring effected added a
+color command, and this was the only color command. Due to that default value
+quirk think, this made the whole text look pink from the beginning instead of
+white. To fix this, I also used the color command to fade in the text by
+changing the color from black to white and I removed the fade commands. That
+way the sprite colors were fixed because they're colored from the beginning.
+
+The twinkle effect at the end is done by adding a storyboard loop to each
+pixel sprite. It's the only place I used loops in this storyboard and it's nice
+to actually have a place to use them. But once again, the default value quirk
+bit me at this point. I started the loop by fading from {@code 0} to {@code 1},
+but since the initial fade was replaced by a color command, this means the
+default value for the fading ended up being {@code 0}, effectively making all
+the text invisible up until the twinkle effect. So to counter that I swapped
+the loop around only making it invisible after making it visible first. See
+{@a=https://github.com/yugecin/osusb1/blob/\
+63235500aead91f879fb31bc8492c49fa9024496/zgreet.cs#L127 zgreet.cs#127} and the
+lines below that.
+
+The names at the left are actually demogroups, the names at the right are single
+persons (except for all@Solskogen of course), either friends or demoscene
+related people or just persons I wanted to mention for some reason.
+
+{@blockquote {@b Imagine Blaze:} 11t :(}
+{@caption A YouTube comment on my video.}
+
+Fun fact: when all this was only a vague idea in 2017, I wanted to release a
+storyboard like this on the 25th of July as a hommage to 11t, but I never made
+that goal ({@a=https://old.reddit.com/r/osugame/comments/50ok0f/\
+what_happened_to_11t/d75qz64/ context}).
 
 {@h3 Torus field}
 
+And yet another scene that was inspired by a demo:
+{@a=https://youtu.be/0CBQI7cktMk?t=135 YouTube: RAZOR 1911 - We Have Accidently
+Borrowed Your Votedisk}. This one almost didn't see the light. I struggled a lot
+when trying to make this look smooth with good rotations. I also had problems
+with this becoming too big in size and not looking smooth or good because I
+needed to reduce the amount of lines per torus.
+
+I almost ditched this scene when I failed to make good rotations, but luckily I
+restored this one later again because at the end this scene is the one where
+you really feel like you're in a 3d environment.
+
+This part of the song it also a bit of a pinnacle, so this scene fits pretty
+well at that time. I also really enjoy how the toruses appear in sync with
+the music. The fade-in and out effect of the toruses in the distance also ended
+up looking really awesome in my opinion.
+
 {@h3 Checkerboard and 3d text}
+
+--------------------------------------------------------------------------------
 
 {@h3 Starfield torus}
 
