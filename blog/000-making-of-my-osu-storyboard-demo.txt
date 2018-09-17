@@ -31,13 +31,14 @@ storyboard (highfps version)}}
 First things first, if you don't know what {@a=https://osu.ppy.sh/home osu!} is,
 it's a rythm game where you have to click circles which are (hopefully) synced
 with the music playing. There are multiple game modes, but the circle clicking
-one (also called 'osu!standard') is the most popular one.
+one (also called 'osu!standard') is the most popular one
+{@sup [citation needed]}.
 
 Beatmaps (which basically contain the music &amp; metadata and describe when and
 where circles, sliders, spinners, etc should be) can also include a video and/or
 a storyboard. A storyboard, in its bare essence, describes a series of images
 and each image can have a timed series of transformations that will be applied
-to it (positioning/rotating/scaling/coloring).
+to it (positioning/rotating/scaling/coloring/fading).
 
 If you're still completely in the dark, here's a nice video that shows what
 gameplay with a storyboard in the background looks like (epilepsy warning):
@@ -99,10 +100,11 @@ could rotate to try to match the cube in the video.
 
 {@img=blog/000/20170715.png;program that draws a wireframe cube and has user \
 controls on the right to change the cube's position and angles;;Yeah that \
-looks horrible.}
+looks horrible... Note that the yellow background actually ends up being \
+transparent, so I could try to match the cube with whatever is behind it.}
 
 I tried but the result looked horrible. The main culprit was that I thought
-that move commands did not allow decimal numbers (spoiler: it does), which
+that move commands did not allow decimal numbers (spoiler: they do), which
 is pretty essential if you want to have a good-looking wireframe cube. I blame
 the osu!wiki for this. For some reason it stated that move commands do not
 allow decimals. (I've submitted a pull request:
@@ -180,8 +182,9 @@ moves low so that the rubik's cube scene wouldn't become too long. So yeah, two
 {@img=blog/000/20180506.jpg;garden with 2 chairs, one having a notebook and a \
 rubik's cube on it;;What a beautiful day that was.}
 
-One other shape I had in mind was a torus. It was relatively easy to generate
-points to make one, as expected. The result came out to be pretty nice.
+One other shape I had in mind to use somewhere in the storyboard was a torus.
+It was relatively easy to generate points to make one, as expected. The result
+came out to be pretty nice.
 
 {@img=blog/000/31052018.jpg;a pixelated green torus;;Anyone fancy a torus?}
 
@@ -317,7 +320,10 @@ scene, demonstrating how the camera can be rotated by dragging the mouse\
 
 I decided to make the program in C#. I'm more familiar with Java, but C#
 seemed like the obvious choice since making GUI stuff is very easy using Visual
-Studio.
+Studio. For some reason I also thought painting things in C# was easier since
+I've done that before, but it's pretty simple to do that in Java too so I'm not
+sure what I was thinking. But somehow C# seemed like the best pick to do this
+because of the GUI and preview stuff.
 
 The GUI itself is pretty simple. No need for anything complicated. The most
 important parts are the {@code PictureBox} where everything gets rendered and
@@ -463,13 +469,14 @@ command of both sprites has a different endtime. The reason behind this is that
 sprites are only visible from their lowest starttime in any command to the
 highest endtime in any command. This means that if the latest endtime is 900,
 the sprite will be visible at time 900 and disappear at time 901. But in this
-case, 900 is the time where the last frame starts, and that frame that should
-be visible from time 900 to 1000 (or rather, 999). This means the last frame
-will never be shown (or just for a millisecond). This leads to missing sprites,
-broken objects, and this potentially leaves a blank few milliseconds in the
-storyboard if that frame is the last one of its scene. To fix this, the last
-command (in this case, the last move command), will have its endtime changed to
-the time that the frame should end.
+case, 900 is the time where the last frame starts, and that frame should also
+be visible for 100ms, so that frame should be visible from time 900 to 1000
+(or rather, 999). This means the last frame will never be shown (or just for a
+millisecond). This leads to missing sprites, broken objects, and this
+potentially leaves a blank few milliseconds in the storyboard if that frame is
+the last one of its scene. To fix this, the last command (in this case, the last
+move command), will have its endtime changed to the time that the frame should
+end.
 
 {@h4 Adding interpolation}
 
@@ -477,11 +484,11 @@ Only setting values at specific times using commands is not that great to make
 movement. To have motion that's more smooth, it would need a lot of commands
 with a tiny framedelta. Another options is to add (or rather, use)
 interpolation. Adding interpolation between the 2d projected positions isn't
-very correct, but it's not so noticable either. At least for the dots, if I try
-to add interpolation to the 3d objects (spectrum, heart, text), it fails
-miserably, expected. This is because those need very precise position / scaling
-/ rotation, which is not possible to interpolate (see {@#=Opaque surfaces| \
-opaque surfaces}).
+very correct, but that incorrectness is not so noticable. At least for the dots,
+if I try to add interpolation to the 3d objects (spectrum, heart, text), it
+fails miserably as expected. This is because those need very precise position /
+scaling / rotation, which is not possible to interpolate (see {@#=Opaque \
+surfaces| opaque surfaces}).
 
 <pre>
 Sprite,Foreground,Centre,d,0,0
@@ -513,9 +520,9 @@ for the first sprite is at time 300, but the last command only goes to time 200
 to interpolate to, so this is pretty much unavoidable. The last frame adjustment
 technique can't be used because that would add a still frame at the end while
 it was moving before. To minimize this though, the scene's time can be extended
-to be a bit longer, compensating the missing frame's duration. If a sprite goes
-out of bounds, I'm also allowing one frame with out of bounds positions so it
-can interpolate to the edge of the screen instead of just disappearing. Same
+to be a bit longer, compensating for the missing frame's duration. If a sprite
+goes out of bounds, I'm also allowing one frame with out of bounds positions so
+it can interpolate to the edge of the screen instead of just disappearing. Same
 for when a sprite appears from an out of bounds position.
 
 <pre>
@@ -553,6 +560,10 @@ processing. Every command that is generated by a phantom frame is marked as a
 phantom command. Since sprites are never reused, only the very first and last
 commands are being checked if they're phantom commands. If they are, they get
 "promoted" to a real command. All the other phantom commands are just ditched.
+
+The result of doing this is that sprites can appear or disappear between
+actual frames, so scenario's like the one above won't happen (or rather, it
+won't be visible if the phantom framedelta is small enough).
 
 The only scenes that used phantom frames/commands are the {@#=Rubik's cube| \
 rubik's cube} and {@#=Starfield torus| starfield torus} scenes.
@@ -688,11 +699,11 @@ is basically a reversed {@code lerp()}. {@code eq_cub()} is a cubic bezier
 interpolation with 2 given vec2's that define the curve. Thanks to operator
 overloading I can do things like {@code vec3 - vec3 * number}.
 
-In projects like these, I like to put everything inside a partial class. This
-basically creates a global scope and allows me to simply write {@code rad(x)}
-instead of something stupid like {@code MathHelper.rad(x)}. I wrote some
-simple functions so I can just do {@code cos(x)} instead of {@code (float) \
-Math.cos(x)}. Not doing this makes me insane. Like really, which variant
+In projects like these, I like to put everything inside the same partial class.
+This basically creates a global scope and allows me to simply write
+{@code rad(x)} instead of something stupid like {@code MathHelper.rad(x)}. I
+wrote some simple functions so I can just do {@code cos(x)} instead of {@code
+(float) Math.cos(x)}. Not doing this makes me insane. Like really, which variant
 would you prefer?
 
 <pre>
@@ -932,7 +943,7 @@ twice. This time it took me longer to find the issue though (maybe you noticed
 it in the previous image?).
 
 {@img=blog/000/culbug2c.png;the diff of the commit, showing a - was replaced \
-with a *, this time on a different place;;Oops<sup>2</sup>.}
+with a *, this time on a different place;;Oops{@sup 2}.}
 
 {@blockquote
 {@b yugecin:} aaaaaaaaaa I got the same issue again with my cross product
@@ -1003,19 +1014,18 @@ the bits and bytes level (maybe unless you're a javascript dev or something...).
 
 {@h2 Scene breakdown}
 
-More details per scene and how they were made.
-
 {@h3 Intro cube}
 
 Despite being the first scene, this one was made after all the others were
 already done. I had to come up with something good to 'fill' the first 16
 seconds. There are quite some nice things afterwards, but I feel like the
 beginning should be interesting enough too for people to stick around and watch
-the rest. I thought some nice intro with some pre-credits or other text would
-be nice. The intro of the Devolution demo by Kewlers is very nice
-{@a=https://youtube.com/watch?v=-CinD6xUvr0 YouTube: Devolution by Kewlers}, but
-at this point I felt like I copied enough already so I didn't want to copy
-another thing.
+everything that comes after it. I thought some nice intro with some pre-credits
+or other text would be nice. The intro of the Devolution demo by Kewlers is very
+nice: {@a=https://youtube.com/watch?v=-CinD6xUvr0 YouTube: Devolution by
+Kewlers}, but at this point I felt like I copied enough already so I didn't want
+to copy another thing (you'll see what I mean when you read about the other
+scenes...).
 
 I realized I didn't really have cube (other than the rubik's cube) so I played
 with the idea of having a cube. Maybe opaque, but I wanted to only show opaque
@@ -1046,7 +1056,8 @@ pixelscreen isn't drawn or exported to the storyboard, it's just non-visibly
 being computed.
 
 {@img=blog/000/startcube.png;filled cube with colorful sides and some text \
-pixels are visible on two sides;;Draw the text pixel if the color matches.}
+pixels are visible on two sides;;Text pixels are being drawn when their color \
+matches.}
 
 As for the text itself, I didn't really know what to put there. I wasn't sure
 about the 'robin_be presents' but I had no idea what else to put there. Emily
@@ -1058,17 +1069,20 @@ greeting to Emily of course :3.
 
 Every demo needs a tunnel right?
 
-I got the initial tunnel idea from a demo, {@a=https://youtu.be/FUjKo_hgLL8?t=34
-YouTube: Elude - Rise And Shine | Demoscene} (at 0:34). The fly-in effect was a
-nice way to make it appear and it fitted nicely with the music. I really like
-the lighting effect that's going on. I got that idea from the lighting show at
-Rampage 2017/Zillion.xxx 2017. I didn't go there, but I saw it on different
-videos. Example: (epilepsy warning) {@a=https://youtu.be/QqL0MmymLV0?t=558
-YouTube: Zillion - The Final Rave PART 1} (at 9:18). At the end of the tunnel,
-segments 'break out' and I got that idea from yet another demo:
-{@a=https://youtu.be/aL0FIHRrCw4?t=877 YouTube: Revision 2018 - Concert -
-Logicoma} (at 14:37) (actually this is scene from a demo, edited to be used as
-background visuals for this (awesome) concert during Revision 2018).
+I got the basic tunnel concept from a demo,
+{@a=https://youtu.be/FUjKo_hgLL8?t=34 YouTube: Elude - Rise And Shine |
+Demoscene} (at 0:34). The fly-in effect was a nice way to make it appear and it
+fitted nicely with the music.
+
+I really like the lighting effect that's going on in the tunnel. I got that
+idea from the lighting show at Rampage 2017/Zillion.xxx 2017. I didn't go there,
+but I saw it on different videos. Example: (epilepsy warning)
+{@a=https://youtu.be/QqL0MmymLV0?t=558 YouTube: Zillion - The Final Rave PART 1}
+(at 9:18). At the end of the tunnel, segments 'break out' and I got that idea
+from yet another demo: {@a=https://youtu.be/aL0FIHRrCw4?t=877 YouTube: Revision
+2018 - Concert - Logicoma} (at 14:37) (actually this is a scene from a demo,
+edited to be used as background visuals for this (awesome) concert during
+Revision 2018).
 
 Fun fact: the tunnel is rendered at 3fps, but it looks smooth thanks to
 {@#=Adding interpolation| interpolation}. The lighting effect, however, is done
@@ -1100,7 +1114,8 @@ coming from a side that shouldn't be visible;;See the lime line between the \
 blue bars? Yeah that ain't good.}
 
 The solution to that was to change the height of the sides to only show what
-is needed to be shown.
+is needed to be shown. This way no overlapping was possible due to overlapping
+sides.
 
 {@img=blog/000/spectrumb.png;image of the same spectrum but with the bars \
 separated from each other showing that the sides are only as large as they \
@@ -1136,16 +1151,16 @@ B' D2 B R D2 R'
 </pre>
 {@caption The moves I wrote down.}
 
-The moves (which I wrote down when I solved my physical cube) ( yes I know this
-is not the correct notation for the moves but made sense for me ok?) were parsed
-from a file. The {@code >}, {@code &lt;}, {@code ^} symbols mean that I rotated
-the cube in that way while I was solving it.
+The moves (which I wrote down when I solved my physical cube) (yes I know this
+is not the correct notation for the moves but they made sense for me ok?) were
+parsed from a file. The {@code >}, {@code &lt;}, {@code ^} symbols mean that I
+rotated the cube in that way while I was solving it.
 
 The code ended up to be pretty unreadable which was quite fun to do. It's not
-needed to edit the code once it's done so why not. At some points it actually
-made the code more clean because it got rid of repetitions. You can view the
-full source in the {@a=https://github.com/yugecin/osusb1/blob/master/zrub.cs \
-zrub.cs} file.
+needed to edit the code once it's done anwyways so why not. At some points it
+actually made the code more clean because it got rid of repetitions. You can
+view the full source in the
+{@a=https://github.com/yugecin/osusb1/blob/master/zrub.cs zrub.cs} file.
 
 <pre>
 int[,][] movmat =
@@ -1310,13 +1325,13 @@ The checkerboard is ... a checkerboard, nothing really special about it. I do
 think it adds to the scene because there are already so many scenes that just
 have a plain black background and this is something different I guess.
 
-The text is somewhat special though. Instead of making only having the cubes
-where the pixels should be, I made it combine different cubes together
-vertically in order to reduce the amount of sprites. That ended up being a
-pretty effective way for saving some space.
+The text is somewhat special though. Instead of making a cube for each pixel,
+I made it so that it combines different cubes together vertically in order to
+reduce the amount of sprites. That ended up being a pretty effective way for
+saving some space.
 
 {@img=blog/000/text.png;the 3d text with each 'part' having a different color;;\
-The text, each 'cube' having a different color in an attempt to show show \
+The text, each 'cube' having a different color in an attempt to show how \
 cubes are combined.}
 
 {@h3 Starfield torus}
@@ -1331,7 +1346,8 @@ rectangle decides what color the dot will receive.
 The real 'magic' part is how the scrolling text disappears behind the torus
 while the torus isn't even solid. This is once again done by using a
 pixelscreen and a colored surface. There is a non-rendered red surface being
-drawn onto the pixelscreen. The z-buffer makes the intersection between the
+drawn onto the pixelscreen (but this whole pixelscreen is basically not being
+rendered at the end). The z-buffer makes the intersection between the
 torus and the surface look correct and so the text pixels only get drawn when
 the color on the pixelscreen at the text pixel's position is red.
 
@@ -1359,12 +1375,15 @@ _MX,0,150200,152025,208.6,0
 </pre>
 {@caption Some of the commands generated for the scrolling text.}
 
+In retrospect the text is a bit negative but I, once again, had no idea what
+to put there...
+
 {@h2 Compression}
 
 Everything about reducing the size of the resulting storyboard file.
 
-Fun fact: when saving the beatmap using the editor in osu!, its size goes from
-27MB to 32.6MB (without variables).
+Fun fact: when saving the beatmap using the editor in osu!, its size goes up
+from 27MB to 32.6MB (for the version without variables).
 
 {@h3 Line endings}
 
@@ -1384,13 +1403,13 @@ a filename that's as short as possible? I've seen storyboard that use
 filenames like {@code SB\alien\spaceship.png}. Maybe it might be a bit
 annoying to use one letter filenames while you're working on it if you have
 many sprites (not for me since keeping track of only 4 sprites is not that
-hard x3), but you can always change the names to something shorter when it's
+hard), but you can always change the names to something shorter when it's
 finished.
 
 So I gave my sprites each only one letter as filename. The wiki states that
 the quotes are only really needed when the path has spaces in it, so I could
 ditch those too. Me being curious tried to remove the extension as well, and
-that seems to work just fine. So I my object declarations looked more or
+that seems to work just fine. So my object declarations looked more or
 less like this: {@code Sprite,Foreground,Centre,d,0,0}.
 
 Then I thought, what would happen if I use an empty filename? So I tried just
@@ -1769,8 +1788,8 @@ $scale
 this would fail.}
 
 Of course using variables will make loading the map slower, especially if there
-are lots of them, which was the case for my storyboard. I generated 554
-variables and pretty much every line used a variable. Having osu! go through
+are lots of them, which was definitely the case for my storyboard. I generated
+554 variables and pretty much every line used a variable. Having osu! go through
 554 variables for about a million lines made the loading time jump from about 3
 seconds to roughly 45 seconds... :D
 
