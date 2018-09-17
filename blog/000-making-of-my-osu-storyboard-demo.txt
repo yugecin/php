@@ -1131,17 +1131,17 @@ basically essential for the scene to be deterministic.
 
 <pre>
 F R B D R' L' T2 R FM' TMH L D' B L' F FM R B' D L' FM D F' D TMV D2 TMV' F L' \
-F' L D' R D' R2 FM'2 R T2 TMV D2 TMV' R FM2 R' D2 L D' L' F L' F' L < L D' L' \
-F L' F' L D' R' D R F' R F R' < < D L D' L' F L' F' L T' ^ ^ > > F T R T' R' \
-F' R' T2 R T R' T R TMV2 T TMV2 D2 TMV'2 T TMV'2 D2 R D2 R' B' D2 B T2 B' D2 B \
-R D2 R'
+F' L D' R D' R2 FM'2 R T2 TMV D2 TMV' R FM2 R' D2 L D' L' F L' F' L &lt; L D' \
+L' F L' F' L D' R' D R F' R F R' &lt; &lt; D L D' L' F L' F' L T' ^ ^ > > F T \
+R T' R' F' R' T2 R T R' T R TMV2 T TMV2 D2 TMV'2 T TMV'2 D2 R D2 R' B' D2 B T2 \
+B' D2 B R D2 R'
 </pre>
 {@caption The moves I wrote down.}
 
 The moves (which I wrote down when I solved my physical cube) ( yes I know this
 is not the correct notation for the moves but made sense for me ok?) were parsed
-from a file. The {@code >}, {@code <}, {@code ^} symbols mean that I rotated the
-cube in that way while I was solving it.
+from a file. The {@code >}, {@code &lt;}, {@code ^} symbols mean that I rotated
+the cube in that way while I was solving it.
 
 The code ended up to be pretty unreadable which was quite fun to do. It's not
 needed to edit the code once it's done so why not. At some points it actually
