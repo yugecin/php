@@ -870,6 +870,10 @@ will overlap the previous ones.
 background are actually drawn on top;;Drawing order from right to left and \
 left to right. Both have overlapping issues.}
 
+This was easy to fix for the pixelscreen, I just used a z-buffer for that. But
+in this case it's not possible to use a z-buffer since you can't draw a part
+of a sprite in osu!.
+
 The way I fixed this was to add a second copy of every triangle (only when it's
 actually needed of couse). When the left side of the cube should be culled, it
 uses the copy in the left-to-right batch. If it shouldn't be culled, it uses the
@@ -1064,9 +1068,9 @@ Rampage 2017/Zillion.xxx 2017. I didn't go there, but I saw it on different
 videos. Example: (epilepsy warning) {@a=https://youtu.be/QqL0MmymLV0?t=558
 YouTube: Zillion - The Final Rave PART 1} (at 9:18). At the end of the tunnel,
 segments 'break out' and I got that idea from yet another demo:
-{@a=https://youtu.be/aL0FIHRrCw4?t=877 Revision 2018 - Concert - Logicoma}
-(at 14:37) (actually this is scene from a demo, edited to be used as background
-visuals for this (awesome) concert during Revision 2018).
+{@a=https://youtu.be/aL0FIHRrCw4?t=877 YouTube: Revision 2018 - Concert -
+Logicoma} (at 14:37) (actually this is scene from a demo, edited to be used as
+background visuals for this (awesome) concert during Revision 2018).
 
 Fun fact: the tunnel is rendered at 3fps, but it looks smooth thanks to
 {@#=Adding interpolation| interpolation}. The lighting effect, however, is done
@@ -1113,13 +1117,127 @@ version).
 
 {@h3 Rubik's cube}
 
---------------------------------------------------------------------------------
+This one was quite the journey. It was the first real scene I made after messing
+around a lot with plain test cubes and I took a shitton of time to make the
+movements work. In fact this took so many tries I lost lots of motivation at
+different times. Then I managed to finally make it work completely just after
+Emily showed me her first wireframe cube.
+
+The way this one works is basically this: every time it's being rendered, all
+moves that need to be done up until the time that is requested by the frame are
+being done on the unscrambled cube. After drawing, all positions are being reset
+so the next time rendering can start again from a 'fresh' cube. This was
+basically essential for the scene to be deterministic.
+
+<pre>
+F R B D R' L' T2 R FM' TMH L D' B L' F FM R B' D L' FM D F' D TMV D2 TMV' F L' \
+F' L D' R D' R2 FM'2 R T2 TMV D2 TMV' R FM2 R' D2 L D' L' F L' F' L < L D' L' \
+F L' F' L D' R' D R F' R F R' < < D L D' L' F L' F' L T' ^ ^ > > F T R T' R' \
+F' R' T2 R T R' T R TMV2 T TMV2 D2 TMV'2 T TMV'2 D2 R D2 R' B' D2 B T2 B' D2 B \
+R D2 R'
+</pre>
+{@caption The moves I wrote down.}
+
+The moves (which I wrote down when I solved my physical cube) ( yes I know this
+is not the correct notation for the moves but made sense for me ok?) were parsed
+from a file. The {@code >}, {@code <}, {@code ^} symbols mean that I rotated the
+cube in that way while I was solving it.
+
+The code ended up to be pretty unreadable which was quite fun to do. It's not
+needed to edit the code once it's done so why not. At some points it actually
+made the code more clean because it got rid of repetitions. You can view the
+full source in the {@a=https://github.com/yugecin/osusb1/blob/master/zrub.cs \
+zrub.cs} file.
+
+<pre>
+int[,][] movmat =
+	{{new int[]{0,0,0,0,0,2},new int[]{0,0,1,1,0,2},new int[]{0,0,2,2,0,2},
+	  new int[]{1,0,2,2,0,1},new int[]{2,0,2,2,0,0},new int[]{2,0,1,1,0,0},
+	  new int[]{2,0,0,0,0,0},new int[]{1,0,0,0,0,1},new int[]{1,0,1,1,0,1}},
+	 {new int[]{0,0,2,0,2,2},new int[]{0,0,1,0,1,2},new int[]{0,0,0,0,0,2},
+	  new int[]{0,1,0,0,0,1},new int[]{0,2,0,0,0,0},new int[]{0,2,1,0,1,0},
+	  new int[]{0,2,2,0,2,0},new int[]{0,1,2,0,2,1},new int[]{0,1,1,0,1,1}},
+	 {new int[]{0,0,0,0,2,0},new int[]{0,1,0,1,2,0},new int[]{0,2,0,2,2,0},
+	  new int[]{1,2,0,2,1,0},new int[]{2,2,0,2,0,0},new int[]{2,1,0,1,0,0},
+	  new int[]{2,0,0,0,0,0},new int[]{1,0,0,0,1,0},new \
+int[]{1,1,0,1,1,0}}};
+int[][] emovmat =
+	{new int[]{0,0,0},new int[]{0,0,0},new int[]{2,0,0},
+	 new int[]{0,0,2},new int[]{0,0,0},new int[]{0,2,0},
+	 new int[]{0,0,1},new int[]{0,1,0},new int[]{1,0,0}};
+int[][] rotmat =
+	{new int[]{3,0,1,2,7,4,5,6},
+	 new int[]{3,2,7,4,5,0,1,6},
+	 new int[]{1,6,7,2,3,0,5,4}};
+int[] rmref = {0,1,1,2,2,0,2,0,1};
+int[] dirfix = {0,2,0,0,2,2,0,2,2};
+</pre>
+{@caption Lots of arrays describing the way parts should be moved.}
+
+At the end I saw that it looked a bit buggy when one side is only slightly
+visible, it looks like the colors of the pixels changed a lot because of how
+small the visible side is due to the viewing angle. It's a bit unfortunate but
+it's how it is now.
+
+{@img=blog/000/cubg.gif;animated image showing pixels on the side changing \
+color really fast, making it look bad;;Buggy part visible on the bottom and \
+right sides.}
 
 {@h3 Waves}
 
+This one took me a long time too. I got the idea (I think) from yet another
+demo, one of my favorites: {@a=https://youtu.be/vF-eVnqq-bw?t=33 YouTube: The
+butterfly effect - Andromeda Software Development (ASD) (PPR)} (at 0:33 but I
+suggest you watch the whole thing because it's beautiful). There's no way I
+could make it as nice as that though, but I wanted to add some wave-y things.
+
+I spent a long time trying to make this look good using several tutorials about
+perlin noise, cubic noise, FFT, ... I messed a lot with parameters and values
+in an attempt to make it look somewhat good but nothing felt really amazing. At
+the end the code consisted mostly of parts coming from one blog post / tutorial:
+{@a=https://gpfault.net/posts/perlin-noise.txt.html Using Person Noise to
+Generate 2D Terrain and Water}. That post was only for 2D so I guess I failed
+to do it right in 3D so it doesn't look very amazing.
+
+{@img=blog/000/wavey.png;opaque water surface with waves rendered in the \
+application;;An early version of the waves rendered in an early-ish version of \
+the application, 21 July 2018.}
+
 {@h3 Heart}
 
+The heart idea is also slightly inspired by another demo:
+{@a=https://youtu.be/cVrdQ9GWzaU?t=146 YouTube: Elude "Step by Step" Amiga
+AGA/RTG Demo (Vampire 600 V2)} (at 2:26). At this point in the song I wanted
+to show some 3d object, a torus or a heart or something else. It ended up being
+a heart.
+
+I instantly had the idea to change the rendering method in sync with the song,
+so I made it render using a pixelscreen and a wireframe version at those points.
+I really like that part. It's actually the only place where I ended up actually
+showing a pixelscreen and it looks so good with the heart that I think that I
+should've showed more pixelscreen stuff. Oh well.
+
+At some point I also made the heart beat in sync with the song (the beating
+does seem to be a bit bugged in the highfps version though, but I kind of made
+that version in a hurry). I also had the idea to start from an exploded heart
+and move in the pieces in the beginning to form the completed heart. I looks
+pretty nice and is somewhat fun and might be unexpected and surprising for the
+viewer to see that such an object can be made with just storyboard commands.
+
+The heart was actually made in Blender. I have no experience with modeling
+(except from making an object and technical drawings in Autodesk Inventor back
+years ago in school), so I searched for a tutorial. I found and followed this
+tutorial: {@a=https://www.youtube.com/watch?v=tS29wahvDiQ YouTube: Blender
+Easy Creating :: Heart Beat Animation (2.78c)}. After a few tries of following
+what is being done in the video, I got slightly familiar with how to do basic
+stuff in Blender so at the end I managed to make a somewhat decent looking
+heart. I then exported it to an .obj file and parsed that in the application.
+
+{@img=blog/000/heart.png;the heart in blender;;Blender skills are missing.}
+
 {@h3 Greetings}
+
+--------------------------------------------------------------------------------
 
 {@h3 Torus field}
 
