@@ -1,6 +1,6 @@
 contact
 
-16 Sep 2018
+17 Sep 2018
 --------------------------------------------------------------------------------
 {@h1 contact {@small {@ia=pages/40_contact.txt [txt]}}}
 
@@ -11,7 +11,7 @@ Here are some ways to contact me or places where you can find me on the net.
   {@li {@a=https://twitter.com/yugecin26 Twitter: yugecin26}}
   {@li {@a=https://whatpulse.org/yugecin WhatPulse: yugecin} (if you want to
   register you can use my {@a=http://whatpulse.org/ref/316450 referral
-  link})}
+  link}, much appreciated)}
   {@li {@a=https://www.youtube.com/c/robin_be YouTube: robin_be}}
   {@li {@a=https://steamcommunity.com/id/yugecin Steam: yugecin}}
   {@li Discord: username: robin_be tag: 2125}
