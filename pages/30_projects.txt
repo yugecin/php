@@ -16,8 +16,8 @@ working on. Only the more 'important' ones are on here, check out my
 
 {@b Status:} coming soon-ish
 
-Codename for now. Planned aviation themed San Andreas Multiplayer server
-currently under development. Also contains a website.
+Codename for now. Planned aviation themed {@a=http://sa-mp.com/ San Andreas
+Multiplayer} server currently under development. Also contains a website.
 
 {@lang-pawn} {@lang-c} {@lang-java} {@lang-php}
 
