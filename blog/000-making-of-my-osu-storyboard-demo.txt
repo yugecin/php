@@ -1,8 +1,8 @@
-1535883433
+1537223123
 
 Making of my osu! storyboard demo
 
-02 Sep 2018
+18 Sep 2018
 --------------------------------------------------------------------------------
 {@img=blog/000/ytthumb.png;fragmented heart scene;YouTube thumbnail}
 
@@ -252,8 +252,6 @@ instantly thought I found something. It has some nice buildups, which can be
 useful for demo-ish stuffs, and it's a pretty nice song overall. It is a bit
 long, but I figured I didn't have to fill the entire length. It ended up being
 the song for the final version.
-
-{@h1 don't forget to change the date when finishing this}
 
 {@h2 Techniques and approach}
 
