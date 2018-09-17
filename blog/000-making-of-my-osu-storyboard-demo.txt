@@ -1001,17 +1001,119 @@ the bits and bytes level (maybe unless you're a javascript dev or something...).
 
 {@h2 Scene breakdown}
 
+More details per scene and how they were made.
+
 {@h3 Intro cube}
+
+Despite being the first scene, this one was made after all the others were
+already done. I had to come up with something good to 'fill' the first 16
+seconds. There are quite some nice things afterwards, but I feel like the
+beginning should be interesting enough too for people to stick around and watch
+the rest. I thought some nice intro with some pre-credits or other text would
+be nice. The intro of the Devolution demo by Kewlers is very nice
+{@a=https://youtube.com/watch?v=-CinD6xUvr0 YouTube: Devolution by Kewlers}, but
+at this point I felt like I copied enough already so I didn't want to copy
+another thing.
+
+I realized I didn't really have cube (other than the rubik's cube) so I played
+with the idea of having a cube. Maybe opaque, but I wanted to only show opaque
+3d objects later for a more 'surprise' thing. Maybe pixelated, but I wasn't sure
+if that would look good for the start. So I ended up with having a wireframe
+cube.
+
+Just fading in the cube would be a bit lame, so I made the lines 'grow' until
+they formed a complete cube. It looked nice but it was a bit too much with all
+the lines once the text started, so I decided to enable culling once the cube
+is completed.
+
+The initial idea was to add the text on the actual sides of the cube. Since
+everything is made step by step, moving the text from the middle to the sides
+was something that would be done at the end, but I quite liked how it looked
+with the text being in the middle so I just left it like that. It kinda reminded
+me of the game {@a=https://store.steampowered.com/app/219890/Antichamber/
+Antichamber}.
+
+{@img=blog/000/anti.gif;animated image, walking around a cube where its \
+contents changes depending on the side the player is viewing from;;The \
+non-Euclidean world in Antichamber.}
+
+To make the effect, I used a pixelscreen to draw a filled cube. Then the text
+pixels would be drawn depending on if the color of the pixel's position matches
+with the color of the cube side to which the text belongs. Of course the
+pixelscreen isn't drawn or exported to the storyboard, it's just non-visibly
+being computed.
+
+{@img=blog/000/startcube.png;filled cube with colorful sides and some text \
+pixels are visible on two sides;;Draw the text pixel if the color matches.}
+
+As for the text itself, I didn't really know what to put there. I wasn't sure
+about the 'robin_be presents' but I had no idea what else to put there. Emily
+at one point said that I should make it clear that the whole storyboard is made
+out of only 4 sprites, so this was a nice place to put it in. Also a special
+greeting to Emily of course :3.
 
 {@h3 Tunnel}
 
-Idea from the lighting show at Rampage 2017/Zillion.xxx 2017. I didn't go there,
-but I saw it on different videos. Example: (epilepsy warning)
-{@a=https://youtu.be/LAoX8WSiLm0?t=223 YouTube: Zillion.xxx 17/02/2017} at 3:43.
+Every demo needs a tunnel right?
+
+I got the initial tunnel idea from a demo, {@a=https://youtu.be/FUjKo_hgLL8?t=34
+YouTube: Elude - Rise And Shine | Demoscene} (at 0:34). The fly-in effect was a
+nice way to make it appear and it fitted nicely with the music. I really like
+the lighting effect that's going on. I got that idea from the lighting show at
+Rampage 2017/Zillion.xxx 2017. I didn't go there, but I saw it on different
+videos. Example: (epilepsy warning) {@a=https://youtu.be/QqL0MmymLV0?t=558
+YouTube: Zillion - The Final Rave PART 1} (at 9:18). At the end of the tunnel,
+segments 'break out' and I got that idea from yet another demo:
+{@a=https://youtu.be/aL0FIHRrCw4?t=877 Revision 2018 - Concert - Logicoma}
+(at 14:37) (actually this is scene from a demo, edited to be used as background
+visuals for this (awesome) concert during Revision 2018).
+
+Fun fact: the tunnel is rendered at 3fps, but it looks smooth thanks to
+{@#=Adding interpolation| interpolation}. The lighting effect, however, is done
+by inserting commands into the sprite directly. This is one of the only places
+where commands are made 'manually'.
+
+<pre>
+foreach (int lighttime in lighttimes) {
+	// ...
+	ColorCommand cc;
+	cc = new ColorCommand(lightstart, lightend, v3(1f), color);
+	cc.easing = eq2num(eq_in_quad);
+	dots[idx].addCommandOverride(cc);
+}
+</pre>
+{@caption Color commands being added to the sprite.}
 
 {@h3 Spectrum}
 
+It's a spectrum. I've read somewhere that spectrums are not really special
+anymore since there are tools to generate them and now every storyboard has one.
+So I thought let's do something special: an opaque 3d spectrum.
+
+Thanks to the 3d opaque objects technique this looked quite good, but it still
+had some issues at the point where the two copies joined.
+
+{@img=blog/000/spectruma.png;image of the spectrum with a visible lime line \
+coming from a side that shouldn't be visible;;See the lime line between the \
+blue bars? Yeah that ain't good.}
+
+The solution to that was to change the height of the sides to only show what
+is needed to be shown.
+
+{@img=blog/000/spectrumb.png;image of the same spectrum but with the bars \
+separated from each other showing that the sides are only as large as they \
+need to be;;Much better.}
+
+Lots of people {@s complained} made the remark that the fps is quite low, but
+I actually like it like that. Ok, maybe the rotation and movement should be a
+bit smoother, but if the bar heights are updated faster (like they are in the
+highfps version) it doesn't look as good anymore in my opinion (but of course
+I guess I could've fixed that and still made it move smoother in the highfps
+version).
+
 {@h3 Rubik's cube}
+
+--------------------------------------------------------------------------------
 
 {@h3 Waves}
 
