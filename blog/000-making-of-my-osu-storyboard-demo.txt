@@ -931,7 +931,7 @@ with a *;;Oops.}
 
 But after that fix there was still a culling issue that showed up very rarely.
 Sometimes it would show entire triangles that shouldn't be visible and at other
-times it wouldn't show them they they should be visible.
+times it wouldn't show them while they should be visible.
 
 {@img=blog/000/culbug2.png;cube with a small line from a surface that \
 shouldn't be visible;;That on the left shouldn't be there, on the right the \
