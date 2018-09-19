@@ -122,6 +122,8 @@ thing or can be used as reference.
 
 Beware: this was written years ago and might be coded weirdly.
 
+{@lang-java} {@lang-php}
+
 {@ul
   {@li {@a=https://github.com/yugecin/tsstats GitHub: yugecin/tsstats}}
   {@li {@a=https://github.com/yugecin/tsstats-webviewer GitHub:
@@ -139,8 +141,6 @@ See it in action:
 
 {@i {@ia=contact.html Contact me} if you use this and want to be featured in
 this list}
-
-{@lang-java} {@lang-php}
 
 <hr/>
 
