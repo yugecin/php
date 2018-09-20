@@ -7,7 +7,7 @@ function makepage {
 	echo "$SKELETON1" > $1
 	echo "$2" | head -n1 >> $1
 	echo "$SKELETON23" >> $1
-	echo "<header><a href=\"$1~INTERNALLINKINV~\">~LIGHTSOFF~</a></header>" >> $1
+	echo "<header><a href=\"/$1~INTERNALLINKINV~\">~LIGHTSOFF~</a></header>" >> $1
 	echo "$NAV" >> $1
 	if [ ! -z "$3" ]
 	then
@@ -72,7 +72,7 @@ for IX in "${PAGES[@]}"
 do
 	PF=${IX##*/*_}
 	PN=$(head -n1 $IX)
-	NAV="$NAV|<a href=\"${PF%.txt*}.html~INTERNALLINK~\">$PN</a>"
+	NAV="$NAV|<a href=\"/${PF%.txt*}.html~INTERNALLINK~\">$PN</a>"
 done
 
 NAV="<nav>${NAV#*|}</nav><hr/>"

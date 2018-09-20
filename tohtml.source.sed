@@ -122,7 +122,7 @@ s_{@lang #\([0-9a-fA-F]\{6\}\)}_<span class="l" style="background-color: #\1"></
 		g
 		s/\(.*\)\n.*$/\1\n<\/a>/
 		x
-		s/.*\n\(.*\){@ia=\([^ ]*\) \?\(.*\)/\1<a href="\2~INTERNALLINK~">\3/
+		s_.*\n\(.*\){@ia=\([^ ]*\) \?\(.*\)_\1<a href="/\2~INTERNALLINK~">\3_
 		b nexttag
 	}
 
@@ -138,7 +138,7 @@ s_{@lang #\([0-9a-fA-F]\{6\}\)}_<span class="l" style="background-color: #\1"></
 	/{@a=[^ ]*\( \|$\)/ {
 		H
 		g
-		s_\(.*\)\n.*$_\1\n</a><img src="moin-www.png" alt="globe icon" title="external link"/>_
+		s_\(.*\)\n.*$_\1\n</a><img src="/moin-www.png" alt="globe icon" title="external link"/>_
 		x
 		s/.*\n\(.*\){@a=\([^ ]*\) \?\(.*\)/\1<a href="\2">\3/
 		b nexttag
