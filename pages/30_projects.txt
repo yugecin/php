@@ -69,7 +69,7 @@ A (sort of) demo in the form of an {@a=https://osu.ppy.sh osu!} storyboard.
   {@li {@a=https://github.com/yugecin/osusb1 GitHub: yugecin/osusb1}}
   {@li {@a=https://youtube.com/watch?v=bOGJWGJOMOk YouTube video showing the \
 storyboard (original version)}}
-  {@li {@a=https://youtube.com/watch?v=cPrhws8hevk YouTube video showing the \
+  {@li {@a=https://youtube.com/watch?v=YW6cEbk6-0I YouTube video showing the \
 storyboard (highfps version)}}
   {@li {@a=https://old.ppy.sh/b/1756941?m=0 Beatmap on osu! website}}
 }
