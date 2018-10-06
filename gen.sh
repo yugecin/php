@@ -38,7 +38,7 @@ echo "<ul>" >> $BLOGPAGE
 
 # collect blog posts
 mapfile -t _BLOGPOSTS < <(find blog/*.txt -maxdepth 1 -type f | grep -v "blog/_")
-BLOGPOSTS=
+BLOGPOSTS=()
 for IX in "${_BLOGPOSTS[@]}"
 do
 	TIMESTAMP=$(head -n1 $IX)
@@ -51,15 +51,22 @@ do
 	OUTPUTFILE=blog-${OUTPUTFILE/.txt/.html}
 	TITLE=$(head -n 3 $IX | tail -n 1)
 	DATE=$(date -d @$TIMESTAMP +"%0d %b %Y")
-	BLOGPOSTS=$BLOGPOSTS$'\n'"$DATE|$IX $OUTPUTFILE $TITLE"
-	echo "{@li $DATE - {@ia=$OUTPUTFILE $TITLE}}" >> $BLOGPAGE
+	LI="{@li $DATE - {@ia=$OUTPUTFILE $TITLE}}"
+	BLOGPOSTS+=("$TIMESTAMP|$DATE|$LI|$IX $OUTPUTFILE $TITLE")
+done
+
+IFS=$'\n' BLOGPOSTS=($(sort -rn <<<"${BLOGPOSTS[*]}"))
+
+for IX in "${BLOGPOSTS[@]}"
+do
+	LI=${IX#*|}
+	LI=${LI#*|}
+	LI=${LI%%|*}
+	echo "$LI" >> $BLOGPAGE
 done
 
 echo "</ul>" >> $BLOGPAGE
 echo "" >> $BLOGPAGE
-
-BLOGPOSTS=$(echo "$BLOGPOSTS" | tail -n +2 | sort -n)
-readarray -t BLOGPOSTS <<<"$BLOGPOSTS"
 
 # collect pages
 mapfile -t PAGES < <(find pages/*.txt -maxdepth 1 -type f | grep -v "pages/_")
@@ -90,8 +97,9 @@ BLOGTOP=$(sed -f tohtml.sed < blog/_top_template.txt)
 echo ""
 for IX in "${BLOGPOSTS[@]}"
 do
+	IX=${IX#*|}
 	DATE=${IX%%|*}
-	INPUTFILE=${IX#*|}
+	INPUTFILE=${IX##*|}
 	OUTPUTFILE=${INPUTFILE#* }
 	TITLE=${OUTPUTFILE#* }
 	INPUTFILE=${INPUTFILE%% *}
