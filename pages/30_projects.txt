@@ -76,6 +76,23 @@ storyboard (highfps version)}}
 
 <hr/>
 
+{@h2 intellijplugins}
+
+{@b Status:} partly finished
+
+Some plugins for applications based on the Intellij Platform that make my
+life better. Perhaps yours, too? Currently has a plugin for changing the "look
+and feel" and a plugin that colors the caret based on the active ideavim mode.
+
+{@lang-java}
+
+{@ul
+  {@li {@a=https://github.com/yugecin/intellijplugins GitHub: \
+yugecin/intellijplugins}}
+}
+
+<hr/>
+
 {@h2 php}
 
 {@b Status:} finished, maintenance
