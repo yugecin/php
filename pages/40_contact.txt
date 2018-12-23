@@ -1,6 +1,6 @@
 contact
 
-17 Sep 2018
+23 Dec 2018
 --------------------------------------------------------------------------------
 {@h1 contact {@small {@ia=pages/40_contact.txt [txt]}}}
 
@@ -13,6 +13,7 @@ Here are some ways to contact me or places where you can find me on the net.
   register you can use my {@a=http://whatpulse.org/ref/316450 referral
   link}, much appreciated)}
   {@li {@a=https://www.youtube.com/c/robin_be YouTube: robin_be}}
+  {@li {@a=https://www.shadertoy.com/user/robin_be Shadertoy: robin_be}}
   {@li {@a=https://steamcommunity.com/id/yugecin Steam: yugecin}}
   {@li Discord: username: robin_be tag: 2125}
   {@li IRC: robin_be on irc.exp-gaming.net}
