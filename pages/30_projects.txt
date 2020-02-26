@@ -41,7 +41,7 @@ Anna. Modules can be loaded and unloaded at runtime.
 {@lang-java}
 
 {@ul
-  {@li {@a=https://github.com/yugecin/anna: yugecin/anna}}
+  {@li {@a=https://github.com/yugecin/anna GitHub: yugecin/anna}}
 }
 
 <hr/>
