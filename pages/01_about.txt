@@ -1,6 +1,6 @@
 about me
 
-16 Sep 2018
+26 Feb 2020
 --------------------------------------------------------------------------------
 {@h1 about me {@small {@ia=pages/01_about.txt [txt]}}}
 
@@ -24,16 +24,14 @@ screens (and I am fine with that).
 {@h3 Things I do sometimes}
 
 {@ul
-  {@li C# (5)}
+  {@li c}
+  {@li asm/RE}
   {@li php and web stuff (no js)}
-  {@li asm}
 }
 
 {@h3 Things I want to do more}
 
 {@ul
-  {@li c}
-  {@li asm/RE}
   {@li sleep}
 }
 
