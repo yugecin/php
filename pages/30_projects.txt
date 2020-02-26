@@ -1,6 +1,6 @@
 projects
 
-14 Dec 2018
+26 Feb 2020
 --------------------------------------------------------------------------------
 {@h1 projects {@small {@ia=pages/30_projects.txt [txt]}}}
 
@@ -14,12 +14,36 @@ working on. Only the more 'important' ones are on here, check out my
 
 {@h2 basdon-fly}
 
-{@b Status:} coming soon-ish
+{@b Status:} Live, early alpha
 
-Codename for now. Planned aviation themed {@a=http://sa-mp.com/ San Andreas
-Multiplayer} server currently under development. Also contains a website.
+Aviation themed {@a=http://sa-mp.com/ San Andreas Multiplayer} server. Includes
+a website that shows all flight details.
 
-{@lang-pawn} {@lang-c} {@lang-java} {@lang-php}
+{@lang-c} {@lang-java} {@lang-php}
+
+{@ul
+  {@li {@a=https://github.com/basdon/fly-plugin GitHub: basdon/fly-plugin}}
+  {@li {@a=https://github.com/basdon/fly-db GitHub: basdon/fly-db}}
+  {@li {@a=https://github.com/basdon/fly-web GitHub: basdon/fly-web}}
+  {@li {@a=https://github.com/basdon/fly-services GitHub: basdon/fly-services}}
+  {@li {@a=https://basdon.net website: basdon.net}}
+}
+
+<hr/>
+
+{@h2 anna}
+
+{@b Status:} Ready
+
+--------------------------------------------------------------------------------
+Modular IRC mod. Named after Anna^, from the 2006 BASSHUNTER song named Boten
+Anna. Modules can be loaded and unloaded at runtime.
+
+{@lang-java}
+
+{@ul
+  {@li {@a=https://github.com/yugecin/anna: yugecin/anna}}
+}
 
 <hr/>
 
