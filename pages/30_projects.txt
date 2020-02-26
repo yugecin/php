@@ -35,7 +35,6 @@ a website that shows all flight details.
 
 {@b Status:} Ready
 
---------------------------------------------------------------------------------
 Modular IRC mod. Named after Anna^, from the 2006 BASSHUNTER song named Boten
 Anna. Modules can be loaded and unloaded at runtime.
 
