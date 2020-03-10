@@ -12,6 +12,21 @@ working on. Only the more 'important' ones are on here, check out my
 
 <hr/>
 
+{@h2 samp-mapedit}
+
+{@b Status:} WIP
+
+In-game map editor for GTA: San Andreas. Also handles (race)checkpoints.
+Supports SA-MP's RemoveBuilding/SetObjectMaterial/SetObjectMaterialText.
+
+{@lang-c} {@lang-asm}
+
+{@ul
+  {@li {@a=https://github.com/yugecin/samp-mapedit GitHub: yugecin/samp-mapedit}}
+}
+
+<hr/>
+
 {@h2 basdon-fly}
 
 {@b Status:} Live, early alpha
