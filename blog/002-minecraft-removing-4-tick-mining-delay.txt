@@ -1,0 +1,105 @@
+1589481267
+
+Minecraft: removing 4 tick mining delay
+
+14 May 2020
+--------------------------------------------------------------------------------
+
+Every once in a while I return to playing Minecraft. One thing I always tend to
+do is removing a delay between mining blocks. Since I usually spend most of my
+time mining, this delay frustrates me quite a bit.
+
+Years ago, in a previous life, I used MCP (which stood for Minecraft Coder Pack)
+to decompile minecraft. There I found how to remove the delay, by setting the
+{@code blockHitDelay} to {@code 0} in
+{@code PlayerControllerMP#onPlayerDamageBlock}.  It usually takes a while for
+MCP to get updated for newer versions, and nowadays I don't even try to find
+updated version anymore since at some point it started to get impossible to
+find them.
+
+So the way I've been doing it now is to find the class, edit the value and
+recompile it. Then attach a debugger to the running JVM instance and hotswap the
+class.
+
+To begin, we would need to find the class. Most identifiers are usually
+obfuscated, so this can be done by searching for a pattern. I saw this code in
+the (older versions) of the class we need, and thought maybe the {@code 4.5}
+value would be easy to find.
+
+<pre>
+public float getBlockReachDistance()
+{
+	return !creativeMode ? 4.5F : 5F;
+}
+</pre>
+
+{@a=https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.4.4 \
+The JVM specs for CONSTANT_Float_info structure} tells us that a float constant
+consists of a byte with value {@code 4}, followed by the float value in IEEE-754
+format, big endian. So, find the jar (in my case
+{@code %APPDATA%\.minecraft\versions\20w20b\20w20b.jar}), extract it somewhere
+and grep for our pattern.
+
+<pre>
+$ find . -name "*.class" | xargs grep -obUaP "\x04\x40\x90\x00\x00"
+./azg.class:2765:@P
+./dls$a.class:1083:@P
+./dvt.class:348:@P
+./dwx.class:591:@P
+./dxn.class:1969:@P
+./ebd$m.class:1185:@P
+./efs.class:277:@P
+./eik.class:724:@P
+</pre>
+
+There aren't too many matches, so it's doable to go through every one of them
+with your favorite decompiler and see if it's the target class.
+{@code dxn.class} shows me this:
+
+<pre>
+public float c()
+{
+	return this.j.e() ? 5.0F : 4.5F;
+}
+</pre>
+
+Copy the contents of that class file and copy it into a source file in a project
+in your favorite IDE, with the same name. One method up is this method:
+
+<pre>
+public boolean b(ft var1, fy var2)
+{
+	this.n();
+	if (this.h > 0) {
+		--this.h;
+		return true;
+	} else {
+		cel var3;
+(..)
+</pre>
+
+That {@code if} is checking the block hit delay, so I put this line above the
+if (of course there's different ways to do this, but hey, simplicity and
+hot-swapability):
+
+<pre>
+	this.h = 0;
+</pre>
+
+To compile the file you probably need to link the jar and some libraries, which
+can usually be found in {@code %APPDATA%\.minecraft\libraries}. I used
+Fernflower to decompile and had to fix some usages of an enum. For some reason
+it added an import for {@code rz.a} but the compiler wasn't accepting it, so I
+removed the import and replace all usages of the enum type {@code a} in method
+parameters with {@code rz.a}.
+
+The next step is to add some arguments to Minecraft to enable debugging, it
+doesn't seem to hard to do with the new launcher. I added following arguments:
+
+<pre>
+-Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1052
+</pre>
+
+Then simply launch the game, attach the debugger of your favorite IDE and
+hotswap the class.
+
