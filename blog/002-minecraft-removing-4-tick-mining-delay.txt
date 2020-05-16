@@ -2,7 +2,7 @@
 
 Minecraft: removing 4 tick mining delay
 
-14 May 2020
+16 May 2020
 --------------------------------------------------------------------------------
 
 Every once in a while I return to playing Minecraft. One thing I always tend to
@@ -18,8 +18,8 @@ updated version anymore since at some point it started to get impossible to
 find them.
 
 So the way I've been doing it now is to find the class, edit the value and
-recompile it. Then attach a debugger to the running JVM instance and hotswap the
-class.
+recompile it. Then attach a debugger to the running JVM instance and hot-swap
+the class.
 
 To begin, we would need to find the class. Most identifiers are usually
 obfuscated, so this can be done by searching for a pattern. I saw this code in
@@ -53,8 +53,9 @@ $ find . -name "*.class" | xargs grep -obUaP "\x04\x40\x90\x00\x00"
 </pre>
 
 There aren't too many matches, so it's doable to go through every one of them
-with your favorite decompiler and see if it's the target class.
-{@code dxn.class} shows me this:
+with your favorite decompiler and see if it's the target class. In
+{@code dxn.class} I found following method which sort of looks like the
+{@code getBlockReachDistance()} method we're trying to find.
 
 <pre>
 public float c()
@@ -63,8 +64,9 @@ public float c()
 }
 </pre>
 
-Copy the contents of that class file and copy it into a source file in a project
-in your favorite IDE, with the same name. One method up is this method:
+So this is the class that we need and will modify and hot-swap. Copy the
+contents of that class file and copy it into a source file in a project in your
+favorite IDE, with the same name. One method up is this method:
 
 <pre>
 public boolean b(ft var1, fy var2)
@@ -101,5 +103,5 @@ doesn't seem to hard to do with the new launcher. I added following arguments:
 </pre>
 
 Then simply launch the game, attach the debugger of your favorite IDE and
-hotswap the class.
+hot-swap the class.
 
