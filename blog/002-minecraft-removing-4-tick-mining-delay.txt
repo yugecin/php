@@ -2,12 +2,16 @@
 
 Minecraft: removing 4 tick mining delay
 
-16 May 2020
+17 May 2020
 --------------------------------------------------------------------------------
 
 Every once in a while I return to playing Minecraft. One thing I always tend to
-do is removing a delay between mining blocks. Since I usually spend most of my
-time mining, this delay frustrates me quite a bit.
+do is removing a 4-tick delay between mining blocks. Usually there should be 20
+ticks per second, meaning there's 50ms between ticks. So after breaking a
+block, there is a 200ms delay before the next block will start to be mined.
+Since I usually spend most of my time mining, this delay frustrates me quite a
+bit. Even if you have a pickaxe that breaks a block as good as instantly,
+you'd still have to wait for those annoying 200ms {@i for every block}.
 
 Years ago, in a previous life, I used MCP (which stood for Minecraft Coder Pack)
 to decompile minecraft. There I found how to remove the delay, by setting the
@@ -96,7 +100,7 @@ removed the import and replace all usages of the enum type {@code a} in method
 parameters with {@code rz.a}.
 
 The next step is to add some arguments to Minecraft to enable debugging, it
-doesn't seem to hard to do with the new launcher. I added following arguments:
+doesn't seem too hard to do with the new launcher. I added following arguments:
 
 <pre>
 -Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1052
