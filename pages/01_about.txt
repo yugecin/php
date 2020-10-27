@@ -1,6 +1,6 @@
 about me
 
-26 Feb 2020
+27 Oct 2020
 --------------------------------------------------------------------------------
 {@h1 about me {@small {@ia=pages/01_about.txt [txt]}}}
 
@@ -17,14 +17,14 @@ screens (and I am fine with that).
 
 {@ul
   {@li Java}
-  {@li GTA:SA stuff (CLEO/SCM/PAWN)}
+  {@li c}
+  {@li GTA:SA/SA:MP stuff (CLEO/SCM/asm/c/RE)}
   {@li Procrastinate}
 }
 
 {@h3 Things I do sometimes}
 
 {@ul
-  {@li c}
   {@li asm/RE}
   {@li php and web stuff (no js)}
 }
@@ -33,6 +33,7 @@ screens (and I am fine with that).
 
 {@ul
   {@li sleep}
+  {@li move}
 }
 
 If you want to know what I really do, check out the {@ia=projects.html \

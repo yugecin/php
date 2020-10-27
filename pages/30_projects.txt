@@ -1,6 +1,6 @@
 projects
 
-26 Feb 2020
+27 Oct 2020
 --------------------------------------------------------------------------------
 {@h1 projects {@small {@ia=pages/30_projects.txt [txt]}}}
 
@@ -14,34 +14,62 @@ working on. Only the more 'important' ones are on here, check out my
 
 {@h2 samp-mapedit}
 
-{@b Status:} WIP
+{@b Status:} Usable state
 
-In-game map editor for GTA: San Andreas. Also handles (race)checkpoints.
+In-game map editor for GTA: San Andreas. Also handles (race)checkpoints,
+textdraws, vehicles and gangzones.
 Supports SA-MP's RemoveBuilding/SetObjectMaterial/SetObjectMaterialText.
+
+The current status is that it is usable for me, and that's all I want to do. I
+made this editor mainly for me so I can get going faster on the
+{@#=basdon-fly| basdon-fly project}. To actually make a decent public release,
+it would require much effort to make everything work for all kinds of different
+gta executables (since there's lots of memory operations) and the editor is
+probably very non user friendly for anyone else than me. I don't want to spend
+time on that because time is already sparse if you look at the big picture of
+life and I would feel like doing that is a chore that might kill my motivation
+completely.
 
 {@lang-c} {@lang-asm}
 
 {@ul
   {@li {@a=https://github.com/yugecin/samp-mapedit GitHub: yugecin/samp-mapedit}}
+  {@li {@a=https://twitter.com/yugecin26/status/1255233630051487744 \
+  Twitter thread with images/GIFs}}
 }
 
 <hr/>
 
 {@h2 basdon-fly}
 
-{@b Status:} Live, early alpha
+{@b Status:} Live, alpha
 
 Aviation themed {@a=http://sa-mp.com/ San Andreas Multiplayer} server. Includes
-a website that shows all flight details.
+a website that shows all flight details, with a flight tracker and viewer.
 
-{@lang-c} {@lang-java} {@lang-php}
+{@lang-c} {@lang-asm} {@lang-java} {@lang-php}
 
 {@ul
   {@li {@a=https://github.com/basdon/fly-plugin GitHub: basdon/fly-plugin}}
   {@li {@a=https://github.com/basdon/fly-db GitHub: basdon/fly-db}}
   {@li {@a=https://github.com/basdon/fly-web GitHub: basdon/fly-web}}
   {@li {@a=https://github.com/basdon/fly-services GitHub: basdon/fly-services}}
+  {@li {@a=https://github.com/basdon/basdon-tools GitHub: basdon/basdon-tools}}
   {@li {@a=https://basdon.net website: basdon.net}}
+}
+
+<hr/>
+
+{@h2 xandilordi-soundboard}
+
+{@b Status:} Ready, occasionally adding more sounds
+
+A soundboard HTML page for a Belgian comedian (Xander De Rycke).
+
+{@ul
+  {@li {@a=http://xandilordi-soundboard.be xandilordi-soundboard.be}}
+  {@li {@a=https://github.com/yugecin/xandilordi-soundboard GitHub: \
+  yugecin/xandilordi-soundboard}}
 }
 
 <hr/>
@@ -63,7 +91,7 @@ Anna. Modules can be loaded and unloaded at runtime.
 
 {@h2 opsu-dance}
 
-{@b Status:} long-running, semi-paused, occasional updates
+{@b Status:} long-running, paused/abandoned, occasional updates
 
 Is a fork of {@a=https://github.com/itdelatrisu/opsu opsu!}, which is an
 open-source clone of the {@a=https://osu.ppy.sh osu!} game. My fork has more
@@ -81,7 +109,7 @@ doing UI stuff.
 
 {@h2 osukps}
 
-{@b Status:} largely finished, occasional updates
+{@b Status:} mostly finished and abandoned
 
 A little program that shows keystates, keys per second and total keys for rythm
 games (osu!, stepmania etc). Useful for making videos or livestreaming.
@@ -135,7 +163,7 @@ yugecin/intellijplugins}}
 
 {@b Status:} finished, maintenance
 
-My personal home page. The thing you're probably watching right now. Is
+My personal home page. The thing you're probably looking at right now. Is
 basically a static site generator using sed and bash scripts.
 
 {@lang-sed} {@lang-shell}
@@ -239,16 +267,14 @@ Simple web-based plaintext notekeeper. I used this one myself a lot, every day.
 
 A php script that queries a SA-MP server to make activity graphs (using the
 {@a=https://github.com/goat1000/SVGGraph SVGGraph library}). Was made for a
-specific server that is now down, but can be easily modified to work for any
-server.
+specific server, but can be easily modified to work for any server.
 
 {@lang-php}
 
 {@ul
   {@li {@a=https://github.com/thepilotslife/plquery GitHub:
 thepilotslife/plquery}}
-  {@li {@a=https://robin.thisisgaming.org/pl/stats/ data (now archived since
-target server doesn't exist anymore}}
+  {@li {@a=https://robin.thisisgaming.org/pl/stats/ data}}
 }
 
 <hr/>
