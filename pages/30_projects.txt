@@ -1,6 +1,6 @@
 projects
 
-27 Oct 2020
+05 Jan 2021
 --------------------------------------------------------------------------------
 {@h1 projects {@small {@ia=pages/30_projects.txt [txt]}}}
 
@@ -9,6 +9,23 @@ working on. Only the more 'important' ones are on here, check out my
 {@a=https://github.com/yugecin GitHub profile} for more (random) things.
 
 ~INDEXGOESHERE~
+
+<hr/>
+
+{@h2 nfsu2-re}
+
+{@b Status:} long-running
+
+Hobby reverse engineering project about need for speed underground 2.
+Figuring out workings and file formats. Pseudo goals are making a save game
+editor and unofficial online multiplayer functionality.
+
+{@lang-c} {@lang-asm}
+
+{@ul
+  {@li {@a=https://github.com/yugecin/nfsu2-re GitHub: yugecin/nfsu2-re}}
+  {@li {@a=https://yugecin.github.io/nfsu2-re documentation}}
+}
 
 <hr/>
 
@@ -50,12 +67,9 @@ a website that shows all flight details, with a flight tracker and viewer.
 {@lang-c} {@lang-asm} {@lang-java} {@lang-php}
 
 {@ul
-  {@li {@a=https://github.com/basdon/fly-plugin GitHub: basdon/fly-plugin}}
-  {@li {@a=https://github.com/basdon/fly-db GitHub: basdon/fly-db}}
-  {@li {@a=https://github.com/basdon/fly-web GitHub: basdon/fly-web}}
-  {@li {@a=https://github.com/basdon/fly-services GitHub: basdon/fly-services}}
-  {@li {@a=https://github.com/basdon/basdon-tools GitHub: basdon/basdon-tools}}
   {@li {@a=https://basdon.net website: basdon.net}}
+  {@li {@a=https://github.com/basdon/basdon-fly GitHub: basdon/basdon-fly}}
+  {@li {@a=https://github.com/basdon/basdon-tools GitHub: basdon/basdon-tools}}
 }
 
 <hr/>
