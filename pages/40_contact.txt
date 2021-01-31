@@ -1,6 +1,6 @@
 contact
 
-23 Dec 2018
+31 Jan 2021
 --------------------------------------------------------------------------------
 {@h1 contact {@small {@ia=pages/40_contact.txt [txt]}}}
 
@@ -16,7 +16,7 @@ Here are some ways to contact me or places where you can find me on the net.
   {@li {@a=https://www.shadertoy.com/user/robin_be Shadertoy: robin_be}}
   {@li {@a=https://steamcommunity.com/id/yugecin Steam: yugecin}}
   {@li Discord: username: robin_be tag: 2125}
-  {@li IRC: robin_be on irc.exp-gaming.net}
+  {@li IRC: robin_be on chat.irc.tl}
   {@li E-mail (pick one, not for spam or advertising):
     {@ul
       {@li local-part: yugecin domain: yandex.com}
