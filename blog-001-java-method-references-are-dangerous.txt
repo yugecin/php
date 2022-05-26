@@ -1,0 +1,266 @@
+.pushmode config
+{Java method references are dangerous} ||| title
+{06 Oct 2018} ||| published
+{26 May 2022} ||| modified
+.popmode config
+
+This post is the result of me having to figure out a rather strange problem. May
+the same not happen to you.
+
+.pushmode section
+
+{Index} ||| h id=index
+
+{} ||| index
+
+.popmode section
+.pushmode section
+
+{Scenario} ||| h id=scenario
+
+Let's say you have a class {TheClass} with a method {theMethod} that             ||| code,code
+does something important.
+
+In a later version, you noticed that {theMethod} can be used elsewhere too       ||| code
+so you move it to {BaseClass} and make {TheClass} extend {BaseClass}.            ||| code,code,code
+
+.pushmode pre
+$ cat versionA/TheClass.java
+class TheClass {
+        void theMethod() {
+                System.out.println("hi!");
+        }
+}
+
+$ cat versionB/TheClass.java
+class BaseClass {
+        void theMethod() {
+                System.out.println("hi!");
+        }
+}
+
+class TheClass extends BaseClass {
+}
+.popmode pre
+{{TheClass.java} for both versions.}                                             ||| p class=capt,code
+
+.popmode section
+.pushmode section
+
+{Calling the method} ||| h id=callingthemethod
+
+Now, what if {TheClass} is part of a library and a user wants to use it?         ||| code
+They can invoke {theMethod} in a few different ways.                             ||| code
+
+.pushmode pre
+$ cat User.java
+public class User {
+        public static void main(String[] args) {
+                TheClass i = new TheClass();
+                i.theMethod();
+                ((Runnable) () -> i.theMethod()).run();
+                ((Runnable) i::theMethod).run();
+        }
+}
+.popmode pre
+{Usage of {theMethod} in other code.}                                            ||| p class=capt,code
+
+Let's try compiling and running {User.java} using {TheClass} from version A.     ||| code,code
+
+.pushmode pre
+$ javac versionA/TheClass.java
+
+$ javac -cp versionA/ User.java
+
+$ java -cp ".;versionA/" User
+hi!
+hi!
+hi!
+.popmode pre
+{Using version A.}                                                               ||| p class=capt
+
+Let's do the same for version B.
+
+.pushmode pre
+$ javac versionB/TheClass.java
+
+$ javac -cp versionB/ User.java
+
+$ java -cp ".;versionB/" User
+hi!
+hi!
+hi!
+.popmode pre
+{Using version B.}                                                               ||| p class=capt
+
+All great, everything works as expected.
+
+.popmode section
+.pushmode section
+
+{Mixing versions on the classpath} ||| h id=mixingversions
+
+But what happens if there's a different version of the library containing
+{TheClass} on the running classpath? Let's see.                                  ||| code
+
+.pushmode section
+
+{Compiling for version A and running with version B} ||| h id=compileArunB
+
+.pushmode pre
+$ javac -cp versionA/ User.java
+
+$ java -cp ".;versionB/" User
+hi!
+hi!
+hi!
+.popmode pre
+
+All good!
+
+.popmode section
+.pushmode section
+
+{Compiling for version B and running with version A} ||| h id=compileBrunA
+
+{                                                                                ||| pre style=white-space:pre-wrap;word-break:break-all
+$ javac -cp versionB/ User.java
+
+$ java -cp ".;versionA/" User
+hi!
+hi!
+Exception in thread "main" java.lang.BootstrapMethodError: \
+java.lang.NoClassDefFoundError: BaseClass
+        at User.main(User.java:6)
+Caused by: java.lang.NoClassDefFoundError: BaseClass
+        ... 1 more
+Caused by: java.lang.ClassNotFoundException: BaseClass
+        at java.net.URLClassLoader.findClass(Unknown Source)
+        at java.lang.ClassLoader.loadClass(Unknown Source)
+        at sun.misc.Launcher$AppClassLoader.loadClass(Unknown Source)
+        at java.lang.ClassLoader.loadClass(Unknown Source)
+        ... 1 more
+}                                                                                |||
+
+Uh-oh! The normal invocation and lambda are working fine, but when it's trying
+to call {someMethod} using a method reference, things suddenly explode.          ||| code
+
+This can be quite confusing for the user of the library (me, yesterday). We're
+getting a {ClassNotFoundException} for {BaseClass} on line 6, but we don't even  ||| code,code
+know where {BaseClass} came from. Only {TheClass} is used and there's no         ||| code,code
+{BaseClass} to be found in the library that we compiled against.                 ||| code
+
+.popmode section
+.popmode section
+.pushmode section
+
+{Investigating the crashsite} ||| h id=investigation
+
+Let's see what there is to be found under the hood in the bytecode.
+
+.pushmode section
+
+{Normal invocation} ||| h id=normalinvoc
+
+{                                                                                ||| pre
+// (omitted)
+
+ aload1
+ invokevirtual TheClass.theMethod()V
+
+// (omitted)
+}                                                                                |||
+
+Nothing special for the normal invocation.
+
+.popmode section
+.pushmode section
+
+{Lambda invocation} ||| h id=lambdainvoc
+
+{                                                                                ||| pre style=white-space:pre-wrap;word-break:break-all
+// (omitted)
+
+ aload1
+ invokedynamic java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke\
+/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/\
+lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/\
+MethodType;)Ljava/lang/invoke/CallSite; : run(LTheClass;)Ljava/lang/Runnable; \
+()V User.lambda$main$0(LTheClass;)V (6) ()V
+ invokeinterface java/lang/Runnable.run()V
+
+// (omitted)
+
+ private static synthetic lambda$main$0(TheClass arg0) { //(LTheClass;)V
+  L1
+   aload0
+   invokevirtual TheClass.theMethod()V
+   return
+ }
+}                                                                                |||
+
+Lots of more code for the lamba invocation, but in the end it's adding a method
+that calls {TheClass.theMethod} like a normal invocation.                        ||| code
+
+.popmode section
+.pushmode section
+
+{Method reference invocation} ||| h id=methodrefinvoc
+
+{                                                                                ||| pre style=white-space:pre-wrap;word-break:break-all
+ aload1
+ dup
+ invokevirtual java/lang/Object.getClass()Ljava/lang/Class;
+ pop
+ invokedynamic java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke\
+/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang\
+/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;\
+)Ljava/lang/invoke/CallSite; : run(LTheClass;)Ljava/lang/Runnable; ()V \
+{BaseClass.theMethod()V} (5) ()V                                                 ||| strong
+ invokeinterface java/lang/Runnable.run()V
+}                                                                                |||
+{Method reference + invocation.}                                                 ||| p class=capt
+
+Well hello there. Inside that big mess there's {BaseClass.theMethod()V}.         ||| code
+Of course this won't work when having version A on the classpath.
+
+So what happens when it's compiled against version A?
+
+{                                                                                ||| pre style=white-space:pre-wrap;word-break:break-all
+ aload1
+ dup
+ invokevirtual java/lang/Object.getClass()Ljava/lang/Class;
+ pop
+ invokedynamic java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke\
+/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang\
+/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;\
+)Ljava/lang/invoke/CallSite; : run(LTheClass;)Ljava/lang/Runnable; ()V \
+{TheClass.theMethod()V} (5) ()V                                                  ||| strong
+ invokeinterface java/lang/Runnable.run()V
+}                                                                                |||
+{Method reference + invocation when compiled using version A.}                   ||| code
+
+No real surprises here actually, now it just uses {TheClass.theMethod}. But this ||| code
+also works fine when running it while version B is on the classpath.
+
+.popmode section
+.popmode section
+.pushmode section
+
+{In the real world} ||| h id=realworld
+
+A real world situation can be that you're writing an extension or plugin for a
+host application. The code hierarchy in the host application may change in newer
+versions, but the changes might not be directly visible (imagine
+{theMethod} being deeper down in the structure). Of course you'd want your       ||| code
+plugin to still work for previous versions. It compiles fine when using the
+latest version so you'd think it's all good, but then problems like this could
+appear when a user uses an older version of the host application (that used to
+work with your extension/plugin).
+
+In this situation, if one still wants a single binary for different
+versions of the host application, one can either not use method references where
+they cause issues like this or just compile using the older version of the host's
+SDK.
+
+.popmode section

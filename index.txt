@@ -1,0 +1,110 @@
+.pushmode config
+{home/about} ||| title
+{02 May 2022} ||| modified
+.popmode config
+
+This is the homepage of Robin, also known as robin_be/yugecin/yugecin26. Hello :)
+
+{} ||| index
+
+.pushmode section
+
+{about me}                                                                      ||| h id=aboutme
+
+I was born, raised, and currently live in Belgium, more specifically in
+{West-Flanders}, so my native tongue is Dutch and my French is pretty much      ||| a class=ext href=https://en.wikipedia.org/wiki/West_Flanders
+non-existent. I currently spend most of my time with computers,
+either for work (fulltime (5d/38h) software developer) or for
+fun (programming for fun, playing a game or generally wasting time).
+
+{things I do a lot}                                                             ||| strong
+
+.pushmode ul
+- working fulltime (as a software developer)
+- coding c
+- coding GTA:SA/SA:MP stuff (CLEO/SCM/asm/c/RE)
+- procrastinate
+- playing TrackMania United Forever (2008)
+.popmode ul
+
+{things I do sometimes}                                                         ||| strong
+
+.pushmode ul
+- assembly (x86 intel syntax) / reverse engineering (using IDA freeware)
+- coding Java (usually 1.8)
+- coding php and web stuff (little js)
+- going for a run/walk/bike ride/inline skate ride
+.popmode ul
+
+{things I want to do more}                                                      ||| strong
+
+.pushmode ul
+- sleep
+- move (without getting injured)
+.popmode ul
+
+{things I want to do less}                                                      ||| strong
+
+.pushmode ul
+- browse Twitter
+- browse YouTube
+- eat junk
+.popmode ul
+
+If you want to know what I'm really working on, check out the {projects} page.  ||| a href=projects.html
+
+.popmode section
+.pushmode section
+
+{contact}                                                                       ||| h id=contact
+
+Here are some ways to contact me or places where you can find me on the net.
+
+.pushmode ul
+- {GitHub: yugecin}                                                             ||| a class=ext href=https://github.com/yugecin
+- {Twitter: yugecin26}                                                          ||| a class=ext href=https://twitter.com/yugecin26 rel=nofollow
+- {WhatPulse: yugecin} (if you want to register you can use my {WhatPulse       ||| a class=ext href=https://whatpulse.org/yugecin,a class=ext href=http://whatpulse.org/ref/316450
+  referral link}, much appreciated)                                             |||
+- {YouTube: robin_be}                                                           ||| a class=ext href=https://www.youtube.com/c/robin_be rel=nofollow
+- {Shadertoy: robin_be}                                                         ||| a class=ext href=https://www.shadertoy.com/user/robin_be
+- {Steam: yugecin}                                                              ||| a class=ext href=https://steamcommunity.com/id/yugecin
+- Discord: username: robin_be tag: 2125
+- IRC: robin_be on {irc.liberty-unleashed.co.uk}                                ||| a class=ext href=https://liberty-unleashed.co.uk/irc/servers/
+- E-mail (pick one, not for spam or advertising):
+  .pushmode ul
+  - yugecin domain: yandex.com
+  - local-part: robin domain: basdon.net
+  - local-part: robin domain: thisisgaming.org
+  .popmode ul
+- Trackmania United/Nations Forever: yugecin (login & displayname), usually
+  playing on server {racing_room_speed}                                         ||| a class=ext href=tmtp://#join=racing_room_speed
+.popmode ul
+
+Don't fall for impersonation (of anyone).
+
+.popmode section
+.pushmode section
+
+{random stuff}                                                                  ||| h id=randomstuff
+
+Some movies/series I enjoyed:
+
+.pushmode ul
+- back to the future I/II/III (1985/1989/1990)
+- burn after reading (2008)
+- catch me if you can (2002)
+- good will hunting (1997)
+- la casa de papel (aka money heist) (series) (2017-2021)
+- little miss sunshine (2006)
+- margin call (2011)
+- rain man (1988)
+- scott pilgrim vs the world (2010)
+- stranger things (series) (2016-...)
+- taxi (1/2/3/4) (1998/2000/2003/2007)
+- the big short (2015)
+- the breakfast club (1985)
+- the intouchables (2011)
+- this is england (2006)
+.popmode ul
+
+.popmode section

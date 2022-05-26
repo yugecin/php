@@ -1,0 +1,12 @@
+.pushmode config
+{blog} ||| title
+{26 Apr 2022} ||| modified
+.popmode config
+
+Blogpost-ish things. Contains rants and stuff.
+
+.pushmode ul
+- {blog-002-minecraft-removing-4-tick-mining-delay}                             ||| blogentry
+- {blog-001-java-method-references-are-dangerous}                               ||| blogentry
+- {blog-000-making-of-my-osu-storyboard-demo}                                   ||| blogentry
+.popmode ul

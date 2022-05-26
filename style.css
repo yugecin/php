@@ -1,77 +1,93 @@
 body {
 	font-family: 'Tahoma', 'arial', sans-serif;
-	max-width: 45em;
-	margin: 2em auto;
-	padding: 0 .75em;
-	background: WHITE;
-	color: BLACK;
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUh\
+EUgAAAAUAAAAFAQMAAAC3obSmAAAABGdBTUEAALGPC/xhBQAAAAFzUkdC\
+AK7OHOkAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAGUExURbi4uMzMzMand\
+IoAAAASSURBVAjXY0hgOMDQwSDBYAAAC8oB8SH4uXgAAAAASUVORK5CYII=');
+	color: #000;
+	margin: 0;
 }
-::selection {
-	color: WHITE;
-	background: BLACK;
-}
+::selection,
 ::-moz-selection {
-	color: WHITE;
-	background: BLACK;
+	color: #fff;
+	background: #000;
+}
+body > div {
+	max-width: 45em;
+	margin: 2em auto 17em auto;
+	padding: 1em 1.5em;
+	background: #fff;
+	border: 2px solid #b8b8b8;
+}
+div div {
+	padding-left: 1em;
+	border-left: 3px solid #777;
+	margin: 2em 0;
+}
+h2 a, h3 a, h4 a, h5 a, h6 a {
+	color: #a0a0a0;
+}
+a.ext::after {
+	display: inline-block;
+	content: '';
+	width: 12px;
+	height: 12px;
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAM\
+AgMAAAArG7R0AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAADsMAAA7DAcdvqGQ\
+AAAAJUExURUdwTAD/AAAA//ENIZIAAAABdFJOUwBA5thmAAAAL0lEQVQI12NggAFRBwaG0AQGptAVDF\
+wzsxi4Zq1k4JqaCcZMU1cwMCxbwMCg1QAArE8JoyhJwYoAAAAASUVORK5CYII=') no-repeat;
 }
 pre,
 code {
 	font-family: 'courier new', monospace;
-	background: LIGHTGREY;
+	background: #e8e8e8;
 }
 pre {
-	white-space: pre-wrap;
+	white-space: pre;
+	overflow-x: auto;
 	word-break: break-all;
 	padding: 1em;
-	border: 2px solid DARKGREY;
+	border: 2px solid #606060;
 	font-size: smaller;
 }
 code {
-	padding: .1em .4em;
-	border-radius: 2px;
+	padding: 0 .2em;
+	border-radius: 3px;
 }
-header,
 footer {
-	color: DARKGREY;
+	color: #606060;
 	text-align: right;
-	font-size: small;
-	padding-top: 1em;
-}
-.small {
 	font-size: small;
 }
 blockquote {
 	font-style: italic;
+	background: #eee;
+	border-left: 5px solid #aaa;
+	padding: 1em;
 }
 hr {
-	border-top: 1px solid DARKGREY;
-	border-bottom: 1px solid LIGHTGREY;
+	margin: 1em 0;
+	border-top: 1px solid #606060;
+	border-bottom: 1px solid #e8e8e8;
 }
 nav {
 	text-align: center;
 }
 nav a {
-	padding: 0 1em;
-}
-a {
-	color: BLUELINK;
-}
-p.pushup,
-p.capt {
-	margin-top: -.75em;
+	padding: 0 2em;
 }
 p.capt,
 p.img {
 	text-align: center;
-	color: DARKGREY;
+	color: #606060;
 }
 p.img img {
 	max-width: 100%;
-	border: 2px solid LIGHTGREY;
+	border: 2px solid #e8e8e8;
 }
 a.s {
 	text-decoration: none;
-	color: LIGHTGREY;
+	color: #e8e8e8;
 	float: right;
 }
 span.l {

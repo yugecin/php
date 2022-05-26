@@ -1,5 +1,2 @@
-/*.html
-!/_*.html
-/tohtml.sed
-/pages/02_blog.txt
-/blog/000/dump/
+*.html
+!404.html
