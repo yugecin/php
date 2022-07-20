@@ -91,11 +91,11 @@ void php_mmp_img_directive_validate_and_trunc_name(struct mmparse *mm, struct mm
 	/*cut off the extra part of the tag name (ie make 'imgcaptioned' or 'imgcollapsed' into 'img')*/
 	data->directive->name[3] = 0;
 }
-/*jeanine:p:i:97;p:72;a:r;x:10.00;y:-80.00;*/
+/*jeanine:p:i:97;p:72;a:r;x:10.24;y:-85.58;*/
 static
 enum mmp_dir_content_action php_mmp_dir_img(struct mmparse *mm, struct mmp_dir_content_data *data)
 {
-	struct mmp_dir_arg *alt_arg;
+	struct mmp_dir_arg *alt_arg, *raw_arg;
 	register char *c;
 
 	if (!data->content_len) {
@@ -117,6 +117,11 @@ enum mmp_dir_content_action php_mmp_dir_img(struct mmparse *mm, struct mmp_dir_c
 	alt_arg->value_len = data->content_len;
 	memcpy(alt_arg->name, "alt", 4);
 	memcpy(alt_arg->value, data->contents, data->content_len + 1);
+	if ((raw_arg = mmpextras_find_directive_argument(data->directive, "raw"))) {
+		raw_arg->name[0] = 0;
+		mmparse_print_tag_with_directives(mm, data->directive, "/>");
+		return DELETE_CONTENTS;
+	}
 	php_mmp_img_directive_validate_and_trunc_name(mm, data);/*jeanine:r:i:67;*/
 	mmparse_append_to_expanded_line(mm, "<p class='img'>", 15);
 	mmparse_print_tag_with_directives(mm, data->directive, "/>");

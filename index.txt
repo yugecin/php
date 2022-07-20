@@ -85,6 +85,23 @@ Don't fall for impersonation (of anyone).
 .popmode section
 .pushmode section
 
+{visited demoparties and releases}                                              ||| h id=demoparties
+
+.pushmode ul
+- {Norwegian flag} Solskogen 2018                                               ||| img raw src=famfamfam-no.png title="Norwegian flag"
+- {Norwegian flag} Solskogen 2019                                               ||| img raw src=famfamfam-no.png title="Norwegian flag"
+  .pushmode ul
+  - {chalkskogen19}                                                             ||| a class=ext href=https://demozoo.org/graphics/206116/
+    // 4th out of 7 entries in the "logo" competition
+  .popmode ul
+- {Norwegian flag} Black Valley 2022                                            ||| img raw src=famfamfam-no.png title="Norwegian flag"
+  .pushmode ul
+  - {metro}                                                                     ||| a class=ext href=https://demozoo.org/productions/310456/
+    // 5th out of 6 entries in the "combined intro" competition
+    // {blogpost}                                                               ||| href id=blog-003-metro-an-8KB-executable-demo.html#
+  .popmode ul
+.popmode ul
+
 {random stuff}                                                                  ||| h id=randomstuff
 
 Some movies/series I enjoyed:
@@ -93,6 +110,7 @@ Some movies/series I enjoyed:
 - back to the future I/II/III (1985/1989/1990)
 - burn after reading (2008)
 - catch me if you can (2002)
+- Эпидемия (aka to the lake) (2019)
 - good will hunting (1997)
 - la casa de papel (aka money heist) (series) (2017-2021)
 - little miss sunshine (2006)
@@ -101,6 +119,7 @@ Some movies/series I enjoyed:
 - scott pilgrim vs the world (2010)
 - stranger things (series) (2016-...)
 - taxi (1/2/3/4) (1998/2000/2003/2007)
+- the accountant (2016)
 - the big short (2015)
 - the breakfast club (1985)
 - the intouchables (2011)

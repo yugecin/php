@@ -78,7 +78,7 @@ For making the graffiti, I also made a quick tool to position some cubic beziers
 and then output the coordinates of the (control) points,
 to paste them into the shader.
 
-{screenshot of a program that draws beziers with controllable control points}   ||| img src=blog003/graf.png title="graffiti tooling"
+{{screenshot of a program that draws beziers with controllable control points}} ||| a href=blog003/graf.png,img raw src=blog003/graf.png title="graffiti tooling" style="max-width:100%"
 
 For every frame, the position in the chain of beziers for the current time
 (minus and plus some small value) is calculated and a circle is drawn at that
