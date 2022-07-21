@@ -102,6 +102,9 @@ Don't fall for impersonation (of anyone).
   .popmode ul
 .popmode ul
 
+.popmode section
+.pushmode section
+
 {random stuff}                                                                  ||| h id=randomstuff
 
 Some movies/series I enjoyed:
