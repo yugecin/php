@@ -11,9 +11,9 @@ This is the homepage of Robin, also known as robin_be/yugecin/yugecin26. Hello :
 
 {about me}                                                                      ||| h id=aboutme
 
-I was born, raised, and currently live in Belgium, more specifically in
-{West-Flanders}, so my native tongue is Dutch and my French is pretty much      ||| a class=ext href=https://en.wikipedia.org/wiki/West_Flanders
-non-existent. I currently spend most of my time with computers,
+I was born, raised, and currently live in {Belgian flag} Belgium, more          ||| img raw src=famfamfam-be.png title="Belgian flag"
+specifically in {West-Flanders}, so my native tongue is Dutch and my French is  ||| a class=ext href=https://en.wikipedia.org/wiki/West_Flanders
+pretty much non-existent. I currently spend most of my time with computers,
 either for work (fulltime (5d/38h) software developer) or for
 fun (programming for fun, playing a game or generally wasting time).
 
