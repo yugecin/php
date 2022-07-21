@@ -1,6 +1,6 @@
 .pushmode config
 {home/about} ||| title
-{02 May 2022} ||| modified
+{21 July 2022} ||| modified
 .popmode config
 
 This is the homepage of Robin, also known as robin_be/yugecin/yugecin26. Hello :)
