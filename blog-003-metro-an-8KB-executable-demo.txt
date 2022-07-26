@@ -1,7 +1,7 @@
 .pushmode config
 {"metro", an 8KB executable demo} ||| title
 {20 July 2022} ||| published
-{20 July 2022} ||| modified
+{26 July 2022} ||| modified
 .popmode config
 
 {still image of the demo, showing a subway tunnel}                               ||| img src=blog003/thumb.png title="thumbnail"
@@ -53,7 +53,7 @@ zqsd/shift/ctrl input in order to move around the scene. (zqsd because I use
 azerty keyboard layout)
 
 .pushmode plain
-<video width="100%" controls>
+<video controls style="max-width:100%">
 	<source src="blog003/tool.mp4" type="video/mp4">
 </video>
 .popmode plain
@@ -64,7 +64,7 @@ equation, so this one allowed me to use bezier curves for xyz and rotation
 values.
 
 .pushmode plain
-<video width="100%" controls>
+<video controls style="max-width:100%">
 	<source src="blog003/camera.mp4" type="video/mp4">
 </video>
 .popmode plain
@@ -94,6 +94,46 @@ camera is transitioning from the previous to the next graffiti spots.
 
 {first prototype of the railway tunnel, with simple lighting}                    ||| imgcaptioned src=blog003/lighting.gif title="first version of the tunnel" alt="first prototype of the railway tunnel, with simple lighting"
 
-{messing around with the marched lighting}                    ||| imgcaptioned src=blog003/light2.gif title="messing around with the marched lighting" alt="using a slider to control which lighting system to use"
+{messing around with the marched lighting}                                       ||| imgcaptioned src=blog003/light2.gif title="messing around with the marched lighting" alt="using a slider to control which lighting system to use"
+
+.pushmode plain
+<p class="img">
+<video controls style="max-width:100%">
+	<source src="blog003/awt.mp4" type="video/mp4">
+</video>
+<br/>
+Artifacts when using the Java AWT ScrollPane in the tool.
+</p>
+.popmode plain
+
+.pushmode plain
+<p class="img">
+<video controls style="max-width:100%">
+	<source src="blog003/swing.mp4" type="video/mp4">
+</video>
+<br/>
+Artifacts when using the Java Swing JScrollPane in the tool.
+</p>
+.popmode plain
+
+.pushmode plain
+<p class="img">
+<video controls style="max-width:100%">
+	<source src="blog003/mov.mp4" type="video/mp4">
+</video>
+<br/>
+Using the trackbars to control the camera. Initial support beam.
+</p>
+.popmode plain
+
+.pushmode plain
+<p class="img">
+<video controls style="max-width:100%">
+	<source src="blog003/mov2.mp4" type="video/mp4">
+</video>
+<br/>
+Using mouse+keyboard to control the camera. Early version of support beams.
+</p>
+.popmode plain
 
 .popmode section
