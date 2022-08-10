@@ -100,6 +100,7 @@ Don't fall for impersonation (of anyone).
     // 5th out of 6 entries in the "combined intro" competition
     // {blogpost}                                                               ||| href id=blog-003-metro-an-8KB-executable-demo.html#
   .popmode ul
+- {German flag} Evoke 2022                                                      ||| img raw src=famfamfam-de.png title="German flag"
 .popmode ul
 
 .popmode section
@@ -110,6 +111,7 @@ Don't fall for impersonation (of anyone).
 Some movies/series I enjoyed:
 
 .pushmode ul
+- arrival (2016)
 - back to the future I/II/III (1985/1989/1990)
 - burn after reading (2008)
 - catch me if you can (2002)
