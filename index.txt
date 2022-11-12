@@ -1,6 +1,6 @@
 .pushmode config
 {home/about} ||| title
-{21 July 2022} ||| modified
+{12 November 2022} ||| modified
 .popmode config
 
 This is the homepage of Robin, also known as robin_be/yugecin/yugecin26. Hello :)
@@ -101,6 +101,11 @@ Don't fall for impersonation (of anyone).
     // {blogpost}                                                               ||| href id=blog-003-metro-an-8KB-executable-demo.html#
   .popmode ul
 - {German flag} Evoke 2022                                                      ||| img raw src=famfamfam-de.png title="German flag"
+- {Danish flag} TRSAC 2022                                                      ||| img raw src=famfamfam-dk.png title="Norwegian flag"
+  .pushmode ul
+  - {Rekursive Rubik's}                                                         ||| a class=ext href=https://demozoo.org/productions/314185/
+    // 5th out of 5 entries in the "animation/video" competition
+  .popmode ul
 .popmode ul
 
 .popmode section
