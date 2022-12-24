@@ -13,6 +13,7 @@ This post is pretty bare-bones. I'll hopefully expand it at some point.
 {Links} ||| h id=Links
 
 .pushmode ul
+- {GitHub: yugecin/metro}                                                        ||| a class=ext href=https://github.com/yugecin/metro
 - {pouët: metro by yugecin}                                                      ||| a class=ext href=https://www.pouet.net/prod.php?which=91825
 - {Demozoo: Metro by yugecin}                                                    ||| a class=ext href=https://demozoo.org/productions/310456/
 - {download: scene.org file archive :: metro.zip}                                ||| a class=ext href=https://files.scene.org/view/parties/2022/blackvalley22/combined_intro/metro.zip
