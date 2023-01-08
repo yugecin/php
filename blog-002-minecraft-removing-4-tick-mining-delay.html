@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+	<meta charset=utf-8>
+	<title>Minecraft: removing 4 tick mining delay</title>
+	<link rel=stylesheet href=default.css?v0 type=text/css>
+</head>
+<body>
+	<nav>
+		<a href=index.html>home/about</a>
+		<a href=projects.html>projects</a>
+		<a href=blog.html>blog</a>
+	</nav>
+	<div>
+		<p>
+			<a href=blog.html>blog</a>
+			&gt;
+			Minecraft: removing 4 tick mining delay (14 May 2020)
+		<h1>
+			Minecraft: removing 4 tick mining delay
+		</h1>
+		<p>
+			Every once in a while I return to playing Minecraft.
+			One thing I always tend to do is removing a 4-tick delay between mining blocks.
+			Usually there should be 20 ticks per second, meaning there's 50ms between ticks.
+			So after breaking a block, there is a 200ms delay before the next block will start to be mined.
+			Since I usually spend most of my time mining, this delay frustrates me quite a bit.
+			Even if you have a pickaxe that breaks a block as good as instantly,
+			you'd still have to wait for those annoying 200ms <em>for every block</em>.
+		<h2 id=index>
+			Index <a href=#index>#</a>
+		</h2>
+		<ul>
+			<li><a href=#index>Index</a>
+			<li><a href=#findingtheclass>Finding the class to modify</a>
+			<li><a href=#modifytheclass>Modifying the class to remove the delay and compiling</a>
+			<li><a href=#launch>Launching Minecraft with debug and hotswapping</a>
+		</ul>
+		<div id=findingtheclass>
+			<h2>
+				Finding the class to modify <a href=#findingtheclass>#</a>
+			</h2>
+			<p>
+				Years ago, in a previous life,
+				I used MCP (which stood for Minecraft Coder Pack) to decompile minecraft.
+				There I found how to remove the delay, by setting the <code>blockHitDelay</code>
+				to <code>0</code> in <code>PlayerControllerMP#onPlayerDamageBlock</code>.
+				It usually takes a while for MCP to get updated for newer versions,
+				and nowadays I don't even try to find updated version anymore since at
+				some point it started to get impossible to find them
+				(it may not even exist anymore now and/or be replaced with something else).
+			<p>
+				So the way I've been doing it now is to find the class, edit the value and recompile it.
+				Then attach a debugger to the running JVM instance and hot-swap the class.
+			<p>
+				To begin, we would need to find the class.
+				Most identifiers are usually minified, so this can be done by searching for a pattern.
+				I saw this code in the (older versions) of the class we need,
+				and thought maybe the <code> 4.5</code> value would be easy to find.
+<pre>
+public float getBlockReachDistance()
+{
+	return !creativeMode ? 4.5F : 5F;
+}
+</pre>
+			<p>
+				<a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.4.4">
+					The JVM specs for CONSTANT_Float_info structure
+				</a>
+				tells us that a float constant consists of a byte with value <code>4</code>,
+				followed by the float value in IEEE-754 format, big endian.
+				So, find the jar (in my case <code>%APPDATA%\.minecraft\versions\20w20b\20w20b.jar</code>),
+				extract it somewhere and grep for our pattern.
+<pre>
+$ find . -name "*.class" | xargs grep -obUaP "\x04\x40\x90\x00\x00"
+./azg.class:2765:@P
+./dls$a.class:1083:@P
+./dvt.class:348:@P
+./dwx.class:591:@P
+./dxn.class:1969:@P
+./ebd$m.class:1185:@P
+./efs.class:277:@P
+./eik.class:724:@P
+</pre>
+			<p>
+				There aren't too many matches,
+				so it's doable to go through every one of them with your favorite decompiler
+				and see if it's the target class. In <code>dxn.class</code>, I found following
+				method which sort of looks like the <code>getBlockReachDistance()</code>
+				method we're trying to find.
+<pre>
+public float c()
+{
+	return this.j.e() ? 5.0F : 4.5F;
+}
+</pre>
+			<p>
+				So this is the class that we need and will modify and hot-swap.
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<div id=modifytheclass>
+			<h2>
+				Modifying the class to remove the delay and compiling <a href=#modifytheclass>#</a>
+			</h2>
+			<p>
+				Copy the contents of that class file and copy it into a source file in a project
+				in your favorite IDE, with the same name. One method up is this method:
+<pre>
+public boolean b(ft var1, fy var2)
+{
+	this.n();
+	if (this.h &gt; 0) {
+		--this.h;
+		return true;
+	} else {
+		cel var3;
+(..)
+</pre>
+			<p>
+				That <code>if</code> is checking the block hit delay,
+				so I put this line above the <code>if</code> to get rid of the block hit delay.
+<pre>
+	this.h = 0;
+</pre>
+			<p>
+				To compile the file you probably need to link the jar and some libraries,
+				which can usually be found in <code>%APPDATA%\.minecraft\libraries</code>.
+				I used Fernflower to decompile and had to fix some usages of an enum.
+				For some reason it added an import for <code>rz.a</code> but the compiler wasn't accepting it,
+				so I removed the import and replace all usages of the enum type <code>a</code>
+				in method parameters with <code>rz.a</code>.
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<div id=launch>
+			<h2>
+				Launching Minecraft with debug and hotswapping <a href=#launch>#</a>
+			</h2>
+			<p>
+				The next step is to add some arguments to Minecraft to enable debugging,
+				it doesn't seem too hard to do with the new launcher. I added following arguments:
+<pre>
+-Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1052
+</pre>
+			<p>
+				Then simply launch the game, attach the debugger of your favorite IDE and hot-swap the class.
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<footer>
+			<p>
+				published: 14 May 2020 - content last modified: 26 May 2022
+		</footer>
+	</div>
+</body>
+</html>

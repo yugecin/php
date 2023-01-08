@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+	<meta charset=utf-8>
+	<title>projects</title>
+	<link rel=stylesheet href=default.css?v0 type=text/css>
+	<style>
+		p.languages span {
+			width: .9em;
+			height: .9em;
+			position: relative;
+			top: 1px;
+			display: inline-block;
+			border-radius: 50%;
+			}
+			p.languages span + span {
+				margin-left: 1em;
+			}
+	</style>
+</head>
+<body>
+	<nav>
+		<a href=index.html>home/about</a>
+		<a href=projects.html>projects</a>
+		<a href=blog.html>blog</a>
+	</nav>
+	<div>
+		<h1>
+			projects
+		</h1>
+		<p>
+			An (incomplete) list of project or other stuff I'm working on or have been working on.
+			Only the more 'important'/interesting ones are on here, check out my
+			<a href=https://github.com/yugecin>GitHub profile</a> for more (random) things.
+		</p>
+		<div id=index>
+			<h2>
+				Index <a href=#index>#</a>
+			</h2>
+			<ul>
+				<li><a href=#index>Index</a></li>
+				<li><a href=#nfsu2re>nfsu2-re</a></li>
+				<li><a href=#samp-mapedit>samp-mapedit</a></li>
+				<li><a href=#basdon-fly>basdon-fly</a></li>
+				<li><a href=#xandilordi-soundboard>xandilordi-soundboard</a></li>
+				<li><a href=#anna>anna</a></li>
+				<li><a href=#opsu-dance>opsu-dance</a></li>
+				<li><a href=#osukps>osukps</a></li>
+				<li><a href=#osusb1>osusb1</a></li>
+				<li><a href=#intellijplugins>intellijplugins</a></li>
+				<li><a href=#gtasa>gtasa</a></li>
+				<li><a href=#tsstats>tsstats</a></li>
+				<li><a href=#colandras-db-modelselector>colandreas-db-modelselector</a></li>
+				<li><a href=#txtnotes>txtnotes</a></li>
+				<li><a href=#plquery>plquery</a></li>
+			</ul>
+		</div>
+		<div id=nfsu2re>
+			<h2>
+				nfsu2-re <a href=#nfsu2re>#</a>
+			</h2>
+			<p>
+				<strong>Status:</strong> long-running
+			</p>
+			<p>
+				Hobby reverse engineering project about need for speed underground 2.
+				Figuring out workings and file formats.
+				Pseudo goals are making a save game editor and unofficial online multiplayer functionality.
+			</p>
+			<p class=languages>
+				<span style=background:#555></span> C
+				<span style=background:#6e4c13></span> Assembly
+			</p>
+			<p>
+				<strong>Links:</strong>
+			</p>
+			<ul>
+				<li>
+					<a href=https://github.com/yugecin/nfsu2-re>GitHub: yugecin/nfsu2-re</a>
+				</li>
+				<li>	
+					documentation website:
+					<a href=https://yugecin.github.io/nfsu2-re>https://yugecin.github.io/nfsu2-re</a>
+				</li>
+			</ul>
+		</div>
+		<div id=samp-mapedit>
+			<h2>
+				samp-mapedit <a href=#samp-mapedit>#</a>
+			</h2>
+			<p>
+				<strong>Status:</strong> Usable state
+			</p>
+			<p>
+				In-game map editor for GTA: San Andreas. Also handles (race)checkpoints,
+				textdraws, vehicles and gangzones. Supports SA-MP's
+				RemoveBuilding/SetObjectMaterial/SetObjectMaterialText.
+			</p>
+			<p>
+				The current status is that it is usable for me, and that's all I want to do.
+				I made this editor mainly for me so I can get going faster on the
+				<a href=#basdon-fly>basdon-fly</a> project. To actually make a decent public
+				release, it would require much effort to make everything work for all kinds
+				of different gta executables (since there's lots of memory operations) and
+				the editor is probably very non user friendly for anyone else than me.
+				I don't want to spend time on that because time is already sparse if you
+				look at the big picture of life and I would feel like doing that is a chore
+				that might kill my motivation completely.
+			</p>
+			<p class=languages>
+				<span style=background:#555></span> C
+				<span style=background:#6e4c13></span> Assembly
+			</p>
+			<p>
+				<strong>Links:</strong>
+			</p>
+			<ul>
+				<li><a href=https://github.com/yugecin/samp-mapedit>GitHub: yugecin/samp-mapedit</a></li>
+				<li>
+					<a href=https://twitter.com/yugecin26/status/1255233630051487744 rel=nofollow>
+						Twitter thread with images/GIFs
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div id=basdon-fly>
+			<h2>
+				basdon-fly <a href=#basdon-fly>#</a>
+			</h2>
+			<p>
+				<strong>Status:</strong> Live, alpha
+			</p>
+			<p>
+				Aviation themed <a href=https://sa-mp.com>San Andreas Multiplayer</a> server.
+				Includes a website that shows all flight details, with a flight tracker and flight viewer.
+			</p>
+			<p class=languages>
+				<span style=background:#555></span> C
+				<span style=background:#6e4c13></span> Assembly
+				<span style=background:#b07219></span> Java
+				<span style=background:#4f5d95></span> PHP
+			</p>
+			<p>
+				<strong>Links:</strong>
+			</p>
+			<ul>
+				<li><a href=https://basdon.net>website: basdon.net</a></li>
+				<li><a href=https://github.com/basdon/basdon-fly>GitHub: basdon/basdon-fly</a></li>
+				<li><a href=https://github.com/basdon/basdon-tools>GitHub: basdon/basdon-tools</a></li>
+			</ul>
+		</div>
+		<div id=xandilordi-soundboard>
+			<h2>
+				xandilordi-soundboard <a href=#xandilordi-soundboard>#</a>
+			</h2>
+			<p>
+				<strong>Status:</strong> Ready, occasionally adding more sounds
+			</p>
+			<p>
+				A soundboard HTML page for a Belgian comedian (Xander De Rycke).
+			</p>
+			<p>
+				<strong>Links:</strong>
+			</p>
+			<ul>
+				<li><a href=https://xandilordi-soundboard.be>xandilordi-soundboard.be</a></li>
+				<li><a href=https://github.com/yugecin/xandilordi-soundboard>GitHub: yugecin/xandilordi-soundboard</a></li>
+			</ul>
+		</div>
+		<div id=anna>
+			<h2>
+				anna <a href=#anna>#</a>
+			</h2>
+			<p>
+				<strong>Status:</strong> Ready
+			</p>
+			<p>
+				Modular IRC mod. Named after Anna^, from the 2006 BASSHUNTER song named
+				<a href=https://youtu.be/RYQUsp-jxDQ>Boten Anna</a>. Modules can be loaded
+				and unloaded at runtime.
+			</p>
+			<p class=languages>
+				<span style=background:#b07219></span> Java
+			</p>
+			<p>
+				<strong>Links:</strong>
+			</p>
+			<ul>
+				<li><a href=https://github.com/yugecin/anna>GitHub: yugecin/anna</a></li>
+			</ul>
+		</div>
+		<div id=opsu-dance>
+			<h2>
+				opsu-dance <a href=#opsu-dance>#</a>
+			</h2>
+			<p>
+				<strong>Status:</strong> <span class=s>long-running, paused</span>/abandoned
+			</p>
+			<p>
+				Is a fork of <a href=https://github.com/itdelatrisu/opsu>itdelatrisu/opsu</a>,
+				which is an open-source clone of the <a href=https://osu.ppy.sh>osu!</a> game.
+				My fork has more UI/UX improvements (subjective) and contains cursor dance stuff
+				and more customization. I'm also a contributor to the upstream opsu! project,
+				mostly doing UI stuff.
+			</p>
+			<p class=languages>
+				<span style=background:#b07219></span> Java
+			</p>
+			<p>
+				<strong>Links:</strong>
+			</p>
+			<ul>
+				<li><a href=https://github.com/yugecin/opsu-dance>GitHub: yugecin/opsu-dance</a></li>
+			</ul>
+		</div>
+		<div id=osukps>
+			<h2>
+				osukps <a href=#osukps>#</a>
+			</h2>
+			<p>
+				<strong>Status:</strong> mostly finished and abandoned
+			</p>
+			<p>
+				A little program that shows keystates, keys per second and total keys for rythm games
+				(osu!, stepmania etc). Potentially useful for making videos or livestreaming.
+			</p>
+			<p class=languages>
+				<span style=background:#178600></span> C#
+			</p>
+			<p>
+				<strong>Links:</strong>
+			</p>
+			<ul>
+				<li><a href=https://github.com/yugecin/osukps>GitHub: yugecin/osukps</a></li>
+			</ul>
+		</div>
+		<div id=osusb1>
+			<h2>
+				osusb1 <a href=#osusb1>#</a>
+			</h2>
+			<p>
+				<strong>Status:</strong> finished
+			</p>
+			<p>
+				A (sort of) demo in the form of an <a href=https://osu.ppy.sh>osu!</a> storyboard.
+			</p>
+			<p class=languages>
+				<span style=background:#178600></span> C#
+			</p>
+			<p>
+				<strong>Links:</strong>
+			</p>
+			<ul>
+				<li><a href=blog-000-making-of-my-osu-storyboard-demo.html#>blogpost</a></li>
+				<li><a href=https://github.com/yugecin/osusb1>GitHub: yugecin/osusb1</a></li>
+				<li>
+					<a href='https://youtube.com/watch?v=bOGJWGJOMOk'>
+						YouTube video showing the storyboard (original version)
+					</a>
+				</li>
+				<li>
+					<a href='https://youtube.com/watch?v=YW6cEbk6-0I'>
+						YouTube video showing the storyboard (highfps version)
+					</a>
+				</li>
+				<li><a href='https://old.ppy.sh/b/1756941?m=0'>Beatmap on osu! website</a></li>
+			</ul>
+		</div>
+		<div id=intellijplugins>
+			<h2>
+				intellijplugins <a href=#intellijplugins>#</a>
+			</h2>
+			<p>
+				<strong>Status:</strong> partly finished, abandoned
+			</p>
+			<p>
+				Some plugins for applications based on the Intellij Platform that make my life better.
+				Perhaps yours, too? Currently has a plugin for changing the "look and feel" and a
+				plugin that colors the caret based on the active ideavim mode.
+			</p>
+			<p class=languages>
+				<span style=background:#b07219></span> Java
+			</p>
+			<p>
+				<strong>Links:</strong>
+			</p>
+			<ul>
+				<li><a href=https://github.com/yugecin/intellijplugins>GitHub: yugecin/intellijplugins</a></li>
+			</ul>
+		</div>
+		<div id=gtasa>
+			<h2>
+				gtasa <a href=#gtasa>#</a>
+			</h2>
+			<p>
+				<strong>Status:</strong> I always come back to this
+			</p>
+			<p>
+				Not really a project, but I've been messing around a lot with GTA:SA,
+				making small scripts and hacking the game.
+			</p>
+			<p class=languages>
+				<span style=background:#6e4c13></span> Assembly
+				<span style='border:1px solid #555'></span> CLEO/II-era mission code
+				<span style=background:#f34b7d></span> C++
+				<span style=background:#178600></span> C#
+			</p>
+			<p>
+				<strong>Links:</strong>
+			</p>
+			<ul>
+				<li><a href=https://github.com/yugecin/scmcleoscripts>GitHub: yugecin/scmcleoscripts</a></li>
+			</ul>
+		</div>
+		<div id=tsstats>
+			<h2>
+				tsstats <a href=#tsstats>#</a>
+			</h2>
+			<p>
+				<strong>Status:</strong> finished, maintenance
+			</p>
+			<p>
+				A teamspeak3 bot that idles on a server and collects statistics like user activity,
+				channel activity, country activity, kicks &amp; bans.
+				Also includes a live (updated every 5 minutes) viewer of the server.
+			</p>
+			<p>
+				Also has a webviewer (in a separate repo) which shows the stats in a friendly way.
+				Is not necessary to use, but is useful if you don't want to write your own thing
+				or can be used as reference.
+			</p>
+			<p>
+				Beware: this was written years ago and might be coded weirdly.
+			</p>
+			<p class=languages>
+				<span style=background:#b07219></span> Java
+				<span style=background:#4f5d95></span> PHP
+			</p>
+			<p>
+				<strong>Links:</strong>
+			</p>
+			<ul>
+				<li><a href=https://github.com/yugecin/tsstats>GitHub: yugecin/tsstats</a></li>
+				<li><a href=https://github.com/yugecin/tsstats-webviewer>GitHub: yugecin/tsstats-webviewer</a></li>
+			</ul>
+			<p>
+				See it in action:
+			</p>
+			<ul>
+				<li><a href=https://tsstats.thisisgaming.org>TiG (since 24 Aug 2014)</a></li>
+				<li><a href=http://stats.sonic-server.net>Sonic Fidelitus Gaming (since 1 Jan 2018)</a></li>
+			</ul>
+			<p>
+				<em><a href=index.html#contact>Contact me</a> if you use this and want to be featured in this list</em>
+			</p>
+		</div>
+		<div id=colandras-db-modelselector>
+			<h2>
+				colandreas-db-modelselector <a href=#colandras-db-modelselector>#</a>
+			</h2>
+			<p>
+				<strong>Status:</strong> finished
+			</p>
+			<p>
+				Tiny program that filters <a href=https://github.com/Pottus/ColAndreas>ColAndreas</a>
+				database files. ColAndreas is a plugin for SA-MP servers to provide collision insights
+				about the game world. The thing is that its database file containing all the model
+				collision data is easily 44MB and this all ends up in memory of the server. This
+				script allows one to filter to data file to only contain the models that are
+				actually necessary, reducing the memory footprint of the server.
+			</p>
+			<p class=languages>
+				<span style=background:#555></span> C
+			</p>
+			<p>
+				<strong>Links:</strong>
+			</p>
+			<ul>
+				<li><a href=https://github.com/basdon/colandreas-db-modelselector>GitHub: basdon/colandreas-db-modelselector</a>
+				</li>
+			</ul>
+		</div>
+		<div id=txtnotes>
+			<h2>
+				txtnotes <a href=#txtnotes>#</a>
+			</h2>
+			<p>
+				<strong>Status:</strong> finished, maintenance
+			</p>
+			<p>
+				Simple web-based plaintext notekeeper. I used this one myself a lot, every day.
+			</p>
+			<p class=languages>
+				<span style=background:#4f5d95></span> PHP
+			</p>
+			<p>
+				<strong>Links:</strong>
+			</p>
+			<ul>
+				<li><a href=https://github.com/yugecin/txtnotes>GitHub: yugecin/txtnotes</a></li>
+			</ul>
+		</div>
+		<div id=plquery>
+			<h2>
+				plquery <a href=#plquery>#</a>
+			</h2>
+			<p>
+				<strong>Status:</strong> finished
+			</p>
+			<p>
+				A php script that queries a SA-MP server to make activity graphs (using the
+				<a href=https://github.com/goat1000/SVGGraph>SVGGraph library</a>).
+				Was made for a specific server, but can be easily modified to work for any server.
+			</p>
+			<p class=languages>
+				<span style=background:#4f5d95></span> PHP
+			</p>
+			<p>
+				<strong>Links:</strong>
+			</p>
+			<ul>
+				<li><a href=https://github.com/thepilotslife/plquery>GitHub: thepilotslife/plquery</a></li>
+				<li><a href=https://robin.thisisgaming.org/pl/stats/>data</a></li>
+			</ul>
+		</div>
+		<footer>
+			<p>
+				last modified: 01 Jan 2023
+			</p>
+		</footer>
+	</div>
+</body>
+</html>

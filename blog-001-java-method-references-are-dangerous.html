@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+	<meta charset=utf-8>
+	<title>Java method references are dangerous</title>
+	<link rel=stylesheet href=default.css?v0 type=text/css>
+</head>
+<body>
+	<nav>
+		<a href=index.html>home/about</a>
+		<a href=projects.html>projects</a>
+		<a href=blog.html>blog</a>
+	</nav>
+	<div>
+		<p>
+			<a href=blog.html>blog</a>
+			&gt;
+			Java method references are dangerous (06 Oct 2018)
+		<h1>
+			Java method references are dangerous
+		</h1>
+		<p>
+			This post is the result of me having to figure out a rather strange problem.
+			May the same not happen to you.
+		<div id=index>
+			<h2>
+				Index <a href=#index>#</a>
+			</h2>
+			<ul>
+				<li><a href=#index>Index</a>
+				<li><a href=#scenario>Scenario</a>
+				<li><a href=#callingthemethod>Calling the method</a>
+				<li>
+					<a href=#mixingversions>Mixing versions on the classpath</a>
+					<ul>
+						<li><a href=#compileArunB>Compiling for version A and running with version B</a>
+						<li><a href=#compileBrunA>Compiling for version B and running with version A</a>
+					</ul>
+				<li>
+					<a href=#investigation>Investigating the crashsite</a>
+					<ul>
+						<li><a href=#normalinvoc>Normal invocation</a>
+						<li><a href=#lambdainvoc>Lambda invocation</a>
+						<li><a href=#methodrefinvoc>Method reference invocation</a>
+					</ul>
+				<li><a href=#realworld>In the real world</a>
+			</ul>
+		</div>
+		<div id=scenario>
+			<h2>
+				Scenario <a href=#scenario>#</a>
+			</h2>
+			<p>
+				Let's say you have a class <code>TheClass</code> with a method
+				<code>theMethod</code> that does something important.
+			<p>
+				In a later version, you noticed that <code>theMethod</code> can be used
+				elsewhere too so you move it to <code>BaseClass</code> and make
+				<code>TheClass</code> extend <code>BaseClass</code>.
+<pre>
+$ cat versionA/TheClass.java
+class TheClass {
+	void theMethod() {
+		System.out.println("hi!");
+	}
+}
+
+$ cat versionB/TheClass.java
+class BaseClass {
+	void theMethod() {
+		System.out.println("hi!");
+	}
+}
+
+class TheClass extends BaseClass {
+}
+</pre>
+			<p class=capt>
+				<code>TheClass.java</code> for both versions.
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<div id=callingthemethod>
+			<h2>
+				Calling the method <a href=#callingthemethod>#</a>
+			</h2>
+			<p>
+				Now, what if <code>TheClass</code> is part of a library and a user wants to use it?
+				They can invoke <code>theMethod</code> in a few different ways.
+<pre>
+$ cat User.java
+public class User {
+	public static void main(String[] args) {
+		TheClass i = new TheClass();
+		i.theMethod();
+		((Runnable) () -&gt; i.theMethod()).run();
+		((Runnable) i::theMethod).run();
+	}
+}
+</pre>
+			<p class=capt>
+				Usage of <code>theMethod</code> in other code.
+			<p>
+				Let's try compiling and running <code>User.java</code> using <code>TheClass</code> from version A.
+<pre>
+$ javac versionA/TheClass.java
+$ javac -cp versionA/ User.java
+$ java -cp ".;versionA/" User
+hi!
+hi!
+hi!
+</pre>
+			<p class=capt>
+				Using version A.
+			<p>
+				Let's do the same for version B.
+<pre>
+$ javac versionB/TheClass.java
+$ javac -cp versionB/ User.java
+$ java -cp ".;versionB/" User
+hi!
+hi!
+hi!
+</pre>
+			<p class=capt>
+				Using version B.
+			<p>
+				All great, everything works as expected.
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<div id=mixingversions>
+			<h2>
+				Mixing versions on the classpath <a href=#mixingversions>#</a>
+			</h2>
+			<p>
+				But what happens if there's a different version of the library containing
+				<code>TheClass</code> on the running classpath? Let's see.
+			<div id=compileArunB>
+				<p>
+					<small><a href=#mixingversions>Mixing versions on the classpath</a></small>
+				<h3>
+					Compiling for version A and running with version B <a href=#compileArunB>#</a>
+				</h3>
+<pre>
+$ javac -cp versionA/ User.java
+$ java -cp ".;versionB/" User
+hi!
+hi!
+hi!
+</pre>
+				<p>
+					All good!
+				<p class=index>
+					<a href=#index>Index</a>
+			</div>
+			<div id=compileBrunA>
+				<p>
+					<small><a href=#mixingversions>Mixing versions on the classpath</a></small>
+				<h3>
+					Compiling for version B and running with version A <a href=#compileBrunA>#</a>
+				</h3>
+<pre class=wrap>
+$ javac -cp versionB/ User.java
+$ java -cp ".;versionA/" User
+hi!
+hi!
+Exception in thread "main" java.lang.BootstrapMethodError: java.lang.NoClassDefFoundError: BaseClass
+  at User.main(User.java:6)
+Caused by: java.lang.NoClassDefFoundError: BaseClass
+  ... 1 more
+Caused by: java.lang.ClassNotFoundException: BaseClass
+  at java.net.URLClassLoader.findClass(Unknown Source)
+  at java.lang.ClassLoader.loadClass(Unknown Source)
+  at sun.misc.Launcher$AppClassLoader.loadClass(Unknown Source)
+  at java.lang.ClassLoader.loadClass(Unknown Source)
+  ... 1 more
+</pre>
+				<p>
+					Uh-oh! The normal invocation and lambda are working fine,
+					but when it's trying to call <code>someMethod</code> using a method reference,
+					things suddenly explode.
+				<p>
+					This can be quite confusing for the user of the library (me, yesterday).
+					We're getting a <code>ClassNotFoundException</code> for <code>BaseClass</code>
+					on line 6, but we don't even know where <code>BaseClass</code> came from.
+					Only <code>TheClass</code> is used and there's no <code>BaseClass</code> to
+					be found in the library that we compiled against.
+				<p class=index>
+					<a href=#index>Index</a>
+			</div>
+		</div>
+		<div id=investigation>
+			<h2>
+				Investigating the crashsite <a href=#investigation>#</a>
+			</h2>
+			<p>
+				Let's see what there is to be found under the hood in the bytecode.
+			<div id=normalinvoc>
+				<p>
+					<small><a href=#investigation>Investigating the crashsite</a></small>
+				<h3>
+					Normal invocation <a href=#normalinvoc>#</a>
+				</h3>
+<pre>
+// (omitted)
+
+ aload1
+ invokevirtual TheClass.theMethod()V
+
+// (omitted)
+</pre>
+				<p>
+					Nothing special for the normal invocation.
+				<p class=index>
+					<a href=#index>Index</a>
+			</div>
+			<div id=lambdainvoc>
+				<p>
+					<small><a href=#investigation>Investigating the crashsite</a></small>
+				<h3>
+					Lambda invocation <a href=#lambdainvoc>#</a>
+				</h3>
+<pre class=wrap>
+// (omitted)
+
+ aload1
+
+ invokedynamic java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite; : run(LTheClass;)Ljava/lang/Runnable; ()V User.lambda$main$0(LTheClass;)V (6) ()V
+ invokeinterface java/lang/Runnable.run()V
+
+// (omitted)
+
+ private static synthetic lambda$main$0(TheClass arg0) { //(LTheClass;)V
+  L1
+   aload0
+   invokevirtual TheClass.theMethod()V
+   return
+ }
+</pre>
+				<p>
+					Lots of more code for the lamba invocation,
+					but in the end it's adding a method that calls <code>TheClass.theMethod</code>
+					like a normal invocation.
+				<p class=index>
+					<a href=#index>Index</a>
+			</div>
+			<div id=methodrefinvoc>
+				<p>
+					<small><a href=#investigation>Investigating the crashsite</a></small>
+				<h3>
+					Method reference invocation <a href=#methodrefinvoc>#</a>
+				</h3>
+<pre class=wrap>
+ aload1
+ dup
+ invokevirtual java/lang/Object.getClass()Ljava/lang/Class;
+ pop
+ invokedynamic java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite; : run(LTheClass;)Ljava/lang/Runnable; ()V <strong>BaseClass.theMethod()V</strong> (5) ()V
+ invokeinterface java/lang/Runnable.run()V
+</pre>
+				<p class=capt>
+					Method reference + invocation.
+				<p>
+					Well hello there.
+					Inside that big mess there's <code>BaseClass.theMethod()V</code>.
+					Of course this won't work when having version A on the classpath.
+				<p>
+					So what happens when with the method reference it's compiled against version A?
+<pre class=wrap>
+ aload1
+ dup
+ invokevirtual java/lang/Object.getClass()Ljava/lang/Class;
+ pop
+ invokedynamic java/lang/invoke/LambdaMetafactory.metafactory(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite; : run(LTheClass;)Ljava/lang/Runnable; ()V <strong>TheClass.theMethod()V</strong> (5) ()V
+ invokeinterface java/lang/Runnable.run()V
+</pre>
+				<p class=capt>
+					Method reference + invocation when compiled using version A.
+				<p>
+					No real surprises here actually, now it just uses <code>TheClass.theMethod</code>.
+					But this also works fine when running it while version B is on the classpath.
+				<p class=index>
+					<a href=#index>Index</a>
+			</div>
+		</div>
+		<div id=realworld>
+			<h2>
+				In the real world <a href=#realworld>#</a>
+			</h2>
+			<p>
+				A real world situation can be that you're writing an extension or plugin
+				for a host application. The code hierarchy in the host application may
+				change in newer versions, but the changes might not be directly visible (imagine
+				<code>theMethod</code> being deeper down in the structure). Of course you'd
+				want your plugin to still work for previous versions. It compiles fine when
+				using the latest version so you'd think it's all good, but then problems
+				like this could appear when a user uses an older version of the host application
+				(that used to work with your extension/plugin).
+			<p>
+				In this situation, if one still wants a single binary for different versions of
+				the host application, one can either not use method references where they cause
+				issues like this or just compile using the older version of the host's SDK.
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<footer>
+			<p>
+				published: 06 Oct 2018 - content last modified: 26 May 2022
+		</footer>
+	</div>
+</body>
+</html>

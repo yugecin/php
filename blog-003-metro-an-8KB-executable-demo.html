@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+	<meta charset=utf-8>
+	<title>"metro", an 8KB executable demo</title>
+	<link rel=stylesheet href=default.css?v0 type=text/css>
+</head>
+<body>
+	<nav>
+		<a href=index.html>home/about</a>
+		<a href=projects.html>projects</a>
+		<a href=blog.html>blog</a>
+	</nav>
+	<div>
+		<p>
+			<a href=blog.html>blog</a>
+			&gt;
+			"metro", an 8KB executable demo (20 July 2022)
+		<h1>
+			"metro", an 8KB executable demo
+		</h1>
+		<p class=img>
+			<img src=blog003/thumb.png title=thumbnail alt="still image of the demo, showing a subway tunnel">
+		<p>
+			This post is pretty bare-bones. I'll hopefully expand it at some point.
+		<div>
+			<h2 id=Links>
+				Links <a href=#Links>#</a>
+			</h2>
+			<ul>
+				<li><a href=https://github.com/yugecin/metro>GitHub: yugecin/metro</a>
+				<li><a href="https://www.pouet.net/prod.php?which=91825">pouët: metro by yugecin</a>
+				<li><a href=https://demozoo.org/productions/310456/>Demozoo: Metro by yugecin</a>
+				<li>
+					<a href=https://files.scene.org/view/parties/2022/blackvalley22/combined_intro/metro.zip>
+						download: scene.org file archive :: metro.zip
+					</a>
+				<li><a href=https://youtu.be/AtcNkrkNmZQ>YouTube: "metro", an 8KB executable demo (Black Valley 2022)</a>
+				<li><a href=https://youtu.be/d0Voud49TSo>YouTube: "metro", live at Black Valley 2022</a>
+			</ul>
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<div id=Index>
+			<h2>
+				Index <a href='#Index'>#</a>
+			</h2>
+			<ul>
+				<li><a href=#Links>Links</a>
+				<li><a href=#Index>Index</a>
+				<li><a href=#What>What</a>
+				<li><a href=#tooling>Tooling</a>
+				<li><a href=#graffiti>Graffiti</a>
+				<li><a href=#wip>WIP content</a>
+			</ul>
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<div id=What>
+			<h2>
+				What <a href='#What'>#</a>
+			</h2>
+			<p>
+				This is a 6.552 bytes Windows executable demo, made by me,
+				released at the Black Valley 2022 <a href="https://en.wikipedia.org/wiki/Demoscene">demoparty</a>.
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<div id=tooling>
+			<h2>
+				Tooling <a href='#tooling'>#</a>
+			</h2>
+			<p>
+				After prototyping the rails on <a href="https://www.shadertoy.com/">Shadertoy</a>,
+				I wanted to make some tool to edit the shader, mainly for easily controlling
+				variables and because I wanted to use vim bindings because I'm very used to vim and
+				I feel less efficient without it.
+			<p>
+				I made this in Java, simply because I know Java pretty good so I can get going quickly,
+				and I have worked with LWJGL before (a lib that allows using OpenGL).
+				It has a canvas with OpenGL contex, some sliders to tinker with some values that
+				are passed to the shader, and uses a file watcher so the shader file gets read and
+				recompiled whenever that file is changed. I also added mouse and zqsd/shift/ctrl
+				input in order to move around the scene. (zqsd because I use azerty keyboard layout)
+			<video controls style=max-width:100%>
+				<source src=blog003/tool.mp4 type=video/mp4>
+			</video>
+			<p>
+				Then I also added a camera path editor thing, because I thought I wouldn't be able
+				to come up with good camera paths by just making some cool mathematical equation,
+				so this one allowed me to use bezier curves for xyz and rotation values.
+			<video controls style=max-width:100%>
+				<source src=blog003/camera.mp4 type=video/mp4>
+			</video>
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<div id=graffiti>
+			<h2>
+				Graffiti <a href='#graffiti'>#</a>
+			</h2>
+			<p>
+				For making the graffiti, I also made a quick tool to position some cubic beziers
+				and then output the coordinates of the (control) points, to paste them into the shader.
+			<p>
+				<a href=blog003/graf.png>
+					<img
+						src=blog003/graf.png
+						title="graffiti tooling"
+						style=max-width:100%
+						alt="screenshot of a program that draws beziers with controllable control points"
+					>
+				</a>
+			<p>
+				For every frame, the position in the chain of beziers for the current time
+				(minus and plus some small value) is calculated and a circle is drawn at that
+				position (multiple circles actually, in order to also draw the outline of the text).
+				Then that is saved to a texture, to be used to draw it on the wall and as "base"
+				image for the next graffiti frame. The texture is cleared while the camera is
+				transitioning from the previous to the next graffiti spots.
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<div id=wip>
+			<h2>
+				WIP content <a href='#wip'>#</a>
+			</h2>
+			<p class=img>
+				<img
+					src=blog003/lighting.gif
+					title="first version of the tunnel"
+					alt="first prototype of the railway tunnel, with simple lighting"
+				>
+				<br>
+				first prototype of the railway tunnel, with simple lighting
+			<p class=img>
+				<img
+					src=blog003/light2.gif
+					title="messing around with the marched lighting"
+					alt="using a slider to control which lighting system to use"
+				>
+				<br>
+				messing around with the marched lighting
+			<p class=img>
+				<video controls style=max-width:100%>
+					<source src=blog003/awt.mp4 type=video/mp4>
+				</video>
+				<br>
+				Artifacts when using the Java AWT ScrollPane in the tool.
+			<p class=img>
+				<video controls style=max-width:100%>
+					<source src=blog003/swing.mp4 type=video/mp4>
+				</video>
+				<br>
+				Artifacts when using the Java Swing JScrollPane in the tool.
+			<p class=img>
+				<video controls style=max-width:100%>
+					<source src=blog003/mov.mp4 type=video/mp4>
+				</video>
+				<br>
+				Using the trackbars to control the camera. Initial support beam.
+			<p class=img>
+				<video controls style=max-width:100%>
+					<source src=blog003/mov2.mp4 type=video/mp4>
+				</video>
+				<br>
+				Using mouse+keyboard to control the camera. Early version of support beams.
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<footer>
+			<p>
+				published: 20 July 2022 - content last modified: 26 July 2022
+		</footer>
+	</div>
+</body>
+</html>
