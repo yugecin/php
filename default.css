@@ -93,3 +93,7 @@ p.index {
 	font-size: smaller;
 	text-align: right;
 }
+ul ul {
+	margin-top: .3em;
+	margin-bottom: .3em;
+}
