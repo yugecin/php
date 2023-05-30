@@ -7,7 +7,7 @@ html {
 	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFAQMAAAC3obSmAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAGUExURbi4uMzMzMandIoAAAASSURBVAjXY0hgOMDQwSDBYAAAC8oB8SH4uXgAAAAASUVORK5CYII=');
 	color: #000;
 	margin: 0;
-	}
+}
 body {
 	max-width: 45em;
 	margin: 2em auto 17em auto;
@@ -81,11 +81,6 @@ p.capt, p.img {
 		max-width: 100%;
 		border: 2px solid #e8e8e8;
 	}
-a.s {
-	text-decoration: none;
-	color: #e8e8e8;
-	float: right;
-}
 span.s {
 	text-decoration: line-through;
 }
