@@ -20,7 +20,7 @@ body > div {
 div, nav a {
 	padding: 0 1em;
 	border: 2px solid #000;
-	box-shadow: 5px 5px pink;
+	box-shadow: 3px 3px pink;
 	background: #fff;
 }
 div {
