@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+	<meta charset=utf-8>
+	<meta name=viewport content="width=device-width, initial-scale=1.0">
+	<title>Jeanine: a 2d text editor proof of concept</title>
+	<link rel=stylesheet href=default.css?v3 type=text/css>
+</head>
+<body>
+	<nav>
+		<a href=index.html>home/about</a>
+		<a href=projects.html>projects</a>
+		<a href=blog.html>blog</a>
+	</nav>
+	<div>
+		<p>
+			<a href=blog.html>blog</a>
+			&gt;
+			Jeanine: a 2d text editor proof of concept
+		<h1>
+			Jeanine: a 2d text editor proof of concept
+		</h1>
+		<p style=text-align:center>
+			<a href=https://github.com/yugecin/jeanine>https://github.com/yugecin/jeanine</a>
+		<p>
+			It's about time I make this project public and write something about it, just for the sake
+			of having the idea and this implementation out in the open, so maybe others can be inspired.
+		<div id=tldr>
+			<h2>
+				TL;DR <a href=#tldr>#</a>
+			</h2>
+			<ul>
+				<li>Code is split in blocks (manually!), which are linked together
+				<li>This block configuration is stored as comments in the source file, which means editing the source in
+				other editors will generally not mess up the configuration, and the configuration will be persisted when
+				using using version control, though this may generate a lot of lines in commit diffs that are not related
+				to your code
+				<li>A 2d view of code may make it easier to remember where specific code is located (<abbr title="your mileage may vary; meaning you may not experience the same as I do">ymmv</abbr>)
+				<li>Single-use functions and helpers can be moved to the side, uncluttering the more important parts of files
+			</ul>
+			<p class=img>
+				<img src=blog005/jeanine.gif alt="">
+			<p>
+				Check out <a href=#relatedwork>related work</a>
+		</div>
+		<div id=index>
+			<h2>
+				Index <a href=#index>#</a>
+			</h2>
+			<ul>
+				<li><a href=#tldr>TL;DR</a>
+				<li><a href=#index>Index</a>
+				<li><a href=#theidea>The initial idea</a>
+				<li><a href=#thefunctionality>The functionality so far (lots of images here)</a>
+				<li><a href=#missingthings>Missing things that would be nice</a>
+				<li><a href=#persistence>How block configuration is stored</a>
+				<li><a href=#observations>Observations (the good and the bad)</a>
+				<li><a href=#relatedwork>Related work</a>
+				<ul>
+					<li><a href=#codebubbles>Code Bubbles</a>
+					<li><a href=#patchworks>Patchworks</a>
+					<li><a href=#onthedesignoftexteditors>On the design of text editors</a>
+					<li><a href=#natto>Natto</a>
+					<li><a href=#@koujaku>@koujaku's whiteboard coding idea</a>
+				</ul>
+			</ul>
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<div id=theidea>
+			<h2>
+				The initial idea <a href=#theidea>#</a>
+			</h2>
+			<p>
+				I think this idea struck me at 2019/2020, probably while looking at the
+				graph representation of disassembled code in IDA (The Interactive Disassembler).
+			<p class=img>
+				<img src=blog005/idagraph.png alt="IDA with graph view of a piece of disassembled code">
+			<p>
+				One of the main thoughts I had was that I wanted to shove functions to the side.
+				People always say you have to split up code and functions should be short, but
+				then you have a lot of functions that may only get used only once cluttering
+				your file. So it seemed like a nice idea to be able to move those functions to
+				the side and only have "entry" functions in the main view of a source file.
+			<p>
+				Another possible benefit I thought was to better visualize code flow, depending
+				on how much the code is split into different blocks. Though this may be more
+				applicable for assembly code like shown in IDA than typical high-level language
+				code.
+			<p>
+				Some history:
+			<ul>
+				<li>I had the idea for long
+				<li>mentioned it to a friend
+				<li>eventually we started working on it, somewhat
+				<li>named it "Odette", because we saw a file manager earlier named "Marta" and kind
+				of found it was like a typical women's name from past generations. We thought
+				"we can also use a cool old-sounding women's name" so "Odette" it was.
+				<li>we chose C because.. I think inspired by Handmade Hero and Casey Muratori and
+				Jonathan Blow etc.
+				<li>It didn't really progress that fast
+				<li>At some point I decided to try it in Java because I figured it would be much
+				faster to prototype and it would be a good try-out of some of the concepts before
+				applying it in C (I'm familiar with C but more familiar with Java and with Java Swing
+				it's much easier to get going graphically for me because I don't really have experience
+				with graphical stuff in C)
+				<li>Called it "Jeanine" to stay with the "old women name" theme, and of course
+				making it start with a J because it's a Java project
+				<li>Odette became abandoned. Oops. (it never got really much traction, there was a visual
+				and text could be typed but that was it pretty much)
+			</ul>
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<div id=thefunctionality>
+			<h2>
+				The functionality so far (lots of images here) <a href=#thefunctionality>#</a>
+			</h2>
+			<p>
+				(most of following bullet points can be expanded for images and/or more info)
+			<p>
+				(this is a list of <code>&lt;detail&gt;</code> elements, your browser should support clicking
+				it to expand/collapse)
+			<ul>
+				<li>
+					<details open>
+						<summary>
+							Vi(m)-like editing mode because I'm dysfunctional without it (but it
+							lacks many things like visual or visual block)
+						</summary>
+						<pre>
+Move: h j k l ^ $ w b e gg G ^D ^U { }
+Insert: i I a A o O p P
+Delete: x dw db dd dj dk diw di' di\" di[ di( di{ da' da\" da[ da( da{ d$
+Change: cw cb ciw ci' ci\" ci[ ci( ci{ ca' ca\" ca[ ca( ca{ c$ r s
+Indent: &lt;&lt; &gt;&gt; (&lt; &gt; in selection)
+Other: . u J
+Select: ctrl-v
+Copy: yy (y in selection)
+View: z
+Search: / n N *</pre>
+						<p>
+							One thing I have configured in my vim is that the caret's color depends on the corrent
+							mode; red while in normal mode and green while in insert mode. So of course I had to
+							have that here too.
+						<p class=img>
+							<img src=blog005/vim.gif alt="vim keybinds demo">
+						<p>
+							This is by no means an exhaustive implementation of vim keybindings, but it has the
+							essentials (meaning the things I use the most, though not even all of that).
+						<p>
+							Another thing that's also special I think is that moving the cursor while having the
+							primary button held down will just move the caret, there's no mouse selection mode.
+							Initially because I hadn't implemented mouse selection at the start, but I kind of
+							like this. As a vim user, I don't really use mouse selection anyways, and this is
+							a nice way of moving the caret with the mouse (since you can click and move to make
+							sure your caret is placed where you need it, even if you're not precise enough on
+							the first click).
+						<hr>
+					</details>
+				<li>
+					<details open>
+						<summary>
+							Can split contents into different blocks (this is a manual process!!)
+							and link them to each other. blocks always have one parent (except the root block).
+							Links can be anchored at the top, bottom, or at the right of any line of the parent
+							block. Secondary links can be added from any block to any block
+						</summary>
+						<p class=img>
+							<img src=blog005/split.gif alt="split demo">
+						<p>
+							Splitting into blocks can be done by engaging visual line mode (<kbd>ctrl-v</kbd>),
+							optionally expanding it (by going down/up with <kbd>j</kbd>/<kbd>k</kbd>, <kbd>o</kbd>
+							to jump between start/end), and then typing the command <code>:spl</code>.
+						<p>
+							Splitting will create a block with the selected lines, linking the block to the
+							previous block (if applicable) with a bottom link. It will also create a new block
+							for the rest (bottom part) of the content that is now split off from the initial block
+							(if applicable), linking that block with a bottom link to the new block.
+						<p>
+							Changing links can be done with the <code>:link &lt;bot|right|top&gt; &lt;id&gt;</code>
+							command. The <code>id</code> part is first number you see in the headers of each panel.
+							Panels get ids assigned automatically (but you could change them by modifying the
+							Jeanine comments, see <a href=#persistence>How block configuration is stored</a>).
+							(I knew beforehand which ids each block would have in this demo, so that's why I could
+							put in those command without really looking)
+						<p>
+							While normal (non-secondary) links define a clear parent-child relationship and
+							influences the positioning of the child based on the parent's position, secondary
+							links just add another line from block to block to mark related code but serve
+							no other functionality. They can be added with
+							<code>:slink &lt;bot|right|top&gt; &lt;id&gt;</code> and removed by doing
+							<code>:unlink &lt;bot|right|top&gt; &lt;id&gt;</code>.
+							Secondary links are shown in a slightly lighter gray color.
+						<p>
+							Blocks can be deleting by deleting all lines that define it (any linked panels will
+							be re-linked to the root node). Or raw mode can be used to delete Jeanine comments
+							(see <a href=#persistence>How block configuration is stored</a>).
+						<p>
+							Block are positioned manually.
+						<p>
+							Yes there is a check that will deny linking if it would cause a cyclic dependency.
+						<hr>
+					</details>
+				<li>
+					<details open>
+						<summary>
+							Zooming and panning
+						</summary>
+						<p class=img>
+							<img src=blog005/zoompan.gif alt="zooming and panning demo">
+						<p>
+							Zooming is done by scrolling the mousewheel while holding control.
+						<p>
+							Clicking in any block while zoomed will reset the zoom smoothly, while keeping
+							the exact position where the mouse clicked in the same spot (placing the caret
+							doesn't seem so precise in this demo though somehow). No key input is accepted
+							while zoomed.
+						<p>
+							Panning can be done by dragging the background, or by scrolling (holding shift
+							while scrolling will scroll horizontally).
+						<hr>
+					</details>
+				<li>
+					<details open>
+						<summary>
+							Jumping between linked blocks when moving the caret past a boundary
+						</summary>
+						<p class=img>
+							<img src=blog005/jumpboundaries.gif alt="jumping between boundaries demo">
+						<hr>
+					</details>
+				<li>
+					<details open>
+						<summary>
+							Switching between raw mode and 2d mode
+						</summary>
+						<p class=img>
+							<img src=blog005/raw.gif alt="raw command demo">
+						<p>
+							Raw mode can be toggled by the <code>:raw</code> command. Raw mode shows the
+							contents without parsing Jeanine comments and shows all content in one block.
+						<p>
+							The exact caret position will be kept while toggling.
+						<hr>
+					</details>
+				<li>
+					<details open>
+						<summary>
+							Simple settings like font settings and colorscheme with some predefined schemes
+						</summary>
+						<p class=img>
+							<img src=blog005/prefs.gif alt="prefs demo">
+						<p>
+							<code>:prefs</code> will open the preferences editor. It shows some instructions,
+							some line-commands and the preferences contents itself. The line-commands are just
+							lines that can be double-clicked or pressed <code>ENTER</code> on and they will do
+							things. Pressing <code>ENTER</code> while in the preferences content block will
+							apply its contents. Pressing <code>ESC</code> will save and exit the preferences
+							editor. There is a line-comment to exit without saving, too.
+						<p>
+							Preferences are stored to a file defined by the <code>JEANINE_PREFERENCES_FILE</code>
+							environment variable. If this variable is not present, a warning will be shown first
+							before the preferences editor is shown.
+						<p class=img>
+							<img src=blog005/prefsnoenv.gif alt="prefs demo (no env variable)">
+						<hr>
+					</details>
+				<li>
+					<details open>
+						<summary>
+							Font picker
+						</summary>
+						<p class=img>
+							<img src=blog005/font.gif alt="font demo">
+						<p>
+							<code>:font</code> will open the font picker. it will show panels that are prefilled
+							with a list of fonts, list of font sizes, list of flags. They can be double-clicked
+							or pressed <code>ENTER</code> on and the thing the line describes will be applied.
+						<p>
+							Saving the font configuration can be done by opening the preferences editor and
+							using the line-command to apply the current font settings.
+						<p>
+							Jeanine calculates everything based on the width/height of the 'm' character.
+							That means non-monospace fonts may make thing look funky, like the caret showing
+							on a wrong position.
+						<hr>
+					</details>
+				<li>
+					<details open>
+						<summary>
+							Very extremely naive comment highlighting (only C-style line and block comments)
+							(no other syntax highlighting at all, but I'm used to that so I don't mind)
+						</summary>
+						<p class=img>
+							<img src=blog005/comments.png alt="comments demo">
+						<p>
+							Very naive meaning: block comment state does not go beyond block boundaries, and it
+							is not checked if comment tokes are inside strings or not.
+						<hr>
+					</details>
+				<li>
+					<details open>
+						<summary>
+							Simple search
+						</summary>
+						<p class=img>
+							<img src=blog005/search.gif alt="search demo">
+						<p>
+							Search mode can be engaged by pressing <code>/</code>. Afterwards, <kbd>n</kbd> and
+							<code>N</code> can be used to find the next/previous occurrence.
+						<p>
+							<code>*</code> can be used to quick search the symbol under the caret. This search
+							doesn't search for isolated words matching the word under the caret, unlike vim, it's
+							just a simple substring search.
+						<hr>
+					</details>
+				<li>
+					<details open>
+						<summary>
+							Trailing whitespace highlighting
+						</summary>
+						<p class=img>
+							<img src=blog005/trailingws.gif alt="trailing whitespace demo">
+						<p>
+							Trailing whitespace will be highlighted in a customizable color, except if it
+							is on the current line and the current mode is insert mode.
+						<hr>
+					</details>
+			</ul>
+			<ul>
+				<li>Undo (but no redo)
+				<li>Can open and save a file, multiple files even
+			</ul>
+			<p>
+				It is very bare bones and doesn't have things like warnings when closing while modifications
+				haven't been saved yet, but it is in a usable state for me. It's been a long time since I've done
+				decent work on this project, and I don't expect to do so very soon. I want to, but there's
+				a lot of other things I want to do, too.
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<div id=missingthings>
+			<h2>
+				Missing things that would be nice to have <a href=#missingthings>#</a>
+			</h2>
+			<p>
+				Just a few things form the top of my head. I don't plan to make this an editor with a lot
+				of functionality, it works in what it's supposed to do and I find it works well for me for
+				my use cases so far (which is basically only C so far).
+			<ul>
+				<li>Copy/paste from OS clipboard (yeah really that's not in there yet)
+				<li>Showing when errors happened (currently just prints to stderr, which you won't see)
+				<li>Showing issues when loading a file (i.e. broken links)
+				<li>Ability to create a file and/or save as a new file
+				<li>Alternative ways of storing Jeanine comments (see <a href=#persistence>How block configuration is
+				stored</a>) that are fit for other programming languages
+				<li>Command to show list of open files and their blocks, with ability to jump to them
+				<li>Ability to add custom titles to blocks (currently their header shown is their id, parent id,
+				filename, line numbers, read-only status)
+				<li>Redo (only undo works at this moment)
+				<li>Better zoom levels and better performance for large blocks when zooming
+				<li>(External modifications to open files check)
+			</ul>
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<div id=persistence>
+			<h2>
+				How block configuration is stored <a href=#persistence>#</a>
+			</h2>
+			<p>
+				The configuration of the blocks/panels is stored in the source file, as C-style block comments.
+			<ul>
+				<li>+ together with the source file means no additional configuration file which can get lost,
+				it means the configuration can be stored in version control without extra files
+				<li>- moving/changing a lot of blocks (and not touching actual content) will modify a lot of these
+				configuration comments, making a lot of changes in commits that are unrelated to the content
+				<a href=https://github.com/yugecin/nfsu2-re/commit/0e3dd2a4bb410a76482adcae6a1057aa3bd4007d>
+					(example commit that changes a lot of Jeanine comments because one block got bigger and
+					I repositioned the ones that were above and below it)
+				</a>
+				<li>+ since they're comments, the contents can be edited in other editors and it will not mess up
+				block configuration (unless major edits happen that affect those comment lines)
+				<li>- it may look a bit messy when editing in other editors, if there's a lot of them
+			</ul>
+			<p>
+				Have a look at these source files (and their git history) to get a good idea of what the impact is:
+				(and maybe download Jeanine and open the files in it!)
+			<ul>
+				<li><a href=https://github.com/basdon/basdon-fly/blob/master/fly-plugin/maps.c>basdon-fly: maps.c</a>
+				<li><a href=https://github.com/yugecin/nfsu2-re/blob/master/docs/idcparse.c>nfsu2-re: idcparse.c</a>
+				<li><a href=https://github.com/yugecin/nfsu2-re/blob/master/docs/mmparse.c>nfsu2-re: mmparse.c</a>
+				<li><a href=https://github.com/yugecin/nfsu2-re/blob/master/docs/docgen.c>nfsu2-re: docgen.c</a>
+			</ul>
+			<details>
+				<summary>
+					Spec copied from <code>readme-jeanine-comments.txt</code>:
+				</summary>
+				<pre>
+Jeanine comments
+================
+Jeanine comments specify how to layout the source text. They start with a
+jeanine: prefix, followed by the directive character and a colon (like p:),
+followed by properties (like i:1;), optionally followed by a colon and
+another directive with properties and so on. There may only be maximum one
+jeanine comment on a single line.
+
+Currently, both directives and property names are a single character in length.
+Property values can be of any length, but they cannot include a semicolon.
+
+Currently C-style block comments are always used.
+
+If a value is a floating point number, it must include a decimal point.
+
+Examples:
+
+/*jeanine:p:i:1;p:0;a:b;x:0;y:30;*/
+jeanine:                          standard jeanine comment prefix
+  p:                        "panel" directive
+    i:1;p:0;a:b;x:0;y:30;   properties and their values
+
+/*jeanine:s:a:b;i:2;:s:a:b;i:3;*/
+jeanine:                      standard jeanine comment prefix
+  s:                    "secondary link" directive
+    a:b;i:2;            properties and their values
+	    :           directive separator
+	     s:         "secondary link" directive
+	       a:b;i:3; properties and their values
+
+
+
+| Panel directive (p)
+| -------------------
+| These define a "panel", which is a section of text. Everything from the start
+| of a panel directive until the next panel directive (or EOF) will be put in
+| the same panel. Panel directives should be placed on a dedicated source line.
+| The start of the source implicitely defines the root panel, which has an id
+| of 0. The root panel is the only panel that has no parent.
+|
+|
+| | Properties
+| | ----------
+| | - a: the anchor which specifies how this panel is attached to its parent:
+| |      - b: bottom (bottom of parent linked to top of child)
+| |      - t: top (top of parent linked to top of child)
+| |      - r: right (requires a right link location directive; see below)
+| | - i: the id of this panel
+| | - p: the id of the parent of this panel
+| | - x: the x-offset where this panel is located, relatively to the standard
+| |      location as determined by the anchor. If this is a float value,
+| |      it is a multiple of the font width, otherwise it's in pixels.
+| | - y: the y-offset where this panel is located, relatively to the standard
+| |      location as determined by the anchor. If this is a float value,
+| |      it is a multiple of the font height, otherwise it's in pixels.
+
+
+
+| Right link directive (r)
+| ------------------------
+| These define the location where panels with a 'right' anchor are linked.
+| Since a right link is linked at a specific line, it needs an additional
+| jeanine directive to know at which line it is linked (unlike top and bottom
+| links, which are always at panel boundaries).
+|
+| Using a property in the panel directory to store the line number where the
+| link is located would be less suitable, since it will possibly be incorrect
+| after making edits in the source while not in jeanine/2d mode. Putting a
+| jeanine comment at the end of the line that is linked, will survive those
+| edits.
+|
+|
+| | Properties
+| | ----------
+| | - i: the id of the child panel that is linked from here
+
+
+
+| Secondary link directive (s)
+| ----------------------------
+| While panels are already linked by means of properties in the panel directive,
+| secondary links can also be made so it is possible to have multiple links to
+| the same panel. The difference between primary and secondary links is that
+| a primary link defines the location of the child. A panel must always have a
+| primary link (except for the root panel). Secondary links are outgoing,
+| meaning they are placed at the parent's position and link to a child.
+|
+| Secondary links with a top or bottom anchor can be placed in a jeanine comment
+| anywhere within the panel's region, but are usually put at the end. They must
+| be in a jeanine comment that has its own dedicated line. That comment may then
+| not contain any directives that don't require a dedicated line (like a
+| secondary link with a right anchor).
+|
+| Secondary links with a right anchor must be placed at the end of the line
+| where the link should be.
+|
+|
+| | Properties
+| | ----------
+| | - i: the id of the panel that is linked here
+| | - a: anchor:
+| |      - b: bottom (bottom of parent linked to top of child)
+| |      - t: top (top of parent linked to top of child)
+| |      - r: right (this line at the parent to top of child)
+
+
+
+| Legacy right link directive (l)
+| -------------------------------
+| These were in use when jeanine comments weren't fully specced out yet. They
+| are deprecated and won't newly appear any more, but might still be interpreted
+| for backward compatibility reasons. The 'l' initially stood for 'link'. This
+| directive is the functional equivalent of 1..n right link directives (r).
+|
+| This directive doesn't have properties, but rather a comma separated list of
+| ids that denote the child ids. (This inconsistency is the reason that it is
+| deprecated)
+|
+|
+| | Syntax
+| | ------
+| | /*jeanine:l:2,1*/
+| |   jeanine:        standard jeanine comment prefix
+| |           l:      "link" directive
+| |             2,1   child panel ids that are right-linked here (2 and 1)</pre>
+			</details>
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<div id=observations>
+			<h2>
+				Observations (the good and the bad) <a href=#observations>#</a>
+			</h2>
+			<p>
+				So far I've only really used this editor on two C projects;
+				<a href=projects.html#basdon-fly>basdon</a> and <a href=projects.html#nfsu2re>nfsu2-re</a>.
+			<ul>
+				<li>+ confirming one of my initial thoughts, it is really nice to be able to see
+				the main/entry/exposed/public functions together underneath each other as main starting
+				point and have all the "helper" functions be positioned to the side, linked to their usages.
+				This makes it very easy to see which functions are meant to be used an available, and which
+				other functions are basically noise that are irrelevant as a user of the file. (I suppose
+				an "outline" view gives the same effect in traditional IDEs, given that functions have
+				the appropriate modifiers (public) or are annotated accordingly, but I don't really use
+				such "outline" functionalities... maybe I should.)
+				<li>+ I've noticed that I can find the code I'm looking for much quicker than before. I seem
+				to automatically remember the general area in a 2d view of a file where some specific code is,
+				even if I don't remember the name of the functions I'm looking for.
+				<li>- Sometimes I spend too much time positioning blocks. Maybe some sort of automatic positioning
+				would be nice, but I can't see it being good enough so that I won't constantly want to give it
+				touch-ups.
+				<li>- it can look messy if code is split mid-function, because of the code indentation. Though I rarely,
+				if ever, split mid-function.
+				<li>- Jeanine comments break code if they are in a block comment (if the language doesn't support nested
+				block comments), so right-links or whole functions placed in a block comment (given the function has
+				received its own Jeanine block) will give compile errors.
+				<li>- Writing more content in blocks can make it grow over other blocks if they are positioned
+				vertically. Maybe I could add some sort of "spring" links (links that make sure that blocks are
+				"pushed" away when they would overlap), but that also sounds noisy in terms
+				of persisting that together with the link comments. Maybe just pushing blocks out of the way without
+				even such "spring" links would be a thing, but that might get messy and suddenly move everything.
+				Check out the image below and I think you get the idea.
+			</ul>
+			<p class=img>
+				<img src=blog005/verticalblocks.png alt="lots of vertical blocks stacked">
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<div id=relatedwork>
+			<h2>
+				Related work <a href=#relatedwork>#</a>
+			</h2>
+			<div id=codebubbles>
+				<h3>
+					Code Bubbles <a href=#codebubbles>#</a>
+				</h3>
+				<ul>
+					<li>
+						<a href=https://cs.brown.edu/~spr/codebubbles/>
+							https://cs.brown.edu/~spr/codebubbles/
+						</a>
+					<li>
+						<a href=https://github.com/StevenReiss/bubbles>
+							https://github.com/StevenReiss/bubbles
+						</a>
+				</ul>
+				<p>
+					Very similar concept, though you start with a blank canvas and can add bubbles from your source code,
+					which is automatically split for you. It does this by relying on the Eclipse IDE which is running
+					in the background, which makes it that the bubbles are made reliably based on the structure of the
+					code. This also means that it has actual IDE functionality like syntax highlighting, autocomplete,
+					outline etc.
+				<p>
+					This project seems to still get new commits on GitHub.
+				<p class=index>
+					<a href=#index>Index</a>
+			</div>
+			<div id=patchworks>
+				<h3>
+					Patchworks and Code Ribbon<a href=#patchworks>#</a>
+				</h3>
+				<ul>
+					<li>
+						<a href=https://austinhenley.com/pubs/Henley2014CHI_Patchworks.pdf>
+							https://austinhenley.com/pubs/Henley2014CHI_Patchworks.pdf
+						</a>
+					<li>
+						<a href=https://coderibbon.github.io/CodeRibbon/>
+							https://coderibbon.github.io/CodeRibbon/
+						</a>
+				</ul>
+				<p>
+					Patchworks seems like a standalone editor that shows files in a grid-like fashion. I can't seem
+					to find a download for that, but Code Ribbon is a reimplementation, based on Atom.
+				<blockquote>
+					The second iteration of the Patchworks editor
+				</blockquote>
+				<p>
+					From the same author as Code Bubbles.
+				<p class=index>
+					<a href=#index>Index</a>
+			</div>
+			<div id=onthedesignoftexteditors>
+				<h3>
+					On the design of text editors <a href=#onthedesignoftexteditors>#</a>
+				</h3>
+				<ul>
+					<li>
+						<a href=https://arxiv.org/abs/2008.06030>
+							https://arxiv.org/abs/2008.06030
+						</a>
+				</ul>
+				<p>
+					Not an actual implementation, but a paper discussing text editor design and the visual clutter of
+					IDEs. It has a section that describes how comments could be placed in a margin, next to code, which
+					reminds me of how I wanted to "move stuff to the side".
+				<p>
+					This paper also influenced the visuals of Jeanine a tidbit, it made me add margins inside the code
+					blocks and around the code block headers, though very subtle.
+				<p>
+					I can agree with its description of how modern IDEs have a lot of visual clutter and only a small
+					amount of space for displaying actual code. I usually try to hide a lot of things in IDEs (even tabs)
+					so I can focus on the code. Ideally I'd only have a menu bar, and the main screen split between
+					an area that I can switch between fileexplorer/outputconsole/other and an area for code.
+				<p class=index>
+					<a href=#index>Index</a>
+			</div>
+			<div id=natto>
+				<h3>
+					Natto <a href=#natto>#</a>
+				</h3>
+				<ul>
+					<li>
+						<a href=https://natto.dev/>
+							https://natto.dev/
+						</a>
+				</ul>
+				<p>
+					"Write JavaScript on a 2D canvas"
+				<p>
+					I haven't played around with this yet, so no comments.
+				<p class=index>
+					<a href=#index>Index</a>
+			</div>
+			<div id=@koujaku>
+				<h3>
+					@koujaku's whiteboard coding idea <a href=#@koujaku>#</a>
+				</h3>
+				<ul>
+					<li>
+						<a href=https://twitter.com/koujaku/status/1673232525697884160>
+							https://twitter.com/koujaku/status/1673232525697884160
+						</a>
+				</ul>
+				<p>
+					Looks very cool and similar but way more functional!
+				<p>
+					See also this reply:
+					<a href=https://twitter.com/GentooGames/status/1673444270626443264>
+						https://twitter.com/GentooGames/status/1673444270626443264
+					</a>
+					<blockquote>
+						#GameMaker embraced this concept in their implementation of the "workspace"
+					</blockquote>
+				<p class=index>
+					<a href=#index>Index</a>
+			</div>
+			<p class=index>
+				<a href=#index>Index</a>
+		</div>
+		<footer>
+			<p>
+				published: 9 August 2023
+		</footer>
+	</div>
+</body>
+</html>
