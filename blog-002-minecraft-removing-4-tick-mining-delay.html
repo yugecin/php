@@ -84,6 +84,12 @@ $ find . -name "*.class" | xargs grep -obUaP "\x04\x40\x90\x00\x00"
 ./eik.class:724:@P
 </pre>
 			<p>
+				<em>
+					Note: I get can't this to work anymore. The options seem correct
+					and should work but alas. An alternative for windows is BareGrep
+					by baremetalsoft.com.
+				</em>
+			<p>
 				There aren't too many matches,
 				so it's doable to go through every one of them with your favorite decompiler
 				and see if it's the target class. In <code>dxn.class</code>, I found following
@@ -127,10 +133,25 @@ public boolean b(ft var1, fy var2)
 			<p>
 				To compile the file you probably need to link the jar and some libraries,
 				which can usually be found in <code>%APPDATA%\.minecraft\libraries</code>.
+				The file <code>%APPDATA%\.minecraft\versions\&lt;version&gt;\&lt;version&gt;.json</code>
+				has a "libraries" property that should help with the names and versions.
+			<p>
 				I used Fernflower to decompile and had to fix some usages of an enum.
 				For some reason it added an import for <code>rz.a</code> but the compiler wasn't accepting it,
 				so I removed the import and replace all usages of the enum type <code>a</code>
 				in method parameters with <code>rz.a</code>.
+			<p>
+				One time for version 1.18.2, the class contained the line below. That won't compile
+				because it's calling a method named <code>do</code>, which of course is a keyword
+				in Java (the reason that it's there is because the JVM has less constrains on naming
+				than the Java programming language, so modifications to bytecode can make it that
+				decompiled class files to Java source files may not be compilable).
+				Luckily I could comment this line and the game doesn't seem different in
+				any way or crashing, so I got lucky there.
+<pre>
+this.c.a(new wb.b($$0.dc(), $$0.de(), $$0.di(), $$0.dn(), $$0.do(), $$0.aw()));
+</pre>
+
 			<p class=index>
 				<a href=#index>Index</a>
 		</div>
@@ -151,7 +172,7 @@ public boolean b(ft var1, fy var2)
 		</div>
 		<footer>
 			<p>
-				published: 14 May 2020 - content last modified: 26 May 2022
+				published: 14 May 2020 - content last modified: 17 September 2023
 		</footer>
 	</div>
 </body>
