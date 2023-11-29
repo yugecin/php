@@ -44,6 +44,16 @@ a[href*="://"]::after {
 	height: 12px;
 	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAgMAAAArG7R0AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAJUExURUdwTAD/AAAA//ENIZIAAAABdFJOUwBA5thmAAAAL0lEQVQI12NggAFRBwaG0AQGptAVDFwzsxi4Zq1k4JqaCcZMU1cwMCxbwMCg1QAArE8JoyhJwYoAAAAASUVORK5CYII=') no-repeat;
 }
+kbd {
+	font-family: 'courier new', monospace;
+	border: 1px solid #000;
+	border-radius: 5px;
+	margin: 0 .2em;
+	padding: 0 .2em;
+	display: inline-block;
+	background: #f2f2f2;
+	box-shadow: 1px 1px 0 0 #000;
+}
 pre, code {
 	font-family: 'courier new', monospace;
 	background: #e8e8e8;

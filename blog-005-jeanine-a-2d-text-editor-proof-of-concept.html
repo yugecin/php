@@ -4,7 +4,7 @@
 	<meta charset=utf-8>
 	<meta name=viewport content="width=device-width, initial-scale=1.0">
 	<title>Jeanine: a 2d text editor proof of concept</title>
-	<link rel=stylesheet href=default.css?v3 type=text/css>
+	<link rel=stylesheet href=default.css?v4 type=text/css>
 </head>
 <body>
 	<nav>
@@ -255,9 +255,9 @@ Search: / n N *</pre>
 						<p>
 							<code>:prefs</code> will open the preferences editor. It shows some instructions,
 							some line-commands and the preferences contents itself. The line-commands are just
-							lines that can be double-clicked or pressed <code>ENTER</code> on and they will do
-							things. Pressing <code>ENTER</code> while in the preferences content block will
-							apply its contents. Pressing <code>ESC</code> will save and exit the preferences
+							lines that can be double-clicked or pressed <kbd>ENTER</kbd> on and they will do
+							things. Pressing <kbd>ENTER</kbd> while in the preferences content block will
+							apply its contents. Pressing <kbd>ESC</kbd> will save and exit the preferences
 							editor. There is a line-comment to exit without saving, too.
 						<p>
 							Preferences are stored to a file defined by the <code>JEANINE_PREFERENCES_FILE</code>
@@ -277,7 +277,7 @@ Search: / n N *</pre>
 						<p>
 							<code>:font</code> will open the font picker. it will show panels that are prefilled
 							with a list of fonts, list of font sizes, list of flags. They can be double-clicked
-							or pressed <code>ENTER</code> on and the thing the line describes will be applied.
+							or pressed <kbd>ENTER</kbd> on and the thing the line describes will be applied.
 						<p>
 							Saving the font configuration can be done by opening the preferences editor and
 							using the line-command to apply the current font settings.
@@ -308,10 +308,10 @@ Search: / n N *</pre>
 						<p class=img>
 							<img src=blog005/search.gif alt="search demo">
 						<p>
-							Search mode can be engaged by pressing <code>/</code>. Afterwards, <kbd>n</kbd> and
-							<code>N</code> can be used to find the next/previous occurrence.
+							Search mode can be engaged by pressing <kbd>/</kbd>. Afterwards, <kbd>n</kbd> and
+							<kbd>N</kbd> can be used to find the next/previous occurrence.
 						<p>
-							<code>*</code> can be used to quick search the symbol under the caret. This search
+							<kbd>*</kbd> can be used to quick search the symbol under the caret. This search
 							doesn't search for isolated words matching the word under the caret, unlike vim, it's
 							just a simple substring search.
 						<hr>
