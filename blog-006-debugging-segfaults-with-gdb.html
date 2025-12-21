@@ -71,38 +71,38 @@ gdb /basdon-fly/server/samp03svr -c core.8492
 				<code>-c core.8492</code> is the core dump file.
 		</ul>
 		<div>
-		<p>
-			I'm not sure what the correct program argument is, should it be the server executable
-			or my plugin shared library? It does not seem to matter much, but there has to be a
-			program argument or it doesn't show much.
-		<ul>
-			<li>
-				When using <code>/basdon-fly/server/plugins/basdonfly.so</code> instead of
-				<code>samp03svr</code>, the only difference that I can spot is that <code>bt</code>
-				shows a few (6) more calls, but they're all near the bottom of the stack and they
-				don't resolve to a known procedure so it doesn't help me much.
-			<li>
-				When omitting the program argument as a whole and only launching with a core file,
-				gdb is unable to even show a backtrace and finds no types at all
-		</ul>
+			<p>
+				I'm not sure what the correct program argument is, should it be the server executable
+				or my plugin shared library? It does not seem to matter much, but there has to be a
+				program argument or it doesn't show much.
+			<ul>
+				<li>
+					When using <code>/basdon-fly/server/plugins/basdonfly.so</code> instead of
+					<code>samp03svr</code>, the only difference that I can spot is that <code>bt</code>
+					shows a few (6) more calls, but they're all near the bottom of the stack and they
+					don't resolve to a known procedure so it doesn't help me much.
+				<li>
+					When omitting the program argument as a whole and only launching with a core file,
+					gdb is unable to even show a backtrace and finds no types at all
+			</ul>
 		</div>
 		<p>
 			A quick <code>info sharedlibrary</code> should confirm that my plugin library was loaded and included symbols and debug info:
 <pre>
 (gdb) info sharedlibrary
 From        To          Syms Read   Shared Object Library
-		No          /lib/libdl.so.2
-		No          /lib/libpthread.so.0
-		No          /lib/libstdc++.so.6
-		No          /lib/libm.so.6
-		No          /lib/libgcc_s.so.1
-		No          /lib/libc.so.6
+                        No          /lib/libdl.so.2
+                        No          /lib/libpthread.so.0
+                        No          /lib/libstdc++.so.6
+                        No          /lib/libm.so.6
+                        No          /lib/libgcc_s.so.1
+                        No          /lib/libc.so.6
 0xf76f7058  0xf77124d3  Yes (*)     /lib/ld-linux.so.2
-		No          plugins/mysql-r39-3-static.so
-		No          /lib/librt.so.1
-		No          /lib/libnss_files.so.2
-		No          plugins/bcrypt-v2.2-debian7.so
-		No          plugins/simplesocket.so
+                        No          plugins/mysql-r39-3-static.so
+                        No          /lib/librt.so.1
+                        No          /lib/libnss_files.so.2
+                        No          plugins/bcrypt-v2.2-debian7.so
+                        No          plugins/simplesocket.so
 0xf633aa00  0xf635bdd3  Yes         plugins/basdonfly.so
 (*): Shared library is missing debugging information.
 </pre>
@@ -140,7 +140,7 @@ outSpawnInfo=outSpawnInfo@entry=0xffd0c9a2) at spawn.c:118
 #3  0xf6357e92 in missions_end_unfinished (playerid=playerid@entry=0, reason=reason@entry=1024) at missions.c:863
 #4  0xf6357f5b in missions_on_vehicle_destroyed_or_respawned (vehicleid=vehicleid@entry=97) at missions.c:920
 #5  0xf6357b8e in veh_DestroyVehicle (vehicleid=vehicleid@entry=97) at vehicles.c:1132
-#6  0xf6359940 in B_OnVehicleSpawn (amx=0x84929d8, params=0xf63fd6a8 <fakeamx+24712>) at basdonfly_callbacks.c:485
+#6  0xf6359940 in B_OnVehicleSpawn (amx=0x84929d8, params=0xf63fd6a8 &lt;fakeamx+24712&gt;) at basdonfly_callbacks.c:485
 #7  0x08096a07 in ?? ()
 #8  0x080a53b9 in ?? ()
 #9  0x0814b674 in ?? ()
