@@ -69,6 +69,10 @@ gdb /basdon-fly/server/samp03svr -c core.8492
 				did not build nor have debug symbols for.
 			<li>
 				<code>-c core.8492</code> is the core dump file.
+			<li>
+				my working directory also has the file <code>plugins/basdonfly.so</code>, which
+				is the same path that the samp server uses to load this library. gdb isn't able
+				to show me much without this present so this is essential
 		</ul>
 		<div>
 			<p>
