@@ -17,9 +17,36 @@
 			p.languages span + span {
 				margin-left: 1em;
 			}
+		a.imglink {
+			float: right;
+			border: 2px solid #000;
+			width: 25em;
+		}
+		@media (max-width: 42em) {
+			a.imglink {
+				float: unset;
+				display: block;
+				margin: 0 auto;
+			}
+		}
+		a.imglink img {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
 	</style>
 </head>
 <body>
+	<script>
+		// intentionally at the top, so the alert shows before the page is shown
+		switch (location.hash) {
+		case '#intellijplugins':
+		case '#colandras-db-modelselector': // yes it had a typo
+		case '#txtnotes':
+		case '#plquery':
+			alert("The project you've been linked to has been removed from this page.\n\nIt might still be in a repository on my GitHub account, which is linked at the start of this page.");
+		}
+	</script>
 	<div>
 		<nav>
 			<p>
@@ -38,65 +65,57 @@
 		</h1>
 		<p>
 			An (incomplete) list of project or other stuff I'm working on or have been working on.
-			Only the more 'important'/interesting ones are on here, check out my
+			Only some bigger/cooler ones are on here, check out my
 			<a href=https://github.com/yugecin>GitHub profile</a> for more (random) things.
-		</p>
-		<div id=index>
-			<h2>
-				Index <a href=#index>#</a>
-			</h2>
-			<ul>
-				<li><a href=#index>Index</a></li>
-				<li><a href=#nfsu2re>nfsu2-re</a></li>
-				<li><a href=#samp-mapedit>samp-mapedit</a></li>
-				<li><a href=#basdon-fly>basdon-fly</a></li>
-				<li><a href=#jeanine>Jeanine</a></li>
-				<li><a href=#xandilordi-soundboard>xandilordi-soundboard</a></li>
-				<li><a href=#anna>anna</a></li>
-				<li><a href=#opsu-dance>opsu-dance</a></li>
-				<li><a href=#osukps>osukps</a></li>
-				<li><a href=#osusb1>osusb1</a></li>
-				<li><a href=#intellijplugins>intellijplugins</a></li>
-				<li><a href=#gtasa>gtasa</a></li>
-				<li><a href=#tsstats>tsstats</a></li>
-				<li><a href=#colandras-db-modelselector>colandreas-db-modelselector</a></li>
-				<li><a href=#txtnotes>txtnotes</a></li>
-				<li><a href=#plquery>plquery</a></li>
-			</ul>
-		</div>
+		<h2>
+			Index <a href=#index>#</a>
+		</h2>
+		<ul>
+			<li><a href=#nfsu2re>nfsu2-re</a>
+			<li><a href=#samp-mapedit>samp-mapedit</a>
+			<li><a href=#basdon-fly>basdon-fly</a>
+			<li><a href=#jeanine>Jeanine</a>
+			<li><a href=#anna>anna</a>
+			<li><a href=#opsu-dance>opsu-dance</a>
+			<li><a href=#gtasa>gtasa</a>
+			<li><a href=#tsstats>tsstats</a>
+			<li><a href=#osukps>osukps</a>
+			<li><a href=#osusb1>osusb1</a>
+			<li><a href=#xandilordi-soundboard>xandilordi-soundboard</a>
+		</ul>
 		<div id=nfsu2re>
 			<h2>
 				nfsu2-re <a href=#nfsu2re>#</a>
 			</h2>
+			<a href=nfsu2re.jpg class=imglink style=aspect-ratio:804/596>
+				<img src=nfsu2re.jpg alt="need for speed underground 2 game window with in-game ui modified text, and a ui explorer window on top">
+			</a>
 			<p>
-				<strong>Status:</strong> long-running
-			</p>
+				<strong>Status:</strong> long-running, achieved some cool things
 			<p>
 				Hobby reverse engineering project about need for speed underground 2.
 				Figuring out workings and file formats.
 				Pseudo goals are making a save game editor and unofficial online multiplayer functionality.
-			</p>
 			<p class=languages>
 				<span style=background:#555></span> C
 				<span style=background:#6e4c13></span> Assembly
-			</p>
-			<p>
+			<p style=clear:right>
 				<strong>Links:</strong>
-			</p>
 			<ul>
 				<li>
 					<a href=https://github.com/yugecin/nfsu2-re>GitHub: yugecin/nfsu2-re</a>
-				</li>
 				<li>	
 					documentation website:
 					<a href=https://yugecin.github.io/nfsu2-re>https://yugecin.github.io/nfsu2-re</a>
-				</li>
 			</ul>
 		</div>
 		<div id=samp-mapedit>
 			<h2>
 				samp-mapedit <a href=#samp-mapedit>#</a>
 			</h2>
+			<a href=samp-mapedit.jpg class=imglink style=aspect-ratio:16/9>
+				<img src=samp-mapedit.jpg alt="gta:sa-mp client screenshot with map editing user interface">
+			</a>
 			<p>
 				<strong>Status:</strong> Usable state
 			</p>
@@ -120,7 +139,7 @@
 				<span style=background:#555></span> C
 				<span style=background:#6e4c13></span> Assembly
 			</p>
-			<p>
+			<p style=clear:right>
 				<strong>Links:</strong>
 			</p>
 			<ul>
@@ -136,20 +155,23 @@
 			<h2>
 				basdon-fly <a href=#basdon-fly>#</a>
 			</h2>
+			<a href=basdon-fly.jpg class=imglink style=aspect-ratio:1288/720>
+				<img src=basdon-fly.jpg alt="gta:sa-mp screenshot of 4 players in airplanes on a custom mapped airport">
+			</a>
 			<p>
-				<strong>Status:</strong> Live, alpha
+				<strong>Status:</strong> Live, beta
 			</p>
 			<p>
 				Aviation themed <a href=https://sa-mp.com>San Andreas Multiplayer</a> server.
-				Includes a website that shows all flight details, with a flight tracker and flight viewer.
+				Includes a website that shows all flight details with a flight tracker and flight viewer,
+				IRC-linked chat (using <a href=#anna>anna</a>).
 			</p>
 			<p class=languages>
 				<span style=background:#555></span> C
-				<span style=background:#6e4c13></span> Assembly
 				<span style=background:#b07219></span> Java
 				<span style=background:#4f5d95></span> PHP
 			</p>
-			<p>
+			<p style=clear:right>
 				<strong>Links:</strong>
 			</p>
 			<ul>
@@ -162,14 +184,19 @@
 			<h2>
 				Jeanine <a href=#jeanine>#</a>
 			</h2>
+			<a href=blog005/jeanine.gif class=imglink style=aspect-ratio:739/565>
+				<img src=blog005/jeanine.gif alt="">
+			</a>
 			<p>
 				<strong>Status:</strong> Usable state (for me), not actively being worked on
 			<p>
-				2d editor proof of concept. I use this for some C coding while working on
+				2d editor proof of concept. A file can be manually split into separate blocks which can be linked to each other. This allows positioning code in a structured way, making it easy to see which pieces of code are the main interesting parts of a file and which other pieces are just helper things to support the main part of the file.
+			<p>
+				I use this for some C coding while working on
 				<a href=#nfsu2re>nfsu2-re</a> and <a href=#basdon-fly>basdon-fly</a>.
 			<p class=languages>
 				<span style=background:#b07219></span> Java
-			<p>
+			<p style=clear:right>
 				<strong>Links:</strong>
 			<ul>
 				<li>
@@ -180,40 +207,28 @@
 					<a href=https://github.com/yugecin/Jeanine>GitHub: yugecin/Jeanine</a>
 			</ul>
 		</div>
-		<div id=xandilordi-soundboard>
-			<h2>
-				xandilordi-soundboard <a href=#xandilordi-soundboard>#</a>
-			</h2>
-			<p>
-				<strong>Status:</strong> Ready, occasionally adding more sounds
-			</p>
-			<p>
-				A soundboard HTML page for a Belgian comedian (Xander De Rycke).
-			</p>
-			<p>
-				<strong>Links:</strong>
-			</p>
-			<ul>
-				<li><a href=https://xandilordi-soundboard.be>xandilordi-soundboard.be</a></li>
-				<li><a href=https://github.com/yugecin/xandilordi-soundboard>GitHub: yugecin/xandilordi-soundboard</a></li>
-			</ul>
-		</div>
 		<div id=anna>
 			<h2>
 				anna <a href=#anna>#</a>
 			</h2>
+			<a href=anna-it.png class=imglink style=aspect-ratio:928/671>
+				<img src=anna-it.png alt="window with a list of messages which shows IRC messages being sent to and from the bot">
+			</a>
 			<p>
 				<strong>Status:</strong> Ready
 			</p>
 			<p>
-				Modular IRC mod. Named after Anna^, from the 2006 BASSHUNTER song named
+				Modular IRC bot. Named after Anna^, from the 2006 BASSHUNTER song named
 				<a href=https://youtu.be/RYQUsp-jxDQ>Boten Anna</a>. Modules can be loaded
 				and unloaded at runtime.
-			</p>
+			<p>
+				The screenshot is of the "interactive test" window, which is extra functionality
+				to simulate an IRC server sending messages to the bot and shows the messages that
+				the bot sends.
 			<p class=languages>
 				<span style=background:#b07219></span> Java
 			</p>
-			<p>
+			<p style=clear:right>
 				<strong>Links:</strong>
 			</p>
 			<ul>
@@ -224,129 +239,87 @@
 			<h2>
 				opsu-dance <a href=#opsu-dance>#</a>
 			</h2>
+			<a href=opsu-dance.jpg class=imglink style=aspect-ratio:600/338>
+				<img src=opsu-dance.jpg alt="">
+			</a>
 			<p>
 				<strong>Status:</strong> <span class=s>long-running, paused</span>/abandoned
 			</p>
 			<p>
 				Is a fork of <a href=https://github.com/itdelatrisu/opsu>itdelatrisu/opsu</a>,
 				which is an open-source clone of the <a href=https://osu.ppy.sh>osu!</a> game.
-				My fork has more UI/UX improvements (subjective) and contains cursor dance stuff
-				and more customization. I'm also a contributor to the upstream opsu! project,
-				mostly doing UI stuff.
+			<p>
+				This fork started as just an alternative to visualise a bot doing "cursor dance"
+				while playing maps, similar to a bot that I made for osu! did. The reason for
+				that was that this project is something I can distribute to interested people
+				while I'd rather not distribute my bot for the real game.
+			<p>
+				Eventually I made a few UI/UX improvements (subjective) and more customization.
+				This includes completely rewriting the options menu and songlist so they look
+				like a replica of how it is in osu!, as well as the volume control and main
+				menu song control and other small things.
+			<p>
+				I've also contributed to the upstream opsu! project, mostly backporting the UI
+				improvements that I made in my fork.
 			</p>
 			<p class=languages>
 				<span style=background:#b07219></span> Java
 			</p>
-			<p>
+			<p style=clear:right>
 				<strong>Links:</strong>
 			</p>
 			<ul>
 				<li><a href=https://github.com/yugecin/opsu-dance>GitHub: yugecin/opsu-dance</a></li>
 			</ul>
 		</div>
-		<div id=osukps>
-			<h2>
-				osukps <a href=#osukps>#</a>
-			</h2>
-			<p>
-				<strong>Status:</strong> mostly finished and abandoned
-			</p>
-			<p>
-				A little program that shows keystates, keys per second and total keys for rythm games
-				(osu!, stepmania etc). Potentially useful for making videos or livestreaming.
-			</p>
-			<p class=languages>
-				<span style=background:#178600></span> C#
-			</p>
-			<p>
-				<strong>Links:</strong>
-			</p>
-			<ul>
-				<li><a href=https://github.com/yugecin/osukps>GitHub: yugecin/osukps</a></li>
-			</ul>
-		</div>
-		<div id=osusb1>
-			<h2>
-				osusb1 <a href=#osusb1>#</a>
-			</h2>
-			<p>
-				<strong>Status:</strong> finished
-			</p>
-			<p>
-				A (sort of) demo in the form of an <a href=https://osu.ppy.sh>osu!</a> storyboard.
-			</p>
-			<p class=languages>
-				<span style=background:#178600></span> C#
-			</p>
-			<p>
-				<strong>Links:</strong>
-			</p>
-			<ul>
-				<li><a href=blog-000-making-of-my-osu-storyboard-demo.html#>blogpost</a></li>
-				<li><a href=https://github.com/yugecin/osusb1>GitHub: yugecin/osusb1</a></li>
-				<li>
-					<a href='https://youtube.com/watch?v=bOGJWGJOMOk'>
-						YouTube video showing the storyboard (original version)
-					</a>
-				</li>
-				<li>
-					<a href='https://youtube.com/watch?v=YW6cEbk6-0I'>
-						YouTube video showing the storyboard (highfps version)
-					</a>
-				</li>
-				<li><a href='https://old.ppy.sh/b/1756941?m=0'>Beatmap on osu! website</a></li>
-			</ul>
-		</div>
-		<div id=intellijplugins>
-			<h2>
-				intellijplugins <a href=#intellijplugins>#</a>
-			</h2>
-			<p>
-				<strong>Status:</strong> partly finished, abandoned
-			</p>
-			<p>
-				Some plugins for applications based on the Intellij Platform that make my life better.
-				Perhaps yours, too? Currently has a plugin for changing the "look and feel" and a
-				plugin that colors the caret based on the active ideavim mode.
-			</p>
-			<p class=languages>
-				<span style=background:#b07219></span> Java
-			</p>
-			<p>
-				<strong>Links:</strong>
-			</p>
-			<ul>
-				<li><a href=https://github.com/yugecin/intellijplugins>GitHub: yugecin/intellijplugins</a></li>
-			</ul>
-		</div>
 		<div id=gtasa>
 			<h2>
 				gtasa <a href=#gtasa>#</a>
 			</h2>
+			<a href=scmcleoscripts.jpg class=imglink style=aspect-ratio:640/480>
+				<img src=scmcleoscripts.jpg alt="">
+			</a>
 			<p>
-				<strong>Status:</strong> I always come back to this
+				<strong>Status:</strong> N/A
 			</p>
 			<p>
 				Not really a project, but I've been messing around a lot with GTA:SA,
-				making small scripts and hacking the game.
-			</p>
+				making small scripts and hacking the game. This is a collection of (CLEO/SCM) scripts,
+				CLEO plugins, snippets and tools
+			<p>
+				Some projects inside this repo:
+			<ul>
+				<li>airbreak
+				<li>emergency light system
+				<li>Vice City styled weapon pickups
+				<li>autopilot for planes
+				<li>SA:MP object sniffer
+				<li>snippet showing how to edit train carriage sequences
+				<li>snippet how to project world coordinates to screen space
+				<li>snippet how to hook the game's hud drawing function to draw lines
+				<li>tool to convert assembly code to sanny builder <code>hex..end</code> constructs and allow it to reference variables
+			</ul>
 			<p class=languages>
 				<span style=background:#6e4c13></span> Assembly
 				<span style='border:1px solid #555'></span> CLEO/II-era mission code
-				<span style=background:#f34b7d></span> C++
+				<span style=background:#555></span> C
 				<span style=background:#178600></span> C#
 			</p>
-			<p>
+			<p style=clear:right>
 				<strong>Links:</strong>
 			</p>
 			<ul>
 				<li><a href=https://github.com/yugecin/scmcleoscripts>GitHub: yugecin/scmcleoscripts</a></li>
+				<li><a href=https://www.gtagarage.com/mods/show.php?id=28545>"VC Weapon Pickups" mod on gtagarage.com</a>
 			</ul>
 		</div>
 		<div id=tsstats>
 			<h2>
 				tsstats <a href=#tsstats>#</a>
 			</h2>
+			<a href=tsstats.png class=imglink style=aspect-ratio:1063/782>
+				<img src=tsstats.png alt="">
+			</a>
 			<p>
 				<strong>Status:</strong> finished, maintenance
 			</p>
@@ -358,7 +331,8 @@
 			<p>
 				Also has a webviewer (in a separate repo) which shows the stats in a friendly way.
 				Is not necessary to use, but is useful if you don't want to write your own thing
-				or can be used as reference.
+				or can be used as reference. It also includes a view of the server, with all channels
+				and currently connected clients. Design inspired by pisg (Perl IRC Statistics Generator)
 			</p>
 			<p>
 				Beware: this was written years ago and might be coded weirdly.
@@ -367,7 +341,7 @@
 				<span style=background:#b07219></span> Java
 				<span style=background:#4f5d95></span> PHP
 			</p>
-			<p>
+			<p style=clear:right>
 				<strong>Links:</strong>
 			</p>
 			<ul>
@@ -379,85 +353,75 @@
 			</p>
 			<ul>
 				<li><a href=https://tsstats.thisisgaming.org>TiG (since 24 Aug 2014)</a></li>
-				<li><a href=http://stats.sonic-server.net>Sonic Fidelitus Gaming (since 1 Jan 2018)</a></li>
 			</ul>
 			<p>
 				<em><a href=index.html#contact>Contact me</a> if you use this and want to be featured in this list</em>
 			</p>
 		</div>
-		<div id=colandras-db-modelselector>
+		<div id=osukps>
 			<h2>
-				colandreas-db-modelselector <a href=#colandras-db-modelselector>#</a>
+				osukps <a href=#osukps>#</a>
 			</h2>
 			<p>
-				<strong>Status:</strong> finished
-			</p>
+				<strong>Status:</strong> mostly finished and abandoned
 			<p>
-				Tiny program that filters <a href=https://github.com/Pottus/ColAndreas>ColAndreas</a>
-				database files. ColAndreas is a plugin for SA-MP servers to provide collision insights
-				about the game world. The thing is that its database file containing all the model
-				collision data is easily 44MB and this all ends up in memory of the server. This
-				script allows one to filter to data file to only contain the models that are
-				actually necessary, reducing the memory footprint of the server.
-			</p>
+				A little program that shows keystates, keys per second and total keys for rythm games
+				(osu!, stepmania etc). Potentially useful for making videos or livestreaming.
 			<p class=languages>
-				<span style=background:#555></span> C
-			</p>
+				<span style=background:#178600></span> C#
 			<p>
 				<strong>Links:</strong>
-			</p>
 			<ul>
-				<li><a href=https://github.com/basdon/colandreas-db-modelselector>GitHub: basdon/colandreas-db-modelselector</a>
-				</li>
+				<li><a href=https://github.com/yugecin/osukps>GitHub: yugecin/osukps</a>
 			</ul>
 		</div>
-		<div id=txtnotes>
+		<div id=osusb1>
 			<h2>
-				txtnotes <a href=#txtnotes>#</a>
+				osusb1 <a href=#osusb1>#</a>
 			</h2>
 			<p>
-				<strong>Status:</strong> finished, maintenance
-			</p>
+				<strong>Status:</strong> finished, archived
 			<p>
-				Simple web-based plaintext notekeeper. I used this one myself a lot, every day.
-			</p>
+				A (sort of) demo in the form of an <a href=https://osu.ppy.sh>osu!</a> storyboard.
 			<p class=languages>
-				<span style=background:#4f5d95></span> PHP
-			</p>
+				<span style=background:#178600></span> C#
 			<p>
 				<strong>Links:</strong>
-			</p>
 			<ul>
-				<li><a href=https://github.com/yugecin/txtnotes>GitHub: yugecin/txtnotes</a></li>
+				<li><a href=blog-000-making-of-my-osu-storyboard-demo.html>blogpost</a>
+				<li><a href=https://github.com/yugecin/osusb1>GitHub: yugecin/osusb1</a>
+				<li>
+					<a href='https://youtube.com/watch?v=bOGJWGJOMOk'>
+						YouTube video showing the storyboard (original version)
+					</a>
+				<li>
+					<a href='https://youtube.com/watch?v=YW6cEbk6-0I'>
+						YouTube video showing the storyboard (highfps version)
+					</a>
+				<li><a href='https://old.ppy.sh/b/1756941?m=0'>Beatmap on osu! website</a>
 			</ul>
 		</div>
-		<div id=plquery>
+		<div id=xandilordi-soundboard>
 			<h2>
-				plquery <a href=#plquery>#</a>
+				xandilordi-soundboard <a href=#xandilordi-soundboard>#</a>
 			</h2>
+			<a href=xandilordi.png class=imglink style=aspect-ratio:875/586>
+				<img src=xandilordi.png alt="screenshot of the soundboard website">
+			</a>
 			<p>
-				<strong>Status:</strong> finished
-			</p>
+				<strong>Status:</strong> Ready, occasionally adding more sounds
 			<p>
-				A php script that queries a SA-MP server to make activity graphs (using the
-				<a href=https://github.com/goat1000/SVGGraph>SVGGraph library</a>).
-				Was made for a specific server, but can be easily modified to work for any server.
-			</p>
-			<p class=languages>
-				<span style=background:#4f5d95></span> PHP
-			</p>
-			<p>
+				A soundboard HTML page for a Belgian comedian (Xander De Rycke).
+			<p style=clear:right>
 				<strong>Links:</strong>
-			</p>
 			<ul>
-				<li><a href=https://github.com/thepilotslife/plquery>GitHub: thepilotslife/plquery</a></li>
-				<li><a href=https://robin.thisisgaming.org/pl/stats/>data</a></li>
+				<li><a href=https://xandilordi-soundboard.be>xandilordi-soundboard.be</a>
+				<li><a href=https://github.com/yugecin/xandilordi-soundboard>GitHub: yugecin/xandilordi-soundboard</a>
 			</ul>
 		</div>
 		<footer>
 			<p>
-				last modified: 01 Jan 2023
-			</p>
+				last modified: 12 Feb 2026
 		</footer>
 	</div>
 </body>
