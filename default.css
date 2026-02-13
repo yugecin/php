@@ -6,7 +6,7 @@ html {
 	margin: 0;
 	font-family: 'Tahoma', 'arial', sans-serif;
 	color: #000;
-	background: center/40px repeat url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 40 40" stroke="%23fff3"><rect x="10" y="10" width="20" height="20"/></svg>'), #000;
+	background: fixed #bbb url(data:image/bmp;base64,Qk1+AAAAAAAAAD4AAAAoAAAAEAAAABAAAAABAAEAAAAAAAAAAADDDgAAww4AAAIAAAACAAAAd3d3/5aWlv+/fwAAoUAAAK1eAAClUgAAvVoAAIFCAAD/fgAAAAAAAH7/AABCgQAAWr0AAFKlAABerQAAQKEAAH+/AAAAAAAA) repeat;
 	cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAJUExURUdwTPj8+AAAACG8EfMAAAABdFJOUwBA5thmAAAANklEQVQI12MIBQKGrFWrVoKIJSAiAEisZIARqxxAxAS4LExdFFAskw0om8kIVJcChAwBDAIMAPibHK9ONqHMAAAAAElFTkSuQmCC), auto;
 }
 a {
@@ -16,15 +16,22 @@ body {
 	max-width: 65em;
 	margin: 2em auto 17em auto;
 }
-div {
+div, nav {
 	padding: 0 1em;
 	border: 2px solid #000;
 	background: #fff;
 	margin: 2em 0;
+	box-shadow: 5px 5px 0 pink, 7px 3px 0 #000, 7px 7px 0 #000, 3px 7px 0 #000;
+}
+div div {
+	box-shadow: none;
 }
 h1,h2,h3,h4,h5,h6 {
 	background: #bbf;
 	margin: .7em 0;
+	padding: 0 .2em;
+	border: 2px solid #000;
+	box-shadow: 2px 2px 0 #000;
 }
 a[href*="://"]::after {
 	display: inline-block;
