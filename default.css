@@ -13,9 +13,19 @@ a {
 	cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJUExURUdwTPj8+D19/7qcjwYAAAABdFJOUwBA5thmAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANklEQVQI12MIBQKGrFWrVoKIJSAiAEisZIARqxxAxAS4LExdFFAskw0om8kIVJcChAwBDAIMAPibHK9ONqHMAAAAAElFTkSuQmCC), auto;
 }
 body {
-	max-width: 65em;
+	max-width: 50em;
 	margin: 2em auto 17em auto;
 }
+
+nav p {
+	margin: .5em 0; /*normally 1em 0 but we give .5em to the nav links so their click area is larger*/
+}
+nav a {
+	padding: .5em 1em;
+	display: inline-block;
+	font-weight: bold;
+}
+
 div, nav {
 	padding: 0 1em;
 	border: 2px solid #000;
@@ -25,6 +35,7 @@ div, nav {
 }
 div div {
 	box-shadow: none;
+	border-style: ridge;
 }
 h1,h2,h3,h4,h5,h6 {
 	background: #bbf;
