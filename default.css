@@ -90,6 +90,9 @@ blockquote {
 	padding: 1em;
 	margin: 1em;
 }
+blockquote + p.capt {
+	margin-top: -.8em;
+}
 p.capt, p.img {
 	text-align: center;
 	color: #606060;
