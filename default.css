@@ -6,7 +6,8 @@ html {
 	margin: 0;
 	font-family: 'Tahoma', 'arial', sans-serif;
 	color: #000;
-	background: fixed #bbb url(data:image/bmp;base64,Qk1+AAAAAAAAAD4AAAAoAAAAEAAAABAAAAABAAEAAAAAAAAAAADDDgAAww4AAAIAAAACAAAAd3d3/5aWlv+/fwAAoUAAAK1eAAClUgAAvVoAAIFCAAD/fgAAAAAAAH7/AABCgQAAWr0AAFKlAABerQAAQKEAAH+/AAAAAAAA) repeat;
+	/*https://paulbourke.net/texturelibrary/displayimage.cgi?rough/bluerough1.jpg*/
+	background: #a8aacd url('/bluerough1.png');
 	cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAJUExURUdwTPj8+AAAACG8EfMAAAABdFJOUwBA5thmAAAANklEQVQI12MIBQKGrFWrVoKIJSAiAEisZIARqxxAxAS4LExdFFAskw0om8kIVJcChAwBDAIMAPibHK9ONqHMAAAAAElFTkSuQmCC), auto;
 }
 a {
