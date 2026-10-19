@@ -40,127 +40,169 @@
 		</h2>
 		<ul>
 			<li><a href=#index>Index</a>
-			<li><a href=#findingtheclass>Finding the class to modify</a>
-			<li><a href=#modifytheclass>Modifying the class to remove the delay and compiling</a>
-			<li><a href=#launch>Launching Minecraft with debug and hotswapping</a>
+			<li><a href=#2026update>2026 update</a>
+			<li>
+				<a href=#theoldway>The old way (2020-2023)</a>
+				<ul>
+					<li><a href=#findingtheclass>Finding the class to modify</a>
+					<li><a href=#modifytheclass>Modifying the class to remove the delay and compiling</a>
+					<li><a href=#launch>Launching Minecraft with debug and hotswapping</a>
+				</ul>
 		</ul>
-		<div id=findingtheclass>
+		<div id=2026update>
 			<h2>
-				Finding the class to modify <a href=#findingtheclass>#</a>
+				2026 update <a href=#2026update>#</a>
 			</h2>
 			<p>
-				Years ago, in a previous life,
-				I used MCP (which stood for Minecraft Coder Pack) to decompile minecraft.
-				There I found how to remove the delay, by setting the <code>blockHitDelay</code>
-				to <code>0</code> in <code>PlayerControllerMP#onPlayerDamageBlock</code>.
-				It usually takes a while for MCP to get updated for newer versions,
-				and nowadays I don't even try to find updated version anymore since at
-				some point it started to get impossible to find them
-				(it may not even exist anymore now and/or be replaced with something else).
-			<p>
-				So the way I've been doing it now is to find the class, edit the value and recompile it.
-				Then attach a debugger to the running JVM instance and hot-swap the class.
-			<p>
-				To begin, we would need to find the class.
-				Most identifiers are usually minified, so this can be done by searching for a pattern.
-				I saw this code in the (older versions) of the class we need,
-				and thought maybe the <code> 4.5</code> value would be easy to find.
-<pre>
-public float getBlockReachDistance()
-{
-	return !creativeMode ? 4.5F : 5F;
-}
-</pre>
-			<p>
-				<a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.4.4">
-					The JVM specs for CONSTANT_Float_info structure
-				</a>
-				tells us that a float constant consists of a byte with value <code>4</code>,
-				followed by the float value in IEEE-754 format, big endian.
-				So, find the jar (in my case <code>%APPDATA%\.minecraft\versions\20w20b\20w20b.jar</code>),
-				extract it somewhere and grep for our pattern.
-<pre>
-$ find . -name "*.class" | xargs grep -obUaP "\x04\x40\x90\x00\x00"
-./azg.class:2765:@P
-./dls$a.class:1083:@P
-./dvt.class:348:@P
-./dwx.class:591:@P
-./dxn.class:1969:@P
-./ebd$m.class:1185:@P
-./efs.class:277:@P
-./eik.class:724:@P
-</pre>
-			<p>
-				<em>
-					Note: I get can't this to work anymore. The grep options seem correct
-					and should work but alas. An alternative for windows is BareGrep
-					by baremetalsoft.com, it works with the same pattern if the regex checkbox is checked.
-				</em>
-			<p>
-				There aren't too many matches,
-				so it's doable to go through every one of them with your favorite decompiler
-				and see if it's the target class. In <code>dxn.class</code>, I found following
-				method which sort of looks like the <code>getBlockReachDistance()</code>
-				method we're trying to find.
-<pre>
-public float c()
-{
-	return this.j.e() ? 5.0F : 4.5F;
-}
-</pre>
-			<p>
-				So this is the class that we need and will modify and hot-swap.
-			<p class=index>
-				<a href=#index>Index</a>
+				It is now 2026 and I'm on version 26.3 and it seems like the class files are no longer minified.
+				So here's the short approach I used now:
+			<ul>
+				<li>
+					create a new project in intellij (siderant: damn i hate what its UI has become, but at least
+					the functionality is still somewhat the same (if you can find their new positions, that is))
+				<li>
+					add <code>26.3.jar</code> as library (<code>%appdata%\.minecraft\versions\26.3\26.3.jar</code>)
+				<li>
+					decompile the class <code>net.minecraft.client.multiplayer.MultiPlayerGameMode</code> that is
+					in that jar, and add it as source file in your project
+				<li>
+					figure out from the non-working import statement what other libraries you need to add to the
+					project. they are located in <code>%appdata%\.minecraft\libraries</code>. from the import paths
+					it's usually pretty clear, and since i'm doing this on the latest version then i just use latest
+					versions of each library and that works.
+				<li>
+					find every assigment of <code>destroyDelay</code> and assign <code>0</code> instead of the value
+					it has, which is 5 in my case (it doesn't seem to work to just circumvent the condition where it's
+					checked anymore since i keep seeing a delay when i try that, so just never allow it to have a
+					value instead)
+				<li>
+					<a href=#launch>launch and hotswap</a>
+			</ul>
 		</div>
-		<div id=modifytheclass>
+		<div id=theoldway>
 			<h2>
-				Modifying the class to remove the delay and compiling <a href=#modifytheclass>#</a>
+				The old way (2020-2023) <a href=#theoldway>#</a>
 			</h2>
 			<p>
-				Copy the contents of that class file and copy it into a source file in a project
-				in your favorite IDE, with the same name. One method up is this method:
-<pre>
-public boolean b(ft var1, fy var2)
-{
-	this.n();
-	if (this.h &gt; 0) {
-		--this.h;
-		return true;
-	} else {
-		cel var3;
-(..)
-</pre>
-			<p>
-				That <code>if</code> is checking the block hit delay,
-				so I put this line above the <code>if</code> to get rid of the block hit delay.
-<pre>
-	this.h = 0;
-</pre>
-			<p>
-				To compile the file you probably need to link the jar and some libraries,
-				which can usually be found in <code>%APPDATA%\.minecraft\libraries</code>.
-				The file <code>%APPDATA%\.minecraft\versions\&lt;version&gt;\&lt;version&gt;.json</code>
-				has a "libraries" property that should help with the names and versions.
-			<p>
-				I used Fernflower to decompile and had to fix some usages of an enum.
-				For some reason it added an import for <code>rz.a</code> but the compiler wasn't accepting it,
-				so I removed the import and replace all usages of the enum type <code>a</code>
-				in method parameters with <code>rz.a</code>.
-			<p>
-				One time for version 1.18.2, the class contained the line below. That won't compile
-				because it's calling a method named <code>do</code>, which of course is a keyword
-				in Java (the reason that it's there is because the JVM has less constrains on naming
-				than the Java programming language, so modifications to bytecode can make it that
-				decompiled class files to Java source files may not be compilable).
-				Luckily I could comment this line and the game doesn't seem different in
-				any way or crashing, so I got lucky there.
-<pre>
-this.c.a(new wb.b($$0.dc(), $$0.de(), $$0.di(), $$0.dn(), $$0.do(), $$0.aw()));
-</pre>
+				This is what I did to get it working in in 2020-2023, obsolete nowadays.
+			<div id=findingtheclass>
+				<h3>
+					Finding the class to modify <a href=#findingtheclass>#</a>
+				</h3>
+				<p>
+					Years ago, in a previous life,
+					I used MCP (which stood for Minecraft Coder Pack) to decompile minecraft.
+					There I found how to remove the delay, by setting the <code>blockHitDelay</code>
+					to <code>0</code> in <code>PlayerControllerMP#onPlayerDamageBlock</code>.
+					It usually takes a while for MCP to get updated for newer versions,
+					and nowadays I don't even try to find updated version anymore since at
+					some point it started to get impossible to find them
+					(it may not even exist anymore now and/or be replaced with something else).
+				<p>
+					So the way I've been doing it now is to find the class, edit the value and recompile it.
+					Then attach a debugger to the running JVM instance and hot-swap the class.
+				<p>
+					To begin, we would need to find the class.
+					Most identifiers are usually minified, so this can be done by searching for a pattern.
+					I saw this code in the (older versions) of the class we need,
+					and thought maybe the <code> 4.5</code> value would be easy to find.
+	<pre>
+	public float getBlockReachDistance()
+	{
+		return !creativeMode ? 4.5F : 5F;
+	}
+	</pre>
+				<p>
+					<a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.4.4">
+						The JVM specs for CONSTANT_Float_info structure
+					</a>
+					tells us that a float constant consists of a byte with value <code>4</code>,
+					followed by the float value in IEEE-754 format, big endian.
+					So, find the jar (in my case <code>%APPDATA%\.minecraft\versions\20w20b\20w20b.jar</code>),
+					extract it somewhere and grep for our pattern.
+	<pre>
+	$ find . -name "*.class" | xargs grep -obUaP "\x04\x40\x90\x00\x00"
+	./azg.class:2765:@P
+	./dls$a.class:1083:@P
+	./dvt.class:348:@P
+	./dwx.class:591:@P
+	./dxn.class:1969:@P
+	./ebd$m.class:1185:@P
+	./efs.class:277:@P
+	./eik.class:724:@P
+	</pre>
+				<p>
+					<em>
+						Note: I get can't this to work anymore. The grep options seem correct
+						and should work but alas. An alternative for windows is BareGrep
+						by baremetalsoft.com, it works with the same pattern if the regex checkbox is checked.
+					</em>
+				<p>
+					There aren't too many matches,
+					so it's doable to go through every one of them with your favorite decompiler
+					and see if it's the target class. In <code>dxn.class</code>, I found following
+					method which sort of looks like the <code>getBlockReachDistance()</code>
+					method we're trying to find.
+	<pre>
+	public float c()
+	{
+		return this.j.e() ? 5.0F : 4.5F;
+	}
+	</pre>
+				<p>
+					So this is the class that we need and will modify and hot-swap.
+				<p class=index>
+					<a href=#index>Index</a>
+			</div>
+			<div id=modifytheclass>
+				<h3>
+					Modifying the class to remove the delay and compiling <a href=#modifytheclass>#</a>
+				</h3>
+				<p>
+					Copy the contents of that class file and copy it into a source file in a project
+					in your favorite IDE, with the same name. One method up is this method:
+	<pre>
+	public boolean b(ft var1, fy var2)
+	{
+		this.n();
+		if (this.h &gt; 0) {
+			--this.h;
+			return true;
+		} else {
+			cel var3;
+	(..)
+	</pre>
+				<p>
+					That <code>if</code> is checking the block hit delay,
+					so I put this line above the <code>if</code> to get rid of the block hit delay.
+	<pre>
+		this.h = 0;
+	</pre>
+				<p>
+					To compile the file you probably need to link the jar and some libraries,
+					which can usually be found in <code>%APPDATA%\.minecraft\libraries</code>.
+					The file <code>%APPDATA%\.minecraft\versions\&lt;version&gt;\&lt;version&gt;.json</code>
+					has a "libraries" property that should help with the names and versions.
+				<p>
+					I used Fernflower to decompile and had to fix some usages of an enum.
+					For some reason it added an import for <code>rz.a</code> but the compiler wasn't accepting it,
+					so I removed the import and replace all usages of the enum type <code>a</code>
+					in method parameters with <code>rz.a</code>.
+				<p>
+					One time for version 1.18.2, the class contained the line below. That won't compile
+					because it's calling a method named <code>do</code>, which of course is a keyword
+					in Java (the reason that it's there is because the JVM has less constrains on naming
+					than the Java programming language, so modifications to bytecode can make it that
+					decompiled class files to Java source files may not be compilable).
+					Luckily I could comment this line and the game doesn't seem different in
+					any way or crashing, so I got lucky there.
+	<pre>
+	this.c.a(new wb.b($$0.dc(), $$0.de(), $$0.di(), $$0.dn(), $$0.do(), $$0.aw()));
+	</pre>
 
-			<p class=index>
-				<a href=#index>Index</a>
+				<p class=index>
+					<a href=#index>Index</a>
+			</div>
 		</div>
 		<div id=launch>
 			<h2>
@@ -168,7 +210,8 @@ this.c.a(new wb.b($$0.dc(), $$0.de(), $$0.di(), $$0.dn(), $$0.do(), $$0.aw()));
 			</h2>
 			<p>
 				The next step is to add some arguments to Minecraft to enable debugging,
-				it doesn't seem too hard to do with the new launcher. I added following arguments:
+				it doesn't seem too hard to do with the new launcher (it has an "installations" tab and allows
+				one to add JVM arguments). I added following arguments:
 <pre>
 -Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1052
 </pre>
@@ -179,7 +222,7 @@ this.c.a(new wb.b($$0.dc(), $$0.de(), $$0.di(), $$0.dn(), $$0.do(), $$0.aw()));
 		</div>
 		<footer>
 			<p>
-				published: 14 May 2020 - content last modified: 17 September 2023
+				published: 14 May 2020 - content last modified: 19 October 2026
 		</footer>
 	</div>
 </body>
