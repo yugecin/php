@@ -6,8 +6,7 @@ html {
 	margin: 0;
 	font-family: 'Tahoma', 'arial', sans-serif;
 	color: #000;
-	/*https://paulbourke.net/texturelibrary/displayimage.cgi?rough/bluerough1.jpg*/
-	background: #a8aacd url('/bluerough1.png');
+	/*background set in imagestuff.css*/
 	/*cursor set in imagestuff.css*/
 }
 body {
