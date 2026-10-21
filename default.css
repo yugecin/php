@@ -8,7 +8,7 @@ html {
 	color: #000;
 	/*https://paulbourke.net/texturelibrary/displayimage.cgi?rough/bluerough1.jpg*/
 	background: #a8aacd url('/bluerough1.png');
-	cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAJUExURUdwTPj8+AAAACG8EfMAAAABdFJOUwBA5thmAAAANklEQVQI12MIBQKGrFWrVoKIJSAiAEisZIARqxxAxAS4LExdFFAskw0om8kIVJcChAwBDAIMAPibHK9ONqHMAAAAAElFTkSuQmCC), auto;
+	/*cursor set in imagestuff.css*/
 }
 body {
 	max-width: 50em;
@@ -47,7 +47,7 @@ a[href*="://"]:not(.noglobe)::after {
 	content: '';
 	width: 12px;
 	height: 12px;
-	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMAgMAAAArG7R0AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAJUExURUdwTAD/AAAA//ENIZIAAAABdFJOUwBA5thmAAAAL0lEQVQI12NggAFRBwaG0AQGptAVDFwzsxi4Zq1k4JqaCcZMU1cwMCxbwMCg1QAArE8JoyhJwYoAAAAASUVORK5CYII=') no-repeat;
+	/*background set in imagestuff.css*/
 }
 kbd {
 	font-family: 'courier new', monospace;
